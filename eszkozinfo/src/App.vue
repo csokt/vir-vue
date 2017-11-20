@@ -6,7 +6,7 @@
     <main>
       <row :message=message>
         <input v-on:change="checkLeltariSzam" class="leltari-szam-input" type="text" size="9" v-model="leltariSzam" placeholder="Leltári szám"/>
-        <button @click="enableQrcodeReader = true" class="scan-button" type="button" >Beolvasás</button>
+        <button @click="enableQrcodeReader = !enableQrcodeReader" class="scan-button" type="button" >Beolvasás</button>
       </row>
       <qrcode-reader v-if="enableQrcodeReader" @capture="gotQR" head="Bejelentkezés" :defaultCamera="1" :mirror="false"></qrcode-reader>
       <template v-if="eszkoz">
@@ -92,7 +92,6 @@ export default {
     },
 
     gotQR (value) {
-      console.log(value)
       this.leltariSzam = value
       this.checkLeltariSzam()
     },
@@ -103,10 +102,8 @@ export default {
         let result = await odoo.model.searchRead('leltar.eszkoz', [['leltari_szam', '=', this.leltariSzam]])
         if (result.length) {
           this.eszkoz = result.records[0]
-          console.log('eszkoz:', this.eszkoz)
           result = await odoo.model.searchRead('leltar.eszkozmozgas', [['eszkoz_id', '=', this.eszkoz.id]])
           this.mozgas = result.records
-          console.log('mozgas:', this.mozgas)
         } else {
           this.eszkoz = null
           this.message = 'Érvénytelen leltári szám!'
