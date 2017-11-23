@@ -64,12 +64,12 @@ export default {
     utc2local (utc) {
       return new Date(utc + 'Z').toLocaleString()
     },
+
     async login () {
       function urlParam (name) {
         const results = new RegExp('[\\?&]' + name + '=([^&#]*)', 'i').exec(window.location.href)
         return results ? results[1] : null
       }
-
       try {
         this.odooMessage = 'Kapcsolódás...'
         odoo.setHost('.')
@@ -86,12 +86,28 @@ export default {
         console.log(e)
       }
     },
+
     gotQR (value) {
       this.leltariSzam = value
       this.checkLeltariSzam()
     },
-    mozgat () {
+
+    async mozgat () {
+      try {
+        this.eszkozMessage = ''
+        const row = {
+          eszkoz_id: this.eszkoz.id,
+          hova_leltarkorzet_id: this.korzet.id,
+          megerkezett: true
+        }
+        await odoo.model.create('leltar.eszkozmozgas', row)
+        this.checkLeltariSzam()
+      } catch (e) {
+        this.eszkozMessage = e.message
+        console.log(e)
+      }
     },
+
     async checkLeltarkorzet () {
       this.enableQrcodeReader = false
       try {
@@ -108,6 +124,7 @@ export default {
         console.log(e)
       }
     },
+
     async checkLeltariSzam () {
       this.enableQrcodeReader = false
       try {
