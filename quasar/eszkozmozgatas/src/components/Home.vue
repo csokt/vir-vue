@@ -6,11 +6,12 @@
           <q-item-side avatar="statics/icons/eszkozmozgatas-logo.png" />
           <h5 class="on-right">Tárgyi eszköz mozgatás</h5>
         </q-item>
+        <q-item v-if="message">
+          <h6> {{message}} </h6>
+        </q-item>
         <q-item v-if="!odooConnected">
           <q-field class="full-width" label="Bejelentkezés" labelWidth=3 :error="!!odooMessage" :error-label=odooMessage>
-            <q-input v-model="username" float-label="Login név" />
-            <!--
-            -->
+            <q-input v-model="username" float-label="Belépési név" />
             <q-input v-model="password" type="password" float-label="Jelszó" />
             <q-btn @click="login" push color="primary">Bejelentkezés</q-btn>
           </q-field>
@@ -21,14 +22,20 @@
           </q-field>
         </q-item>
         <q-item v-if="odooConnected">
-          <q-field class="full-width" label="Új leltárkörzet" labelWidth=3 :message=korzetMessage>
-            <q-input v-on:change="checkLeltarkorzet" type="text" v-model="leltarkorzetKod" placeholder="Leltárkörzet"/>
+          <q-field class="full-width" label="Új leltárkörzet" labelWidth=3 >
+            <q-input v-on:change="checkLeltarkorzet" v-model="leltarkorzetKod" clearable=true autofocus=true >
+              <q-autocomplete
+                @search="searchLeltarkorzet"
+                :debounce="500"
+                @selected="checkLeltarkorzet"
+              />
+            </q-input>
             <div> <strong> {{korzet && korzet.name}} </strong> </div>
           </q-field>
         </q-item>
         <q-item v-if="odooConnected && korzet">
-          <q-field class="full-width" label="Leltári szám" labelWidth=3 :message=eszkozMessage>
-            <q-input v-on:change="checkLeltariSzam" type="text" v-model="leltariSzam" placeholder="Leltári szám"/>
+          <q-field class="full-width" label="Leltári szám" labelWidth=3 >
+            <q-input v-on:change="checkLeltariSzam" type="text" v-model="leltariSzam" clearable=true />
             <strong> {{eszkoz && eszkoz.name}} </strong>
           </q-field>
         </q-item>
@@ -41,6 +48,8 @@
       </q-list>
     </div>
   </div>
+<!--
+-->
 </template>
 
 <script>
@@ -48,6 +57,7 @@ import odoo from '../odoo-jsonrpc'
 import {
   QField,
   QInput,
+  QAutocomplete,
   QBtn,
   QList,
   QListHeader,
@@ -57,11 +67,21 @@ import {
   QItemMain
 } from 'quasar'
 
+function parseKorzetek (korzetek) {
+  return korzetek.map(korzet => {
+    return {
+      label: korzet.name,
+      value: korzet.leltarkorzet_kod
+    }
+  })
+}
+
 export default {
   name: 'home',
   components: {
     QField,
     QInput,
+    QAutocomplete,
     QBtn,
     QList,
     QListHeader,
@@ -78,15 +98,26 @@ export default {
       leltarkorzetKod: '',
       leltariSzam: '',
       korzet: null,
-      korzetMessage: '',
       eszkoz: null,
-      eszkozMessage: '',
       enableQrcodeReader: false,
       odooConnected: false,
-      odooMessage: ''
+      odooMessage: '',
+      message: ''
     }
   },
   methods: {
+    async searchLeltarkorzet (terms, done) {
+      this.enableQrcodeReader = false
+      try {
+        let result = await odoo.model.searchRead('leltar.korzet', [['name', 'ilike', terms]], ['id', 'leltarkorzet_kod', 'name'], 8)
+        done(parseKorzetek(result.records))
+      }
+      catch (e) {
+        this.message = e.message
+        console.log(e)
+      }
+    },
+
     utc2local (utc) {
       return new Date(utc + 'Z').toLocaleString()
     },
@@ -97,21 +128,21 @@ export default {
         return results ? results[1] : null
       }
       try {
-        this.odooMessage = 'Kapcsolódás...'
+        this.odooConnected = false
+        this.odooMessage = ''
+        this.message = 'Kapcsolódás...'
         odoo.setHost('.')
         const db = urlParam('db') || 'szefo'
         // let result = await odoo.login(db, 'frontend', 'Szefo1953')
         let result = await odoo.login(db, this.username, this.password)
-        console.log(db, 'bejelentkezett')
         this.user = await odoo.model.find('res.users', result.uid, ['name', 'company_id'])
-        console.log(this.user)
         this.odooConnected = true
-        this.odooMessage = ''
       }
       catch (e) {
         this.odooMessage = 'Nincs kapcsolat az adatbázissal!'
         console.log(e)
       }
+      this.message = ''
     },
 
     gotQR (value) {
@@ -121,7 +152,6 @@ export default {
 
     async mozgat () {
       try {
-        this.eszkozMessage = ''
         const row = {
           eszkoz_id: this.eszkoz.id,
           hova_leltarkorzet_id: this.korzet.id
@@ -131,7 +161,7 @@ export default {
         this.checkLeltariSzam()
       }
       catch (e) {
-        this.eszkozMessage = e.message
+        this.message = e.message
         console.log(e)
       }
     },
@@ -139,18 +169,16 @@ export default {
     async checkLeltarkorzet () {
       this.enableQrcodeReader = false
       try {
-        this.korzetMessage = ''
         let result = await odoo.model.searchRead('leltar.korzet', [['leltarkorzet_kod', '=', this.leltarkorzetKod]])
         if (result.length) {
           this.korzet = result.records[0]
         }
         else {
           this.korzet = null
-          this.korzetMessage = 'Érvénytelen leltárkörzet!'
         }
       }
       catch (e) {
-        this.korzetMessage = e.message
+        this.message = e.message
         console.log(e)
       }
     },
@@ -158,18 +186,16 @@ export default {
     async checkLeltariSzam () {
       this.enableQrcodeReader = false
       try {
-        this.eszkozMessage = ''
         let result = await odoo.model.searchRead('leltar.eszkoz', [['leltari_szam', '=', this.leltariSzam]])
         if (result.length) {
           this.eszkoz = result.records[0]
         }
         else {
           this.eszkoz = null
-          this.eszkozMessage = 'Érvénytelen leltári szám!'
         }
       }
       catch (e) {
-        this.eszkozMessage = e.message
+        this.message = e.message
         console.log(e)
       }
     }
