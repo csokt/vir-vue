@@ -1,6 +1,6 @@
 <template>
   <div class="row justify-center">
-    <div style="width: 500px; max-width: 95vw;">
+    <div style="width: 750px; max-width: 95vw;">
       <q-list dense separator no-border>
         <q-item>
           <q-item-side avatar="statics/icons/eszkozmozgatas-logo.png" />
@@ -23,11 +23,10 @@
         </q-item>
         <q-item v-if="odooConnected">
           <q-field class="full-width" label="Új leltárkörzet" labelWidth=3 >
-            <q-input v-on:change="checkLeltarkorzet" v-model="leltarkorzetKod" clearable=true autofocus=true >
+            <q-input v-model="leltarkorzetKod" clearable=true >
               <q-autocomplete
                 @search="searchLeltarkorzet"
                 :debounce="500"
-                @selected="checkLeltarkorzet"
               />
             </q-input>
             <div> <strong> {{korzet && korzet.name}} </strong> </div>
@@ -35,8 +34,10 @@
         </q-item>
         <q-item v-if="odooConnected && korzet">
           <q-field class="full-width" label="Leltári szám" labelWidth=3 >
-            <q-input v-on:change="checkLeltariSzam" type="text" v-model="leltariSzam" clearable=true />
+            <q-input type="text" v-model="leltariSzam" clearable=true />
             <strong> {{eszkoz && eszkoz.name}} </strong>
+            <br>
+            <QrcodeReader v-if="!leltariSzam" @decode="gotQR"> </QrcodeReader>
           </q-field>
         </q-item>
         <q-item v-if="odooConnected && korzet && eszkoz">
@@ -54,6 +55,7 @@
 
 <script>
 import odoo from '../odoo-jsonrpc'
+import { QrcodeReader } from 'vue-qrcode-reader'
 import {
   QField,
   QInput,
@@ -79,6 +81,7 @@ function parseKorzetek (korzetek) {
 export default {
   name: 'home',
   components: {
+    QrcodeReader,
     QField,
     QInput,
     QAutocomplete,
@@ -99,29 +102,22 @@ export default {
       leltariSzam: '',
       korzet: null,
       eszkoz: null,
-      enableQrcodeReader: false,
       odooConnected: false,
       odooMessage: '',
       message: ''
     }
   },
+  watch: {
+    leltarkorzetKod: function (value) {
+      this.checkLeltarkorzet()
+    },
+
+    leltariSzam: function (value) {
+      this.checkLeltariSzam()
+    }
+  },
+
   methods: {
-    async searchLeltarkorzet (terms, done) {
-      this.enableQrcodeReader = false
-      try {
-        let result = await odoo.model.searchRead('leltar.korzet', [['name', 'ilike', terms]], ['id', 'leltarkorzet_kod', 'name'], 8)
-        done(parseKorzetek(result.records))
-      }
-      catch (e) {
-        this.message = e.message
-        console.log(e)
-      }
-    },
-
-    utc2local (utc) {
-      return new Date(utc + 'Z').toLocaleString()
-    },
-
     async login () {
       function urlParam (name) {
         const results = new RegExp('[\\?&]' + name + '=([^&#]*)', 'i').exec(window.location.href)
@@ -147,7 +143,17 @@ export default {
 
     gotQR (value) {
       this.leltariSzam = value
-      this.checkLeltariSzam()
+    },
+
+    async searchLeltarkorzet (terms, done) {
+      try {
+        let result = await odoo.model.searchRead('leltar.korzet', [['name', 'ilike', terms]], ['id', 'leltarkorzet_kod', 'name'], 8)
+        done(parseKorzetek(result.records))
+      }
+      catch (e) {
+        this.message = e.message
+        console.log(e)
+      }
     },
 
     async mozgat () {
@@ -167,7 +173,6 @@ export default {
     },
 
     async checkLeltarkorzet () {
-      this.enableQrcodeReader = false
       try {
         let result = await odoo.model.searchRead('leltar.korzet', [['leltarkorzet_kod', '=', this.leltarkorzetKod]])
         if (result.length) {
@@ -184,7 +189,6 @@ export default {
     },
 
     async checkLeltariSzam () {
-      this.enableQrcodeReader = false
       try {
         let result = await odoo.model.searchRead('leltar.eszkoz', [['leltari_szam', '=', this.leltariSzam]])
         if (result.length) {
@@ -202,8 +206,3 @@ export default {
   }
 }
 </script>
-
-<style lang="stylus">
-.q-btn
-  margin-top 2em
-</style>
