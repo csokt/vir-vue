@@ -9,7 +9,7 @@
       <button @click="$router.push('kodol')" type="button" class="button is-info is-large">Kódolás</button>
     </div>
     <div v-else>
-      <button v-if="store.odooConnected" @click="scanUser=true" type="button" class="button is-danger is-large">Jelentkezzen be kódkártyájával!</button>
+      <button @click="scanUser=true" type="button" class="button is-danger is-large">Jelentkezzen be kódkártyájával!</button>
       <div class="is-size-4 has-text-danger"> {{ store.odooError }} </div>
 
       <div v-if="scanUser" class="modal is-active">

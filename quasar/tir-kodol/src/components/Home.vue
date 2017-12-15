@@ -1,0 +1,157 @@
+<template>
+  <div class="row justify-center">
+    <div style="width: 500px; max-width: 95vw;">
+
+      <div v-if="store.user">
+        <h5> Üdvözlöm {{ store.user.name }} </h5>
+        <q-btn @click="store.user=null" push color="secondary">Kijelentkezés</q-btn>
+        <br>
+        <q-btn @click="$router.push('kodol')" push color="secondary">Kódolás</q-btn>
+      </div>
+      <div v-else>
+        <q-btn @click="scanUser=true; store.userError=''" push color="secondary">Jelentkezzen be kódkártyájával!</q-btn>
+        <div> {{ store.userError }} </div>
+        <QrcodeReader v-if="scanUser" @decode="gotUserQR"> </QrcodeReader>
+      </div>
+
+      <q-list  separator no-border>
+        <q-item>
+          <h5>Táblázatok </h5>
+        </q-item>
+        <q-item v-for="view in config.views" :key="view.id" :to="'/table/'+view.id">
+          {{view.label}}
+        </q-item>
+      </q-list>
+    </div>
+  </div>
+</template>
+
+<script>
+import Config from '../config'
+import Store from '../store'
+import { QrcodeReader } from 'vue-qrcode-reader'
+
+import {
+  QBtn,
+  QList,
+  QItem
+} from 'quasar'
+
+export default {
+  name: 'home',
+  components: {
+    QrcodeReader,
+    QBtn,
+    QList,
+    QItem
+  },
+  data () {
+    return {
+      config: Config,
+      store: Store,
+      request: {
+        jsonrpc: '2.0',
+        method: 'raw',
+        params: {
+          database: 'SzefoModulKeszlet',
+          query: null
+        },
+        id: null
+      },
+      scanUser: false,
+      messageUser: ''
+    }
+  },
+  computed: {
+    routeId () {
+      return Math.random().toString(16).substr(2)
+    }
+  },
+  methods: {
+    gotUserQR (value) {
+      const qr = parseInt(value)
+      if (!qr) {
+        this.store.userError = 'Csak számot lehet megadni!'
+        return
+      }
+      if (qr < 20000) {
+        this.store.userError = 'A kód 20000-nél nem lehet kisebb!'
+      }
+      else if (qr < 50000) {
+        const dolgozokod = qr - 20000
+        this.request.params.query = "select [dolgozokod], [dolgozonev] from [dolgtr] where [aktiv] = 'A' and [dolgozokod] = " + dolgozokod.toString()
+        this.$mqtt.publish(this.store.requestBase + 'varro', JSON.stringify(this.request))
+      }
+      else {
+        const userid = qr - 50000
+        this.request.params.query = 'select [userid], [fullname] from [users] where [userid] = ' + userid.toString()
+        this.$mqtt.publish(this.store.requestBase + 'kodolo', JSON.stringify(this.request))
+      }
+      this.scanUser = false
+    }
+  },
+  mqtt: {
+    'mssql/response/#' (message, topic) {
+      const response = JSON.parse(message.toString())
+      console.log(topic, response)
+    },
+    'mssql/response/tir/kodol/+/varro' (message, topic) {
+      const response = JSON.parse(message.toString())
+      if (response.id === this.routeId) {
+        console.log(response)
+        if (response.result && response.result.length) {
+          this.store.user = {name: response.result[0].dolgozonev.trim(), role: 'varró', belepokod: response.result[0].dolgozokod + 20000}
+          console.log(this.store.user)
+          this.store.kodol = {
+            telephelykod: 0,
+            telephely: 'Szeged, Tavasz u. 2.',
+            kodolokod: -1,
+            kodolo: 'dolgozó',
+            dolgozokod: this.store.user.belepokod,
+            dolgozo: this.store.user.name,
+            belepokod: this.store.user.belepokod,
+            username: this.store.user.name,
+            munkalap: null,
+            muveletkod: null,
+            mennyiseg: null,
+            role: this.store.user.role
+          }
+        }
+        else {
+          this.store.userError = 'Érvénytelen felhasználó kód!'
+        }
+      }
+    },
+    'mssql/response/tir/kodol/+/kodolo' (message, topic) {
+      const response = JSON.parse(message.toString())
+      if (response.id === this.routeId) {
+        console.log(response)
+        if (response.result && response.result.length) {
+          this.store.user = {name: response.result[0].fullname.trim(), role: 'kódoló', belepokod: response.result[0].userid + 50000}
+          console.log(this.store.user)
+          this.store.kodol = {
+            telephelykod: 0,
+            telephely: 'Szeged, Tavasz u. 2.',
+            kodolokod: this.store.user.belepokod,
+            kodolo: this.store.user.name,
+            dolgozokod: null,
+            dolgozo: null,
+            belepokod: this.store.user.belepokod,
+            username: this.store.user.name,
+            munkalap: null,
+            muveletkod: null,
+            mennyiseg: null,
+            role: this.store.user.role
+          }
+        }
+        else {
+          this.store.userError = 'Érvénytelen felhasználó kód!'
+        }
+      }
+    }
+  },
+  mounted () {
+    this.request.id = this.routeId
+  }
+}
+</script>
