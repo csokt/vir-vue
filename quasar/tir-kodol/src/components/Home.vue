@@ -27,6 +27,8 @@
 </template>
 
 <script>
+
+import { callRaw } from '../rpc'
 import Config from '../config'
 import Store from '../store'
 import { QrcodeReader } from 'vue-qrcode-reader'
@@ -49,26 +51,12 @@ export default {
     return {
       config: Config,
       store: Store,
-      request: {
-        jsonrpc: '2.0',
-        method: 'raw',
-        params: {
-          database: 'SzefoModulKeszlet',
-          query: null
-        },
-        id: null
-      },
       scanUser: false,
       messageUser: ''
     }
   },
-  computed: {
-    routeId () {
-      return Math.random().toString(16).substr(2)
-    }
-  },
   methods: {
-    gotUserQR (value) {
+    async gotUserQR (value) {
       const qr = parseInt(value)
       if (!qr) {
         this.store.userError = 'Csak számot lehet megadni!'
@@ -79,29 +67,10 @@ export default {
       }
       else if (qr < 50000) {
         const dolgozokod = qr - 20000
-        this.request.params.query = "select [dolgozokod], [dolgozonev] from [dolgtr] where [aktiv] = 'A' and [dolgozokod] = " + dolgozokod.toString()
-        this.$mqtt.publish(this.store.requestBase + 'varro', JSON.stringify(this.request))
-      }
-      else {
-        const userid = qr - 50000
-        this.request.params.query = 'select [userid], [fullname] from [users] where [userid] = ' + userid.toString()
-        this.$mqtt.publish(this.store.requestBase + 'kodolo', JSON.stringify(this.request))
-      }
-      this.scanUser = false
-    }
-  },
-  mqtt: {
-    'mssql/response/#' (message, topic) {
-      const response = JSON.parse(message.toString())
-      console.log(topic, response)
-    },
-    'mssql/response/tir/kodol/+/varro' (message, topic) {
-      const response = JSON.parse(message.toString())
-      if (response.id === this.routeId) {
-        console.log(response)
+        const response = await callRaw("select [dolgozokod], [dolgozonev] from [dolgtr] where [aktiv] = 'A' and [dolgozokod] = " + dolgozokod.toString())
+        // console.log(response)
         if (response.result && response.result.length) {
           this.store.user = {name: response.result[0].dolgozonev.trim(), role: 'varró', belepokod: response.result[0].dolgozokod + 20000}
-          console.log(this.store.user)
           this.store.kodol = {
             telephelykod: 0,
             telephely: 'Szeged, Tavasz u. 2.',
@@ -121,14 +90,12 @@ export default {
           this.store.userError = 'Érvénytelen felhasználó kód!'
         }
       }
-    },
-    'mssql/response/tir/kodol/+/kodolo' (message, topic) {
-      const response = JSON.parse(message.toString())
-      if (response.id === this.routeId) {
-        console.log(response)
+      else {
+        const userid = qr - 50000
+        const response = await callRaw('select [userid], [fullname] from [users] where [userid] = ' + userid.toString())
+        // console.log(response)
         if (response.result && response.result.length) {
           this.store.user = {name: response.result[0].fullname.trim(), role: 'kódoló', belepokod: response.result[0].userid + 50000}
-          console.log(this.store.user)
           this.store.kodol = {
             telephelykod: 0,
             telephely: 'Szeged, Tavasz u. 2.',
@@ -148,10 +115,8 @@ export default {
           this.store.userError = 'Érvénytelen felhasználó kód!'
         }
       }
+      this.scanUser = false
     }
-  },
-  mounted () {
-    this.request.id = this.routeId
   }
 }
 </script>
