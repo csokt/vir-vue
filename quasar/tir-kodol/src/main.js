@@ -13,11 +13,11 @@ require(`quasar/dist/quasar.${__THEME}.css`)
 import Vue from 'vue'
 import Quasar from 'quasar'
 import router from './router'
-import VueMqtt from 'vue-mqtt'
+// import VueMqtt from 'vue-mqtt'
 
 Vue.config.productionTip = false
 Vue.use(Quasar) // Install Quasar Framework
-Vue.use(VueMqtt, 'wss://mqtts.szefo.local:8880', {username: 'admin', password: 'Szefo1953'})
+// Vue.use(VueMqtt, 'wss://mqtts.szefo.local:8880', {username: 'admin', password: 'Szefo1953'})
 
 if (__THEME === 'mat') {
   require('quasar-extras/roboto-font')

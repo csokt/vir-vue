@@ -5,26 +5,8 @@
   </div>
 </template>
 
-
 <script>
-import Store from './store'
-
-export default {
-  name: 'root',
-  data () {
-    return {
-      store: Store
-    }
-  },
-  mounted () {
-    console.log('App subscribe')
-    this.$mqtt.subscribe(this.store.responseBase + '#')
-  },
-  beforeDestroy () {
-    console.log('App unsubscribe')
-    this.$mqtt.unsubscribe(this.store.responseBase + '#')
-  }
-}
+export default {}
 </script>
 
 <style lang="stylus">

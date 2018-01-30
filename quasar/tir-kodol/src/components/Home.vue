@@ -28,9 +28,9 @@
 
 <script>
 
-import { callRaw } from '../rpc'
 import Config from '../config'
 import Store from '../store'
+import { CallRaw } from '../rpc'
 import { QrcodeReader } from 'vue-qrcode-reader'
 
 import {
@@ -67,7 +67,7 @@ export default {
       }
       else if (qr < 50000) {
         const dolgozokod = qr - 20000
-        const response = await callRaw("select [dolgozokod], [dolgozonev] from [dolgtr] where [aktiv] = 'A' and [dolgozokod] = " + dolgozokod.toString())
+        const response = await CallRaw("select [dolgozokod], [dolgozonev] from [dolgtr] where [aktiv] = 'A' and [dolgozokod] = " + dolgozokod.toString())
         // console.log(response)
         if (response.result && response.result.length) {
           this.store.user = {name: response.result[0].dolgozonev.trim(), role: 'varró', belepokod: response.result[0].dolgozokod + 20000}
@@ -85,6 +85,8 @@ export default {
             mennyiseg: null,
             role: this.store.user.role
           }
+          this.store.kodolasok = []
+          this.store.menthet = true
         }
         else {
           this.store.userError = 'Érvénytelen felhasználó kód!'
@@ -92,7 +94,7 @@ export default {
       }
       else {
         const userid = qr - 50000
-        const response = await callRaw('select [userid], [fullname] from [users] where [userid] = ' + userid.toString())
+        const response = await CallRaw('select [userid], [fullname] from [users] where [userid] = ' + userid.toString())
         // console.log(response)
         if (response.result && response.result.length) {
           this.store.user = {name: response.result[0].fullname.trim(), role: 'kódoló', belepokod: response.result[0].userid + 50000}

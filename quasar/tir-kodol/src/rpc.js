@@ -1,16 +1,19 @@
 import mqtt from 'mqtt'
 
 const cid = Math.random().toString(36).replace('0.', '')
-const requestBase = 'mssql/request/' + cid + '/'
-const responseBase = 'mssql/response/' + cid + '/'
+const mssqlRequestBase = 'mssql/request/' + cid + '/'
+const mssqlResponseBase = 'mssql/response/' + cid + '/'
+const damakodolRequestBase = 'tir/dama/kodol/request/' + cid + '/'
+const damakodolResponseBase = 'tir/dama/kodol/response/' + cid + '/'
 
 let resolver = {}
 
 const client = mqtt.connect('wss://mqtts.szefo.local:8880', {username: 'admin', password: 'Szefo1953'})
-client.subscribe(responseBase + '#')
+client.subscribe(mssqlResponseBase + '#')
+client.subscribe(damakodolResponseBase + '#')
 
 client.on('message', function (topic, message) {
-  const id = topic.replace(responseBase, '')
+  const id = topic.split('/').slice(-1)[0]
   if (resolver[id]) {
     const result = JSON.parse(message.toString())
     resolver[id].resolve(result)
@@ -18,7 +21,7 @@ client.on('message', function (topic, message) {
   }
 })
 
-function callMethod (method, params) {
+function CallMethod (method, params, requestBase) {
   return new Promise((resolve, reject) => {
     const id = Math.random().toString(36).replace('0.', '')
     let request = {
@@ -32,13 +35,25 @@ function callMethod (method, params) {
   })
 }
 
-function callRaw (query) {
+function CallRaw (query) {
   const params = {
     database: 'SzefoModulKeszlet',
     query: query
   }
-  return callMethod('raw', params)
+  return CallMethod('raw', params, mssqlRequestBase)
 }
 
-export default callMethod
-export { callRaw }
+function CallView (view, filter) {
+  const params = {
+    view: view,
+    filter: filter
+  }
+  return CallMethod('view', params, mssqlRequestBase)
+}
+
+function CallKodol (params) {
+  return CallMethod('kodol', params, damakodolRequestBase)
+}
+
+export default CallMethod
+export { CallRaw, CallView, CallKodol }

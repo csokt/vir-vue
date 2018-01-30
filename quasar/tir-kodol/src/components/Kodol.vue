@@ -59,9 +59,9 @@
           <q-item>
             <q-item-main>
               <q-btn @click="$router.go(-1)" push color="secondary">Vissza</q-btn>
-              <q-btn v-if="store.kodol.dolgozo" @click="ujDolgozo" push color="secondary">Új dolgozó</q-btn>
-              <q-btn v-if="store.kodol.munkalap" @click="ujMunkalap" push color="secondary">Új munkalap</q-btn>
-              <q-btn v-if="store.kodol.munkalap && store.kodol.muveletkod && store.kodol.mennyiseg" @click="pubKodolas" push color="secondary">Adatok mentése</q-btn>
+              <q-btn v-if="store.menthet && store.kodol.dolgozo" @click="ujDolgozo" push color="secondary">Új dolgozó</q-btn>
+              <q-btn v-if="store.menthet && store.kodol.munkalap" @click="ujMunkalap" push color="secondary">Új munkalap</q-btn>
+              <q-btn v-if="store.menthet && store.kodol.munkalap && store.kodol.muveletkod && store.kodol.mennyiseg" @click="pubKodolas" push color="secondary">Adatok mentése</q-btn>
             </q-item-main>
           </q-item>
 
@@ -97,6 +97,7 @@
 
 <script>
 import Store from '../store'
+import { CallRaw, CallKodol } from '../rpc'
 import { QrcodeReader } from 'vue-qrcode-reader'
 import {
   QField,
@@ -127,25 +128,11 @@ export default {
   data () {
     return {
       store: Store,
-      request: {
-        jsonrpc: '2.0',
-        method: 'raw',
-        params: {
-          database: 'SzefoModulKeszlet',
-          query: null
-        },
-        id: null
-      },
       message: ''
     }
   },
-  computed: {
-    routeId () {
-      return Math.random().toString(16).substr(2)
-    }
-  },
   methods: {
-    gotDolgozoQR (value) {
+    async gotDolgozoQR (value) {
       console.log(value)
       const qr = parseInt(value)
       if (!qr) {
@@ -159,8 +146,13 @@ export default {
       else {
         this.store.kodol.dolgozokod = value
         const dolgozokod = qr - 20000
-        this.request.params.query = "select [dolgozokod], [dolgozonev] from [dolgtr] where [aktiv] = 'A' and [dolgozokod] = " + dolgozokod.toString()
-        this.$mqtt.publish(this.store.requestBase + 'dolgozo', JSON.stringify(this.request))
+        const response = await CallRaw("select [dolgozokod], [dolgozonev] from [dolgtr] where [aktiv] = 'A' and [dolgozokod] = " + dolgozokod.toString())
+        if (response.result && response.result.length) {
+          this.store.kodol.dolgozo = response.result[0].dolgozonev.trim()
+        }
+        else {
+          this.message = 'Érvénytelen dolgozó kód!'
+        }
       }
     },
 
@@ -169,16 +161,21 @@ export default {
       this.store.kodol.munkalap = value
     },
 
-    pubKodolas () {
+    async pubKodolas () {
       let doc = Object.assign({}, this.store.kodol)
       doc.funkcio = 99994
       doc.createdAt = new Date()
-      doc.id = Math.random().toString(16).substr(2)
-      doc.eredmeny = 'OK'
       this.store.kodolasok.unshift(doc)
-      console.log(this.store.kodolasok)
-      // const msg = JSON.stringify(doc)
-      // client.publish(TopicBase+'request', msg)
+      this.store.menthet = false
+      const response = await CallKodol(doc)
+      console.log(response)
+      if (response.result) {
+        this.store.kodolasok[0].eredmeny = response.result.message
+      }
+      else {
+        this.store.kodolasok[0].eredmeny = 'Hiba!'
+      }
+      this.store.menthet = true
       this.store.kodol.muveletkod = null
       this.store.kodol.mennyiseg = null
     },
@@ -196,23 +193,6 @@ export default {
       this.store.kodol.muveletkod = null
       this.store.kodol.mennyiseg = null
     }
-  },
-  mqtt: {
-    'mssql/response/tir/kodol/+/dolgozo' (message, topic) {
-      const response = JSON.parse(message.toString())
-      if (response.id === this.routeId) {
-        console.log(response)
-        if (response.result && response.result.length) {
-          this.store.kodol.dolgozo = response.result[0].dolgozonev.trim()
-        }
-        else {
-          this.message = 'Érvénytelen dolgozó kód!'
-        }
-      }
-    }
-  },
-  mounted () {
-    this.request.id = this.routeId
   }
 }
 </script>

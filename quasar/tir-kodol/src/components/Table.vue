@@ -20,6 +20,7 @@
 
 <script>
 import Config from '../config'
+import { CallView } from '../rpc'
 
 export default {
   name: 'table',
@@ -39,32 +40,16 @@ export default {
     }
   },
   methods: {
-    requestData () {
-      const request = {
-        jsonrpc: '2.0',
-        method: 'view',
-        params: {
-          view: this.view,
-          filter: {}
-        },
-        id: this.cid
-      }
-      this.$mqtt.publish('mssql/request/' + this.cid + '/tir/tv', JSON.stringify(request))
+    async requestData () {
+      const response = await CallView(this.view, {})
+      this.result = response.result || {}
     },
+
     clearData () {
       this.result = {}
     }
   },
-  mqtt: {
-    'mssql/response/+/tir/tv' (message, topic) {
-      const response = JSON.parse(message.toString())
-      if (response.id === this.cid) {
-        this.result = response.result || {}
-      }
-    }
-  },
   mounted () {
-    this.$mqtt.subscribe('mssql/response/' + this.cid + '/tir/tv')
     if (this.view.refresh) {
       this.myInterval = setInterval(() => {
         this.requestData()
@@ -73,7 +58,6 @@ export default {
     this.requestData()
   },
   beforeDestroy () {
-    this.$mqtt.unsubscribe('mssql/response/' + this.cid + '/tir/tv')
     if (this.myInterval) {
       clearInterval(this.myInterval)
     }
