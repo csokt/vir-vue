@@ -11,6 +11,7 @@
       <div v-else>
         <q-btn @click="scanUser=true; store.userError=''" push color="secondary">Jelentkezzen be kódkártyájával!</q-btn>
         <div> {{ store.userError }} </div>
+        <q-input v-if="scanUser && !store.user" type="number" v-model="qrcode" @keyup.enter="gotUserQR(qrcode)"></q-input>
         <QrcodeReader v-if="scanUser" @decode="gotUserQR"> </QrcodeReader>
       </div>
 
@@ -18,7 +19,7 @@
         <q-item>
           <h5>Táblázatok </h5>
         </q-item>
-        <q-item v-for="view in config.views" :key="view.id" :to="'/table/'+view.id">
+        <q-item v-for="view in userviews" :key="view.id" :to="'/table/'+view.id">
           {{view.label}}
         </q-item>
       </q-list>
@@ -30,10 +31,11 @@
 
 import Config from '../config'
 import Store from '../store'
-import { CallRaw } from '../rpc'
+import { RpcRaw } from '../rpc'
 import { QrcodeReader } from 'vue-qrcode-reader'
 
 import {
+  QInput,
   QBtn,
   QList,
   QItem
@@ -43,6 +45,7 @@ export default {
   name: 'home',
   components: {
     QrcodeReader,
+    QInput,
     QBtn,
     QList,
     QItem
@@ -52,7 +55,18 @@ export default {
       config: Config,
       store: Store,
       scanUser: false,
+      qrcode: null,
       messageUser: ''
+    }
+  },
+  computed: {
+    userviews: function () {
+      if (this.store.user) {
+        return this.config.views.filter(view => view.roles.includes(this.store.user.role))
+      }
+      else {
+        return []
+      }
     }
   },
   methods: {
@@ -67,7 +81,7 @@ export default {
       }
       else if (qr < 50000) {
         const dolgozokod = qr - 20000
-        const response = await CallRaw("select [dolgozokod], [dolgozonev] from [dolgtr] where [aktiv] = 'A' and [dolgozokod] = " + dolgozokod.toString())
+        const response = await RpcRaw("select [dolgozokod], [dolgozonev] from [dolgtr] where [aktiv] = 'A' and [dolgozokod] = " + dolgozokod.toString())
         // console.log(response)
         if (response.result && response.result.length) {
           this.store.user = {name: response.result[0].dolgozonev.trim(), role: 'varró', belepokod: response.result[0].dolgozokod + 20000}
@@ -94,7 +108,7 @@ export default {
       }
       else {
         const userid = qr - 50000
-        const response = await CallRaw('select [userid], [fullname] from [users] where [userid] = ' + userid.toString())
+        const response = await RpcRaw('select [userid], [fullname] from [users] where [userid] = ' + userid.toString())
         // console.log(response)
         if (response.result && response.result.length) {
           this.store.user = {name: response.result[0].fullname.trim(), role: 'kódoló', belepokod: response.result[0].userid + 50000}

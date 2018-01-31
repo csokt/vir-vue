@@ -21,7 +21,7 @@ client.on('message', function (topic, message) {
   }
 })
 
-function CallMethod (method, params, requestBase) {
+function rpcPublish (method, params, requestBase) {
   return new Promise((resolve, reject) => {
     const id = Math.random().toString(36).replace('0.', '')
     let request = {
@@ -35,25 +35,24 @@ function CallMethod (method, params, requestBase) {
   })
 }
 
-function CallRaw (query) {
+function RpcRaw (query) {
   const params = {
     database: 'SzefoModulKeszlet',
     query: query
   }
-  return CallMethod('raw', params, mssqlRequestBase)
+  return rpcPublish('raw', params, mssqlRequestBase)
 }
 
-function CallView (view, filter) {
+function RpcView (view, filter) {
   const params = {
     view: view,
     filter: filter
   }
-  return CallMethod('view', params, mssqlRequestBase)
+  return rpcPublish('view', params, mssqlRequestBase)
 }
 
-function CallKodol (params) {
-  return CallMethod('kodol', params, damakodolRequestBase)
+function RpcKodol (params) {
+  return rpcPublish('kodol', params, damakodolRequestBase)
 }
 
-export default CallMethod
-export { CallRaw, CallView, CallKodol }
+export { RpcRaw, RpcView, RpcKodol }

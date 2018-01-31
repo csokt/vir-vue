@@ -31,6 +31,7 @@
           <q-item>
             <q-field class="full-width" label="Dolgozó" labelWidth=3>
               <strong> {{store.kodol.dolgozo}} </strong>
+              <q-input v-if="!store.kodol.dolgozo" type="number" v-model="qrcode" @keyup.enter="gotDolgozoQR(qrcode)"></q-input>
               <QrcodeReader v-if="!store.kodol.dolgozo" @decode="gotDolgozoQR"> </QrcodeReader>
             </q-field>
           </q-item>
@@ -97,7 +98,7 @@
 
 <script>
 import Store from '../store'
-import { CallRaw, CallKodol } from '../rpc'
+import { RpcRaw, RpcKodol } from '../rpc'
 import { QrcodeReader } from 'vue-qrcode-reader'
 import {
   QField,
@@ -128,12 +129,12 @@ export default {
   data () {
     return {
       store: Store,
+      qrcode: null,
       message: ''
     }
   },
   methods: {
     async gotDolgozoQR (value) {
-      console.log(value)
       const qr = parseInt(value)
       if (!qr) {
         this.message = 'Csak számot lehet megadni!'
@@ -146,7 +147,7 @@ export default {
       else {
         this.store.kodol.dolgozokod = value
         const dolgozokod = qr - 20000
-        const response = await CallRaw("select [dolgozokod], [dolgozonev] from [dolgtr] where [aktiv] = 'A' and [dolgozokod] = " + dolgozokod.toString())
+        const response = await RpcRaw("select [dolgozokod], [dolgozonev] from [dolgtr] where [aktiv] = 'A' and [dolgozokod] = " + dolgozokod.toString())
         if (response.result && response.result.length) {
           this.store.kodol.dolgozo = response.result[0].dolgozonev.trim()
         }
@@ -167,7 +168,7 @@ export default {
       doc.createdAt = new Date()
       this.store.kodolasok.unshift(doc)
       this.store.menthet = false
-      const response = await CallKodol(doc)
+      const response = await RpcKodol(doc)
       console.log(response)
       if (response.result) {
         this.store.kodolasok[0].eredmeny = response.result.message

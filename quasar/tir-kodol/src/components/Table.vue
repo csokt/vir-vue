@@ -1,5 +1,9 @@
 <template>
   <div>
+    <div class="panel-body">
+      <vue-form-generator :schema="schema()" :model="model()" :options="formOptions"></vue-form-generator>
+    </div>
+
     <table class="q-table cell-separator table-striped">
       <thead>
         <tr>
@@ -19,8 +23,13 @@
 </template>
 
 <script>
+import Vue from 'vue'
+import VueFormGenerator from 'vue-form-generator/dist/vfg-core.js'
+Vue.use(VueFormGenerator)
+// import "vue-form-generator/dist/vfg-core.css"
 import Config from '../config'
-import { CallView } from '../rpc'
+import Store from '../store'
+import { RpcView } from '../rpc'
 
 export default {
   name: 'table',
@@ -28,20 +37,31 @@ export default {
   },
   data () {
     return {
-      result: {}
+      result: {},
+      store: Store,
+      formOptions: {
+        validateAfterLoad: true,
+        validateAfterChanged: true
+      }
     }
   },
   computed: {
-    cid () {
-      return Math.random().toString(16).substr(2)
-    },
     view () {
       return Config.views.find(o => o.id === this.$route.params.id)
     }
   },
   methods: {
+    model () {
+      console.log(this.view)
+      return this.store.model
+    },
+
+    schema () {
+      return this.store.schema
+    },
+
     async requestData () {
-      const response = await CallView(this.view, {})
+      const response = await RpcView(this.view, {})
       this.result = response.result || {}
     },
 
