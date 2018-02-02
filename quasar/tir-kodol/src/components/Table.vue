@@ -1,7 +1,16 @@
 <template>
   <div>
-    <div class="panel-body">
+    <div>
+      <span>Lekérdezés: {{view.label}}</span>
+      <span>Felhasználó: {{store.user.name}}</span>
+      <span>{{result.records && result.records.length}} tétel</span>
+      <q-btn @click="isFilter = !isFilter" push color="secondary">Szűrő</q-btn>
+      <q-btn @click="$router.go(-1)" push color="secondary">Vissza</q-btn>
+    </div>
+
+    <div v-if="isFilter" class="panel-body">
       <vue-form-generator :schema="schema()" :model="model()" :options="formOptions"></vue-form-generator>
+      <q-btn @click="requestData(); isFilter = false" push color="secondary">Ment</q-btn>
     </div>
 
     <table class="q-table cell-separator table-striped">
@@ -30,15 +39,20 @@ Vue.use(VueFormGenerator)
 import Config from '../config'
 import Store from '../store'
 import { RpcView } from '../rpc'
+import {
+  QBtn
+} from 'quasar'
 
 export default {
-  name: 'table',
+  name: 'tablazat',
   components: {
+    QBtn
   },
   data () {
     return {
       result: {},
       store: Store,
+      isFilter: false,
       formOptions: {
         validateAfterLoad: true,
         validateAfterChanged: true
@@ -52,22 +66,35 @@ export default {
   },
   methods: {
     model () {
-      console.log(this.view)
-      return this.store.model
+      return this.store.filter
     },
 
     schema () {
-      return this.store.schema
+      return this.view.schema
     },
 
     async requestData () {
-      const response = await RpcView(this.view, {})
+      const response = await RpcView(this.view, this.store.filter)
       this.result = response.result || {}
     },
 
     clearData () {
       this.result = {}
     }
+  },
+  beforeCreate () {
+    const view = Config.views.find(o => o.id === this.$route.params.id)
+    let model = {}
+    for (let field of view.fields) {
+      if (!field.filter) { continue }
+      if (field.default) {
+        model[field.name] = Store.user[field.default]
+      }
+      else {
+        model[field.name] = null
+      }
+    }
+    Store.filter = model
   },
   mounted () {
     if (this.view.refresh) {
@@ -86,6 +113,11 @@ export default {
 </script>
 
 <style scoped>
+.q-btn {
+  margin-top: 0em;
+  margin-left: 1em;
+}
+
 table {
   border-collapse: collapse;
   width: 100%;

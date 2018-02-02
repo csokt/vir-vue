@@ -59,10 +59,10 @@
 
           <q-item>
             <q-item-main>
-              <q-btn @click="$router.go(-1)" push color="secondary">Vissza</q-btn>
+              <q-btn v-if="store.menthet && store.kodol.munkalap && store.kodol.muveletkod && store.kodol.mennyiseg" @click="pubKodolas" push color="secondary">Adatok mentése</q-btn>
               <q-btn v-if="store.menthet && store.kodol.dolgozo" @click="ujDolgozo" push color="secondary">Új dolgozó</q-btn>
               <q-btn v-if="store.menthet && store.kodol.munkalap" @click="ujMunkalap" push color="secondary">Új munkalap</q-btn>
-              <q-btn v-if="store.menthet && store.kodol.munkalap && store.kodol.muveletkod && store.kodol.mennyiseg" @click="pubKodolas" push color="secondary">Adatok mentése</q-btn>
+              <q-btn @click="$router.go(-1)" push color="secondary">Vissza</q-btn>
             </q-item-main>
           </q-item>
 

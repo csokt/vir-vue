@@ -257,20 +257,20 @@ let Config = null
 try {
   Config = yaml.safeLoad(configYaml)
   for (let view of Config.views) {
-    //   let schema = {}
+    let schema = {fields: []}
     for (let field of view.fields) {
       if (!field.label) { field.label = field.name }
-      //     if (!field.filter) { continue }
-      //     schema[field.name] = {
-      //       type : field.type === 'number' ? Number : String,
-      //       label: (field.label || field.name) + ' ' + field.filter,
-      //       optional: true
-      //     }
-      //     if (field.readonly) {
-      //       schema[field.name].autoform = {readonly: true}
-      //     }
+      if (!field.filter) { continue }
+      let schemafield = {
+        type: 'input',
+        inputType: field.type === 'number' ? 'number' : 'text',
+        label: (field.label || field.name) + ' ' + field.filter,
+        model: field.name
+      }
+      if (field.readonly) { schemafield.readonly = true }
+      schema.fields.push(schemafield)
     }
-    //   view.schema = new SimpleSchema(schema)
+    view.schema = schema
   }
 }
 catch (err) {
