@@ -1,18 +1,17 @@
 <template>
   <div class="row justify-center">
     <div style="width: 500px; max-width: 95vw;">
-
       <div v-if="store.user">
         <h5> Üdvözlöm {{ store.user.name }} </h5>
-        <q-btn @click="store.user=null" push color="secondary">Kijelentkezés</q-btn>
+        <q-btn @click="$router.push('kodol')" push color="primary">Kódolás</q-btn>
+        <q-btn @click="store.user=null" push color="negative">Kijelentkezés</q-btn>
         <br>
-        <q-btn @click="$router.push('kodol')" push color="secondary">Kódolás</q-btn>
       </div>
       <div v-else>
-        <q-btn @click="scanUser=true; store.userError=''" push color="secondary">Jelentkezzen be kódkártyájával!</q-btn>
+        <q-btn @click="scanUser=true; store.userError=''" push color="primary">Jelentkezzen be kódkártyájával!</q-btn>
         <div> {{ store.userError }} </div>
         <q-input v-if="scanUser && !store.user" type="number" v-model="qrcode" @keyup.enter="gotUserQR(qrcode)"></q-input>
-        <QrcodeReader v-if="scanUser" @decode="gotUserQR"> </QrcodeReader>
+        <qrcode-reader v-show="scanUser" :video-constraints="store.video" @decode="gotUserQR"> </qrcode-reader>
       </div>
 
       <q-list  separator no-border>
@@ -32,7 +31,6 @@
 import Config from '../config'
 import Store from '../store'
 import { RpcRaw } from '../rpc'
-import { QrcodeReader } from 'vue-qrcode-reader'
 
 import {
   QInput,
@@ -44,7 +42,6 @@ import {
 export default {
   name: 'home',
   components: {
-    QrcodeReader,
     QInput,
     QBtn,
     QList,
@@ -126,6 +123,8 @@ export default {
             mennyiseg: null,
             role: this.store.user.role
           }
+          this.store.kodolasok = []
+          this.store.menthet = true
         }
         else {
           this.store.userError = 'Érvénytelen felhasználó kód!'
@@ -136,3 +135,10 @@ export default {
   }
 }
 </script>
+
+<style scoped lang="stylus">
+.q-btn
+  margin-top 1em
+  margin-left: 1em;
+  margin-right 2em
+</style>

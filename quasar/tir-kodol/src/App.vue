@@ -6,13 +6,14 @@
 </template>
 
 <script>
+import Vue from 'vue'
+import VueQrcodeReader from 'vue-qrcode-reader'
+Vue.use(VueQrcodeReader)
+
 export default {}
 </script>
 
 <style lang="stylus">
-.q-btn
-  margin-top 2em
-  margin-right 1em
 .q-if
   font-size 1.2rem
 .q-item

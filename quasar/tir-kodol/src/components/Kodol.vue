@@ -14,44 +14,29 @@
 
         <template v-if="store.user">
           <q-item>
-            <q-field class="full-width" label="Felhasználó" labelWidth=3>
-              <strong> {{store.user.name}} </strong>
-            </q-field>
-          </q-item>
-          <q-item>
-            <q-field class="full-width" label="Telephely" labelWidth=3>
-              <strong> {{store.kodol.telephely}} </strong>
-            </q-field>
-          </q-item>
-          <q-item>
-            <q-field class="full-width" label="Kódoló" labelWidth=3>
-              <strong> {{store.kodol.kodolo}} </strong>
-            </q-field>
-          </q-item>
-          <q-item>
             <q-field class="full-width" label="Dolgozó" labelWidth=3>
               <strong> {{store.kodol.dolgozo}} </strong>
               <q-input v-if="!store.kodol.dolgozo" type="number" v-model="qrcode" @keyup.enter="gotDolgozoQR(qrcode)"></q-input>
-              <QrcodeReader v-if="!store.kodol.dolgozo" @decode="gotDolgozoQR"> </QrcodeReader>
+              <qrcode-reader v-if="!store.kodol.dolgozo" :video-constraints="store.video" @decode="gotDolgozoQR"> </qrcode-reader>
             </q-field>
           </q-item>
 
           <template v-if="store.kodol.dolgozo">
             <q-item>
               <q-field class="full-width" label="Munkalap" labelWidth=3 >
-                <q-input type="number" v-model="store.kodol.munkalap" clearable=true > </q-input>
-                <QrcodeReader v-if="!store.kodol.munkalap" @decode="gotMunkalapQR"> </QrcodeReader>
+                <q-input ref="munkalap" type="number" v-model="store.kodol.munkalap" clearable=true @keyup.enter="$refs.muveletkod.focus()"></q-input>
+                <qrcode-reader v-if="!store.kodol.munkalap" :video-constraints="store.video" @decode="gotMunkalapQR"> </qrcode-reader>
               </q-field>
             </q-item>
             <q-item>
               <q-field class="full-width" label="Műveletkód" labelWidth=3 >
-                <q-input type="number" v-model="store.kodol.muveletkod" clearable=true />
+                <q-input ref="muveletkod" type="number" v-model="store.kodol.muveletkod" clearable=true @keyup.enter="$refs.mennyiseg.focus()"/>
                 <br>
               </q-field>
             </q-item>
             <q-item>
               <q-field class="full-width" label="Mennyiség" labelWidth=3 >
-                <q-input type="number" v-model="store.kodol.mennyiseg" clearable=true />
+                <q-input ref="mennyiseg" type="number" v-model="store.kodol.mennyiseg" clearable=true />
                 <br>
               </q-field>
             </q-item>
@@ -59,10 +44,10 @@
 
           <q-item>
             <q-item-main>
-              <q-btn v-if="store.menthet && store.kodol.munkalap && store.kodol.muveletkod && store.kodol.mennyiseg" @click="pubKodolas" push color="secondary">Adatok mentése</q-btn>
-              <q-btn v-if="store.menthet && store.kodol.dolgozo" @click="ujDolgozo" push color="secondary">Új dolgozó</q-btn>
-              <q-btn v-if="store.menthet && store.kodol.munkalap" @click="ujMunkalap" push color="secondary">Új munkalap</q-btn>
-              <q-btn @click="$router.go(-1)" push color="secondary">Vissza</q-btn>
+              <q-btn v-if="store.menthet && store.kodol.munkalap && store.kodol.muveletkod && store.kodol.mennyiseg" @click="pubKodolas" push color="positive">Adatok mentése</q-btn>
+              <q-btn @click="$router.go(-1)" push color="warning">Vissza</q-btn>
+              <q-btn v-if="store.menthet && store.kodol.munkalap" @click="ujMunkalap" push color="tertiary">Új munkalap</q-btn>
+              <q-btn v-if="store.menthet && store.kodol.dolgozo && store.user.role==='kódoló'" @click="ujDolgozo" push color="tertiary">Új dolgozó</q-btn>
             </q-item-main>
           </q-item>
 
@@ -93,13 +78,27 @@
     </div>
   </div>
 <!--
+          <q-item>
+            <q-field class="full-width" label="Felhasználó" labelWidth=3>
+              <strong> {{store.user.name}} </strong>
+            </q-field>
+          </q-item>
+          <q-item>
+            <q-field class="full-width" label="Telephely" labelWidth=3>
+              <strong> {{store.kodol.telephely}} </strong>
+            </q-field>
+          </q-item>
+          <q-item>
+            <q-field class="full-width" label="Kódoló" labelWidth=3>
+              <strong> {{store.kodol.kodolo}} </strong>
+            </q-field>
+          </q-item>
 -->
 </template>
 
 <script>
 import Store from '../store'
 import { RpcRaw, RpcKodol } from '../rpc'
-import { QrcodeReader } from 'vue-qrcode-reader'
 import {
   QField,
   QInput,
@@ -115,7 +114,6 @@ import {
 export default {
   name: 'kodol',
   components: {
-    QrcodeReader,
     QField,
     QInput,
     QBtn,
@@ -150,6 +148,7 @@ export default {
         const response = await RpcRaw("select [dolgozokod], [dolgozonev] from [dolgtr] where [aktiv] = 'A' and [dolgozokod] = " + dolgozokod.toString())
         if (response.result && response.result.length) {
           this.store.kodol.dolgozo = response.result[0].dolgozonev.trim()
+          this.$refs.munkalap.focus()
         }
         else {
           this.message = 'Érvénytelen dolgozó kód!'
@@ -160,6 +159,7 @@ export default {
     gotMunkalapQR (value) {
       console.log(value)
       this.store.kodol.munkalap = value
+      this.$refs.muveletkod.focus()
     },
 
     async pubKodolas () {
@@ -197,3 +197,9 @@ export default {
   }
 }
 </script>
+
+<style scoped lang="stylus">
+.q-btn
+  margin-top 2em
+  margin-right 2em
+</style>

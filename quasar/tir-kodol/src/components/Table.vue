@@ -1,16 +1,15 @@
 <template>
   <div>
     <div>
-      <span>Lekérdezés: {{view.label}}</span>
-      <span>Felhasználó: {{store.user.name}}</span>
-      <span>{{result.records && result.records.length}} tétel</span>
-      <q-btn @click="isFilter = !isFilter" push color="secondary">Szűrő</q-btn>
-      <q-btn @click="$router.go(-1)" push color="secondary">Vissza</q-btn>
+      <span>{{store.user.name}}:</span>
+      <span>{{view.label}}</span>
+      <q-btn @click="isFilter = !isFilter" push color="primary">Szűrő</q-btn>
+      <q-btn @click="$router.go(-1)" push color="warning">Vissza</q-btn>
     </div>
 
     <div v-if="isFilter" class="panel-body">
       <vue-form-generator :schema="schema()" :model="model()" :options="formOptions"></vue-form-generator>
-      <q-btn @click="requestData(); isFilter = false" push color="secondary">Ment</q-btn>
+      <q-btn @click="requestData(); isFilter = false" push color="positive">Ment</q-btn>
     </div>
 
     <table class="q-table cell-separator table-striped">
@@ -28,6 +27,7 @@
         </tr>
       </tbody>
     </table>
+      <span>{{result.records && result.records.length}} tétel</span>
   </div>
 </template>
 
@@ -114,8 +114,8 @@ export default {
 
 <style scoped>
 .q-btn {
-  margin-top: 0em;
-  margin-left: 1em;
+  margin-left: 0.3em;
+  margin-right: 0.7em;
 }
 
 table {
