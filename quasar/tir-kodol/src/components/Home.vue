@@ -1,27 +1,27 @@
 <template>
   <div class="row justify-center">
-    <div style="width: 500px; max-width: 95vw;">
+    <div style="width: 350px; max-width: 95vw;">
       <div v-if="store.user">
-        <h5> Üdvözlöm {{ store.user.name }} </h5>
-        <q-btn @click="$router.push('kodol')" push color="primary">Kódolás</q-btn>
-        <q-btn @click="store.user=null" push color="negative">Kijelentkezés</q-btn>
-        <br>
-      </div>
-      <div v-else>
-        <q-btn @click="scanUser=true; store.userError=''" push color="primary">Jelentkezzen be kódkártyájával!</q-btn>
-        <div> {{ store.userError }} </div>
-        <q-input v-if="scanUser && !store.user" type="number" v-model="qrcode" @keyup.enter="gotUserQR(qrcode)"></q-input>
-        <qrcode-reader v-show="scanUser" :video-constraints="store.video" @decode="gotUserQR"> </qrcode-reader>
-      </div>
-
-      <q-list  separator no-border>
+        <q-item dense>
+          <h5> {{ store.user.name }} </h5>
+        </q-item>
+        <q-item dense>
+          <q-btn @click="$router.push('kodol')" push color="primary">Kódolás</q-btn>
+          <q-btn @click="store.user=null;scanUser=true; store.userError=''" push color="negative">Kijelentkezés</q-btn>
+        </q-item>
         <q-item>
           <h5>Táblázatok </h5>
         </q-item>
-        <q-item v-for="view in userviews" :key="view.id" :to="'/table/'+view.id">
+        <q-item separator v-for="view in userviews" :key="view.id" :to="'/table/'+view.id">
           {{view.label}}
         </q-item>
-      </q-list>
+      </div>
+      <div v-else>
+        <h5> Jelentkezzen be kártyájával! </h5>
+        <q-input v-if="scanUser && !store.user" type="number" v-model="qrcode" @keyup.enter="gotUserQR(qrcode)"></q-input>
+        <qrcode-reader v-show="scanUser" :video-constraints="store.video" @decode="gotUserQR"> </qrcode-reader>
+        <h5 class="text-negative"> {{ store.userError }} </h5>
+      </div>
     </div>
   </div>
 </template>
@@ -35,7 +35,6 @@ import { RpcRaw } from '../rpc'
 import {
   QInput,
   QBtn,
-  QList,
   QItem
 } from 'quasar'
 
@@ -44,16 +43,14 @@ export default {
   components: {
     QInput,
     QBtn,
-    QList,
     QItem
   },
   data () {
     return {
       config: Config,
       store: Store,
-      scanUser: false,
-      qrcode: null,
-      messageUser: ''
+      scanUser: true,
+      qrcode: null
     }
   },
   computed: {
@@ -98,6 +95,7 @@ export default {
           }
           this.store.kodolasok = []
           this.store.menthet = true
+          this.scanUser = false
         }
         else {
           this.store.userError = 'Érvénytelen felhasználó kód!'
@@ -125,12 +123,12 @@ export default {
           }
           this.store.kodolasok = []
           this.store.menthet = true
+          this.scanUser = false
         }
         else {
           this.store.userError = 'Érvénytelen felhasználó kód!'
         }
       }
-      this.scanUser = false
     }
   }
 }
@@ -138,7 +136,9 @@ export default {
 
 <style scoped lang="stylus">
 .q-btn
-  margin-top 1em
-  margin-left: 1em;
-  margin-right 2em
+  margin-right 1em
+.row
+  font-size 1.2rem
+.q-item
+  font-size 1.2rem
 </style>

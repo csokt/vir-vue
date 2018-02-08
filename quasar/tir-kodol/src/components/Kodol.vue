@@ -1,60 +1,36 @@
 <template>
   <div class="row justify-center">
-    <div style="width: 750px; max-width: 95vw;">
-      <q-list dense separator no-border>
-        <q-item>
-          <h5>Teljesítmény kódolás</h5>
-        </q-item>
-        <q-item v-if="message">
-          <h5> {{message}} </h5>
-        </q-item>
-        <q-item v-if="!store.user">
-          <h5> Jelentkezzen be! </h5>
-        </q-item>
+    <div style="width: 550px; max-width: 95vw;">
+      <h5>Teljesítmény kódolás</h5>
+      <h5 class="text-negative"> {{message}} </h5>
 
-        <template v-if="store.user">
-          <q-item>
-            <q-field class="full-width" label="Dolgozó" labelWidth=3>
-              <strong> {{store.kodol.dolgozo}} </strong>
-              <q-input v-if="!store.kodol.dolgozo" type="number" v-model="qrcode" @keyup.enter="gotDolgozoQR(qrcode)"></q-input>
-              <qrcode-reader v-if="!store.kodol.dolgozo" :video-constraints="store.video" @decode="gotDolgozoQR"> </qrcode-reader>
+      <template v-if="store.user">
+          <q-field class="full-width" label="Dolgozó" labelWidth=3>
+            <q-input v-if="store.kodol.dolgozo" v-model="store.kodol.dolgozo" readonly></q-input>
+            <q-input v-if="!store.kodol.dolgozo" type="number" v-model="qrcode" @keyup.enter="gotDolgozoQR(qrcode)"></q-input>
+            <qrcode-reader v-if="!store.kodol.dolgozo" :video-constraints="store.video" @decode="gotDolgozoQR"> </qrcode-reader>
+          </q-field>
+
+        <template v-if="store.kodol.dolgozo">
+            <q-field class="full-width" label="Munkalap" labelWidth=3 >
+              <q-input ref="munkalap" type="number" v-model="store.kodol.munkalap" clearable=true @keyup.enter="$refs.muveletkod.focus()"></q-input>
+              <qrcode-reader v-if="!store.kodol.munkalap" :video-constraints="store.video" @decode="gotMunkalapQR"> </qrcode-reader>
             </q-field>
-          </q-item>
-
-          <template v-if="store.kodol.dolgozo">
-            <q-item>
-              <q-field class="full-width" label="Munkalap" labelWidth=3 >
-                <q-input ref="munkalap" type="number" v-model="store.kodol.munkalap" clearable=true @keyup.enter="$refs.muveletkod.focus()"></q-input>
-                <qrcode-reader v-if="!store.kodol.munkalap" :video-constraints="store.video" @decode="gotMunkalapQR"> </qrcode-reader>
-              </q-field>
-            </q-item>
-            <q-item>
-              <q-field class="full-width" label="Műveletkód" labelWidth=3 >
-                <q-input ref="muveletkod" type="number" v-model="store.kodol.muveletkod" clearable=true @keyup.enter="$refs.mennyiseg.focus()"/>
-                <br>
-              </q-field>
-            </q-item>
-            <q-item>
-              <q-field class="full-width" label="Mennyiség" labelWidth=3 >
-                <q-input ref="mennyiseg" type="number" v-model="store.kodol.mennyiseg" clearable=true />
-                <br>
-              </q-field>
-            </q-item>
-          </template>
-
-          <q-item>
-            <q-item-main>
-              <q-btn v-if="store.menthet && store.kodol.munkalap && store.kodol.muveletkod && store.kodol.mennyiseg" @click="pubKodolas" push color="positive">Adatok mentése</q-btn>
-              <q-btn @click="$router.go(-1)" push color="warning">Vissza</q-btn>
-              <q-btn v-if="store.menthet && store.kodol.munkalap" @click="ujMunkalap" push color="tertiary">Új munkalap</q-btn>
-              <q-btn v-if="store.menthet && store.kodol.dolgozo && store.user.role==='kódoló'" @click="ujDolgozo" push color="tertiary">Új dolgozó</q-btn>
-            </q-item-main>
-          </q-item>
-
+            <q-field class="full-width" label="Műveletkód" labelWidth=3 >
+              <q-input ref="muveletkod" type="number" v-model="store.kodol.muveletkod" clearable=true @keyup.enter="$refs.mennyiseg.focus()"/>
+            </q-field>
+            <q-field class="full-width" label="Mennyiség" labelWidth=3 >
+              <q-input ref="mennyiseg" type="number" v-model="store.kodol.mennyiseg" clearable=true />
+            </q-field>
         </template>
-      </q-list>
-      <br>
-      <table class="q-table striped cell-separator">
+
+            <q-btn v-if="store.menthet && store.kodol.munkalap && store.kodol.muveletkod && store.kodol.mennyiseg" @click="pubKodolas" push color="positive">Adatok mentése</q-btn>
+            <q-btn @click="$router.go(-1)" push color="warning">Vissza</q-btn>
+            <q-btn v-if="store.menthet && store.kodol.munkalap" @click="ujMunkalap" push color="tertiary">Új munkalap</q-btn>
+            <q-btn v-if="store.menthet && store.kodol.dolgozo && store.user.role==='kódoló'" @click="ujDolgozo" push color="tertiary">Új dolgozó</q-btn>
+
+      </template>
+      <table class="q-table striped cell-separator bordered compact">
         <thead>
           <tr>
             <th>Eredmény</th>
@@ -78,21 +54,6 @@
     </div>
   </div>
 <!--
-          <q-item>
-            <q-field class="full-width" label="Felhasználó" labelWidth=3>
-              <strong> {{store.user.name}} </strong>
-            </q-field>
-          </q-item>
-          <q-item>
-            <q-field class="full-width" label="Telephely" labelWidth=3>
-              <strong> {{store.kodol.telephely}} </strong>
-            </q-field>
-          </q-item>
-          <q-item>
-            <q-field class="full-width" label="Kódoló" labelWidth=3>
-              <strong> {{store.kodol.kodolo}} </strong>
-            </q-field>
-          </q-item>
 -->
 </template>
 
@@ -102,13 +63,7 @@ import { RpcRaw, RpcKodol } from '../rpc'
 import {
   QField,
   QInput,
-  QBtn,
-  QList,
-  QListHeader,
-  QItem,
-  QItemSeparator,
-  QItemSide,
-  QItemMain
+  QBtn
 } from 'quasar'
 
 export default {
@@ -116,13 +71,7 @@ export default {
   components: {
     QField,
     QInput,
-    QBtn,
-    QList,
-    QListHeader,
-    QItem,
-    QItemSeparator,
-    QItemSide,
-    QItemMain
+    QBtn
   },
   data () {
     return {
@@ -194,12 +143,24 @@ export default {
       this.store.kodol.muveletkod = null
       this.store.kodol.mennyiseg = null
     }
+  },
+  created () {
+    if (!this.store.user) {
+      this.$router.replace('/')
+    }
   }
 }
 </script>
 
 <style scoped lang="stylus">
 .q-btn
-  margin-top 2em
-  margin-right 2em
+  margin-top 0.5em
+  margin-bottom 0.5em
+  margin-right 0.7em
+.row
+  font-size 1.2rem
+.q-field
+  margin-top 8px
+.q-table
+  margin-top 0.5em
 </style>

@@ -1,15 +1,14 @@
 <template>
   <div>
     <div>
-      <span>{{store.user.name}}:</span>
-      <span>{{view.label}}</span>
+      <span><strong>{{store.user && store.user.name}}: {{view.label}}</strong></span>
       <q-btn @click="isFilter = !isFilter" push color="primary">Szűrő</q-btn>
       <q-btn @click="$router.go(-1)" push color="warning">Vissza</q-btn>
     </div>
 
     <div v-if="isFilter" class="panel-body">
-      <vue-form-generator :schema="schema()" :model="model()" :options="formOptions"></vue-form-generator>
-      <q-btn @click="requestData(); isFilter = false" push color="positive">Ment</q-btn>
+      <vue-form-generator :schema="view.schema" :model="store.filter" :options="formOptions"></vue-form-generator>
+      <q-btn @click="result = {}; spinner = true; isFilter = false; requestData()" push color="positive">Ment</q-btn>
     </div>
 
     <table class="q-table cell-separator table-striped">
@@ -22,12 +21,20 @@
         <tr v-for="row in result.stat" class="stat">
           <td v-for="field in view.fields">{{row[field.name]}}</td>
         </tr>
-        <tr v-for="row in result.records">
-          <td v-for="field in view.fields">{{row[field.name]}}</td>
-        </tr>
+        <template v-for="(row, index) in result.records">
+          <tr>
+            <td v-for="field in view.fields">{{row[field.name]}}</td>
+          </tr>
+          <tr v-if="(index + 1) % view.head_after === 0">
+            <th v-for="field in view.fields">{{field.label}}</th>
+          </tr>
+        </template>
       </tbody>
     </table>
-      <span>{{result.records && result.records.length}} tétel</span>
+      <h5>
+        <q-spinner v-if="spinner" :size="40"/>
+        <span>{{result.records && result.records.length}} tétel</span>
+      </h5>
   </div>
 </template>
 
@@ -40,19 +47,22 @@ import Config from '../config'
 import Store from '../store'
 import { RpcView } from '../rpc'
 import {
-  QBtn
+  QBtn,
+  QSpinner
 } from 'quasar'
 
 export default {
   name: 'tablazat',
   components: {
-    QBtn
+    QBtn,
+    QSpinner
   },
   data () {
     return {
       result: {},
       store: Store,
       isFilter: false,
+      spinner: true,
       formOptions: {
         validateAfterLoad: true,
         validateAfterChanged: true
@@ -65,24 +75,14 @@ export default {
     }
   },
   methods: {
-    model () {
-      return this.store.filter
-    },
-
-    schema () {
-      return this.view.schema
-    },
-
     async requestData () {
       const response = await RpcView(this.view, this.store.filter)
       this.result = response.result || {}
-    },
-
-    clearData () {
-      this.result = {}
+      this.spinner = false
     }
   },
   beforeCreate () {
+    if (!Store.user) { this.$router.replace('/'); return }
     const view = Config.views.find(o => o.id === this.$route.params.id)
     let model = {}
     for (let field of view.fields) {
