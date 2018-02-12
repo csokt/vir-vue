@@ -13,12 +13,12 @@
 
         <q-collapsible group="szefo" image="/statics/dama.png" label="Dama">
           <q-item link @click="location.href = 'https://tir.szefo.local'">
-            <q-item-side avatar="/statics/quasar-logo.png" />
+            <q-item-side avatar="/statics/dama.png" />
             <q-item-main label="Termelés Információs Rendszer" />
           </q-item>
         </q-collapsible>
 
-        <q-collapsible group="szefo" image="/statics/quasar-logo.png" label="Tárgyi eszköz">
+        <q-collapsible group="szefo" image="/statics/eszkozinfo.png" label="Tárgyi eszköz">
           <q-item link @click="location.href = 'https://eszkozinfo.szefo.local'">
             <q-item-side avatar="/statics/eszkozinfo.png" />
             <q-item-main label="Tárgyi eszköz információk (QR)" />
