@@ -3,18 +3,18 @@
     <div style="width: 750px; max-width: 95vw;">
       <q-list dense separator no-border>
         <q-item>
-          <q-item-side avatar="statics/icons/eszkozinformacio-logo.png" />
+          <q-item-side image="statics/icons/eszkozinformacio-logo.png" />
           <h5 class="on-right">Tárgyi eszköz információk</h5>
         </q-item>
         <q-item v-if="message">
           <h6> {{message}} </h6>
         </q-item>
-        <q-item v-if="odooConnected">
+        <q-item v-show="odooConnected">
           <q-field class="full-width" label="Leltári szám" labelWidth=3 >
             <q-input type="text" v-model="leltariSzam" clearable=true />
             <strong> {{eszkoz && eszkoz.name}} </strong>
             <br>
-            <QrcodeReader v-if="!leltariSzam" @decode="gotQR"> </QrcodeReader>
+            <qrcode-reader v-if="!leltariSzam" @decode="gotQR" :video-constraints="{ width: 640, height: 480 }"> </qrcode-reader>
           </q-field>
         </q-item>
         <q-item v-if="eszkoz">
@@ -152,3 +152,21 @@ export default {
   }
 }
 </script>
+
+<style lang="stylus">
+.q-item-image
+  min-width unset
+  width 50px
+  height 50px
+
+.q-item-avatar
+  border-radius unset
+  width 40px
+  height 40px
+
+.q-list
+  padding unset
+
+.row
+  font-size 1.2rem
+</style>

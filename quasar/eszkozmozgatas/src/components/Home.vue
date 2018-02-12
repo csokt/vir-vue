@@ -3,7 +3,7 @@
     <div style="width: 750px; max-width: 95vw;">
       <q-list dense separator no-border>
         <q-item>
-          <q-item-side avatar="statics/icons/eszkozmozgatas-logo.png" />
+          <q-item-side image="statics/icons/eszkozmozgatas-logo.png" />
           <h5 class="on-right">Tárgyi eszköz mozgatás</h5>
         </q-item>
         <q-item v-if="message">
@@ -11,8 +11,8 @@
         </q-item>
         <q-item v-if="!odooConnected">
           <q-field class="full-width" label="Bejelentkezés" labelWidth=3 :error="!!odooMessage" :error-label=odooMessage>
-            <q-input v-model="username" float-label="Belépési név" />
-            <q-input v-model="password" type="password" float-label="Jelszó" />
+            <q-input ref="username" v-model="username" float-label="Belépési név" @keyup.enter="$refs.password.focus()"/>
+            <q-input ref="password" v-model="password" type="password" float-label="Jelszó" @keyup.enter="login"/>
             <q-btn @click="login" push color="primary">Bejelentkezés</q-btn>
           </q-field>
         </q-item>
@@ -23,7 +23,7 @@
         </q-item>
         <q-item v-if="odooConnected">
           <q-field class="full-width" label="Új leltárkörzet" labelWidth=3 >
-            <q-input v-model="leltarkorzetKod" clearable=true >
+            <q-input v-model="leltarkorzetKod" clearable=true @keyup.enter="$refs.leltariSzam.focus()">
               <q-autocomplete
                 @search="searchLeltarkorzet"
                 :debounce="500"
@@ -32,12 +32,12 @@
             <div> <strong> {{korzet && korzet.name}} </strong> </div>
           </q-field>
         </q-item>
-        <q-item v-if="odooConnected && korzet">
+        <q-item v-show="odooConnected && korzet">
           <q-field class="full-width" label="Leltári szám" labelWidth=3 >
-            <q-input type="text" v-model="leltariSzam" clearable=true />
+            <q-input ref="leltariSzam" v-model="leltariSzam" clearable=true />
             <strong> {{eszkoz && eszkoz.name}} </strong>
             <br>
-            <QrcodeReader v-if="!leltariSzam" @decode="gotQR"> </QrcodeReader>
+            <qrcode-reader v-if="!leltariSzam" @decode="gotQR" :video-constraints="{ width: 640, height: 480 }"> </qrcode-reader>
           </q-field>
         </q-item>
         <q-item v-if="odooConnected && korzet && eszkoz">
@@ -206,3 +206,24 @@ export default {
   }
 }
 </script>
+
+<style lang="stylus">
+.q-item-image
+  min-width unset
+  width 50px
+  height 50px
+
+.q-item-avatar
+  border-radius unset
+  width 40px
+  height 40px
+
+.q-btn
+  margin-top 1em
+
+.q-list
+  padding unset
+
+.row
+  font-size 1.2rem
+</style>
