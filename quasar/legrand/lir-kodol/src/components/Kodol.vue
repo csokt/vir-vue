@@ -20,6 +20,15 @@
           <q-input v-if="store.gylap_szefo_muvelet" v-model="store.gylap_szefo_muvelet.name" readonly></q-input>
         </q-field>
 
+        <q-field class="full-width" label="Hiány" labelWidth=3>
+<!--
+          <q-input v-if="store.gylap_szefo_muvelet" v-model="store.gylap_szefo_muvelet.elter_db" readonly></q-input>
+-->
+          <div v-if="store.gylap_szefo_muvelet">
+            {{store.gylap_szefo_muvelet.osszes_db - store.gylap_szefo_muvelet.kesz_db}}
+          </div>
+        </q-field>
+
         <q-field class="full-width" label="Mennyiség" labelWidth=3>
           <q-input ref="mennyiseg" type="number" v-model="store.mennyiseg" clearable=true></q-input>
         </q-field>

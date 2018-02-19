@@ -1,29 +1,45 @@
 <template>
   <div class="row justify-center">
     <div style="width: 350px; max-width: 95vw;">
-      <div v-if="store.user">
-        <q-item dense>
-          <h5> {{ store.user.name }} </h5>
-        </q-item>
-        <q-item dense>
-          <q-btn @click="$router.push('kodol')" push color="primary">Kódolás</q-btn>
-          <q-btn @click="store.user=null;scanUser=true; store.userError=''" push color="negative">Kijelentkezés</q-btn>
-        </q-item>
+      <q-list no-border dense>
         <q-item>
-          <h5>Táblázatok </h5>
+          <span class="text-faded text-bold">Termelés információs rendszer</span>
         </q-item>
-        <q-item separator v-for="view in userviews" :key="view.id" :to="'/table/'+view.id">
-          {{view.label}}
+
+        <template v-if="store.user">
+          <q-item>
+            <span class="name">{{ store.user.name }}</span>
+          </q-item>
+          <q-item>
+            <q-btn @click="$router.push('kodol')" push color="primary">Kódolás</q-btn>
+            <q-btn @click="store.user=null;scanUser=true; store.userError=''" push color="negative">Kijelentkezés</q-btn>
+          </q-item>
+          <q-item>
+            <h5>Táblázatok </h5>
+          </q-item>
+          <q-item separator v-for="view in userviews" :key="view.id" :to="'/table/'+view.id">
+            {{view.label}}
+          </q-item>
+        </template>
+        <template v-if="!store.user">
+          <q-item>
+            Jelentkezzen be kártyájával!
+          </q-item>
+          <q-item>
+          <q-field class="full-width" label="Kód" labelWidth=2 >
+            <q-input v-if="scanUser && !store.user" type="number" v-model="qrcode" @keyup.enter="gotUserQR(qrcode)"></q-input>
+            <qrcode-reader v-show="scanUser" :video-constraints="store.video" @decode="gotUserQR"> </qrcode-reader>
+          </q-field>
+          </q-item>
+        </template>
+        <q-item>
+          <h5 class="text-negative"> {{store.userError}} </h5>
         </q-item>
-      </div>
-      <div v-else>
-        <h5> Jelentkezzen be kártyájával! </h5>
-        <q-input v-if="scanUser && !store.user" type="number" v-model="qrcode" @keyup.enter="gotUserQR(qrcode)"></q-input>
-        <qrcode-reader v-show="scanUser" :video-constraints="store.video" @decode="gotUserQR"> </qrcode-reader>
-        <h5 class="text-negative"> {{ store.userError }} </h5>
-      </div>
+      </q-list>
     </div>
   </div>
+<!--
+-->
 </template>
 
 <script>
@@ -33,16 +49,22 @@ import Store from '../store'
 import { RpcRaw } from '../rpc'
 
 import {
+  QField,
   QInput,
   QBtn,
+  QList,
+  QListHeader,
   QItem
 } from 'quasar'
 
 export default {
   name: 'home',
   components: {
+    QField,
     QInput,
     QBtn,
+    QList,
+    QListHeader,
     QItem
   },
   data () {
@@ -89,6 +111,7 @@ export default {
             belepokod: this.store.user.belepokod,
             username: this.store.user.name,
             munkalap: null,
+            gepkod: 0,
             muveletkod: null,
             mennyiseg: null,
             role: this.store.user.role
@@ -96,6 +119,7 @@ export default {
           this.store.kodolasok = []
           this.store.menthet = true
           this.scanUser = false
+          this.store.userError = ''
         }
         else {
           this.store.userError = 'Érvénytelen felhasználó kód!'
@@ -117,6 +141,7 @@ export default {
             belepokod: this.store.user.belepokod,
             username: this.store.user.name,
             munkalap: null,
+            gepkod: 0,
             muveletkod: null,
             mennyiseg: null,
             role: this.store.user.role
@@ -124,6 +149,7 @@ export default {
           this.store.kodolasok = []
           this.store.menthet = true
           this.scanUser = false
+          this.store.userError = ''
         }
         else {
           this.store.userError = 'Érvénytelen felhasználó kód!'
@@ -135,6 +161,11 @@ export default {
 </script>
 
 <style scoped lang="stylus">
+.name
+  font-size 1.7rem
+  margin-bottom 0.3em
+.q-list-header
+  font-size 1.2rem
 .q-btn
   margin-right 1em
 .row

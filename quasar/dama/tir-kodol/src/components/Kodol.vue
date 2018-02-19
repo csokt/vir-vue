@@ -13,8 +13,12 @@
 
         <template v-if="store.kodol.dolgozo">
             <q-field class="full-width" label="Munkalap" labelWidth=3 >
-              <q-input ref="munkalap" type="number" v-model="store.kodol.munkalap" clearable=true @keyup.enter="$refs.muveletkod.focus()"></q-input>
+              <q-input ref="munkalap" type="number" v-model="store.kodol.munkalap" clearable=true @keyup.enter="$refs.gepkod.focus()"></q-input>
               <qrcode-reader v-if="!store.kodol.munkalap" :video-constraints="store.video" @decode="gotMunkalapQR"> </qrcode-reader>
+            </q-field>
+            <q-field class="full-width" label="Gépkód" labelWidth=3 >
+              <q-input ref="gepkod" type="number" v-model="store.kodol.gepkod" clearable=true @keyup.enter="$refs.muveletkod.focus()"></q-input>
+              <qrcode-reader v-if="store.kodol.gepkod === null || store.kodol.gepkod === ''" :video-constraints="store.video" @decode="gotGepkodQR"> </qrcode-reader>
             </q-field>
             <q-field class="full-width" label="Műveletkód" labelWidth=3 >
               <q-input ref="muveletkod" type="number" v-model="store.kodol.muveletkod" clearable=true @keyup.enter="$refs.mennyiseg.focus()"/>
@@ -106,12 +110,18 @@ export default {
     },
 
     gotMunkalapQR (value) {
-      console.log(value)
       this.store.kodol.munkalap = value
+      this.$refs.gepkod.focus()
+    },
+
+    gotGepkodQR (value) {
+      console.log(value)
+      this.store.kodol.gepkod = value
       this.$refs.muveletkod.focus()
     },
 
     async pubKodolas () {
+      this.store.kodol.gepkod = this.store.kodol.gepkod || 0
       let doc = Object.assign({}, this.store.kodol)
       doc.funkcio = 99994
       doc.createdAt = new Date()
@@ -132,6 +142,7 @@ export default {
 
     ujMunkalap () {
       this.store.kodol.munkalap = null
+      this.store.kodol.gepkod = 0
       this.store.kodol.muveletkod = null
       this.store.kodol.mennyiseg = null
     },
@@ -140,6 +151,7 @@ export default {
       this.store.kodol.dolgozokod = null
       this.store.kodol.dolgozo = null
       this.store.kodol.munkalap = null
+      this.store.kodol.gepkod = 0
       this.store.kodol.muveletkod = null
       this.store.kodol.mennyiseg = null
     }
