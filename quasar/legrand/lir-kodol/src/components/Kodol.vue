@@ -1,7 +1,8 @@
 <template>
   <div class="row justify-center">
     <div style="width: 550px; max-width: 95vw;">
-      <h5>Teljesítmény kódolás</h5>
+      <div class="text-faded text-bold text-center">Legrand művelet kódolás</div>
+      <hr>
       <h5 class="text-negative"> {{message}} </h5>
 
       <template v-if="store.user">
@@ -21,12 +22,12 @@
         </q-field>
 
         <q-field class="full-width" label="Hiány" labelWidth=3>
+          <q-input v-if="store.gylap_szefo_muvelet" v-model="store.gylap_szefo_muvelet.hiany_db" readonly></q-input>
 <!--
-          <q-input v-if="store.gylap_szefo_muvelet" v-model="store.gylap_szefo_muvelet.elter_db" readonly></q-input>
--->
           <div v-if="store.gylap_szefo_muvelet">
             {{store.gylap_szefo_muvelet.osszes_db - store.gylap_szefo_muvelet.kesz_db}}
           </div>
+-->
         </q-field>
 
         <q-field class="full-width" label="Mennyiség" labelWidth=3>
@@ -109,6 +110,7 @@ export default {
         this.store.muveletszam = null
         this.store.gylap_szefo_muvelet = null
         this.store.mennyiseg = null
+        this.$refs.muveletkod.focus()
       }
       catch (e) {
         this.message = e.message
@@ -208,6 +210,8 @@ export default {
 </script>
 
 <style scoped lang="stylus">
+hr
+  margin 0.1em
 .q-btn
   margin-top 0.5em
   margin-bottom 0.5em

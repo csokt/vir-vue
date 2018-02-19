@@ -5,7 +5,6 @@
         <q-item>
           <span class="text-faded text-bold">Termelés információs rendszer</span>
         </q-item>
-
         <template v-if="store.user">
           <q-item>
             <span class="name">{{ store.user.name }}</span>
@@ -53,7 +52,6 @@ import {
   QInput,
   QBtn,
   QList,
-  QListHeader,
   QItem
 } from 'quasar'
 
@@ -64,7 +62,6 @@ export default {
     QInput,
     QBtn,
     QList,
-    QListHeader,
     QItem
   },
   data () {
@@ -164,8 +161,6 @@ export default {
 .name
   font-size 1.7rem
   margin-bottom 0.3em
-.q-list-header
-  font-size 1.2rem
 .q-btn
   margin-right 1em
 .row

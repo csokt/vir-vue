@@ -2,12 +2,11 @@
   <div class="row justify-center">
     <div style="width: 350px; max-width: 95vw;">
       <q-list no-border dense>
-        <q-list-header>
-          <h5>Legrand művelet kódolás</h5>
-        </q-list-header>
+        <div class="text-faded text-bold text-center">Legrand művelet kódolás</div>
+        <hr>
         <template v-if="store.odooConnected && store.user">
           <q-item>
-            <h5> {{ store.user.name }} </h5>
+            <span class="name">{{ store.user.name }}</span>
           </q-item>
           <q-item>
             <span> {{ store.user.hely }} </span>
@@ -42,7 +41,6 @@ import {
   QInput,
   QBtn,
   QList,
-  QListHeader,
   QItem
 } from 'quasar'
 
@@ -52,7 +50,6 @@ export default {
     QInput,
     QBtn,
     QList,
-    QListHeader,
     QItem
   },
   data () {
@@ -101,8 +98,12 @@ export default {
 </script>
 
 <style scoped lang="stylus">
+hr
+  margin 0.4em
+.name
+  font-size 1.7rem
 .q-btn
-  margin-top 2em
+  margin-top 1em
   margin-right 1em
 .row
   font-size 1.2rem
