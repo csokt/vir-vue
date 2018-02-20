@@ -159,7 +159,8 @@ export default {
       this.store.muveletszam = null
       this.store.gylap_szefo_muvelet = null
       this.store.mennyiseg = null
-      if (this.store.gyartasi_lap_id) {
+      console.log(this.store.gyartasi_lap_id)
+      if (this.store.gyartasi_lap_id > 999) {
         try {
           let result = await odoo.model.find('legrand.gyartasi_lap', this.store.gyartasi_lap_id)
           if (result) {

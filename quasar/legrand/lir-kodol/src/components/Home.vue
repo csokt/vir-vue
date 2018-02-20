@@ -62,7 +62,7 @@ export default {
   methods: {
     async checkUser (value) {
       try {
-        let result = await odoo.model.searchRead('legrand.lir_user', [['qr', '=', parseInt(value)]], [])
+        let result = await odoo.model.searchRead('legrand.lir_user', [['qr', '=', parseInt(value)], ['role', '=', 'kodolo']], [])
         if (result.length) {
           this.store.user = result.records[0]
           this.scanUser = false
