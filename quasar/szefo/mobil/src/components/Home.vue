@@ -5,9 +5,13 @@
       <h5 class="text-center">SZEFO mobil alkalmazások</h5>
       <q-list separator>
         <q-collapsible group="szefo" image="/statics/legrand.png" label="Legrand">
+          <q-item link @click="location.href = 'https://lir-keszlet.szefo.local'">
+            <q-item-side avatar="/statics/lir-keszlet.png" />
+            <q-item-main label="Készlet információk" />
+          </q-item>
           <q-item link @click="location.href = 'https://lir-kodol.szefo.local'">
-            <q-item-side avatar="/statics/legrand.png" />
-            <q-item-main label="Legrand művelet kódolás" />
+            <q-item-side avatar="/statics/lir-kodol.png" />
+            <q-item-main label="Művelet kódolás" />
           </q-item>
         </q-collapsible>
 
@@ -21,11 +25,11 @@
         <q-collapsible group="szefo" image="/statics/eszkozinfo.png" label="Tárgyi eszköz">
           <q-item link @click="location.href = 'https://eszkozinfo.szefo.local'">
             <q-item-side avatar="/statics/eszkozinfo.png" />
-            <q-item-main label="Tárgyi eszköz információk (QR)" />
+            <q-item-main label="Eszköz információk (QR)" />
           </q-item>
           <q-item separator link @click="location.href = 'https://eszkozmozgatas.szefo.local'">
             <q-item-side avatar="/statics/eszkozmozgatas.png" />
-            <q-item-main label="Tárgyi eszköz mozgatás" />
+            <q-item-main label="Eszköz mozgatás" />
           </q-item>
         </q-collapsible>
       </q-list>
