@@ -97,7 +97,7 @@ export default {
         const response = await RpcRaw("select [dolgozokod], [dolgozonev] from [dolgtr] where [aktiv] = 'A' and [dolgozokod] = " + dolgozokod.toString())
         // console.log(response)
         if (response.result && response.result.length) {
-          this.store.user = {name: response.result[0].dolgozonev.trim(), role: 'varró', belepokod: response.result[0].dolgozokod + 20000}
+          this.store.user = {name: response.result[0].dolgozonev.trim(), role: 'varró', belepokod: response.result[0].dolgozokod + 20000, filterCikkszam: ''}
           this.store.kodol = {
             telephelykod: 0,
             telephely: 'Szeged, Tavasz u. 2.',

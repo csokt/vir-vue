@@ -1,6 +1,6 @@
 <template>
   <div class="row justify-center">
-    <div style="width: 450px; max-width: 95vw;">
+    <div style="width: 550px; max-width: 95vw;">
       <div class="text-faded text-bold text-center text-margin-top">Chance készlet információk</div>
       <hr>
       <div v-show="odooConnected">
@@ -11,10 +11,13 @@
           />
         </q-input>
 
-        <q-input ref="cikkszam" placeholder="Cikkszám" v-on:change="checkCikkszam" type="number" v-model="cikkszam" clearable=true></q-input>
+        <div class="flex-container">
+          <q-input ref="cikkszam" placeholder="Cikkszám" v-on:change="checkCikkszam" type="number" v-model="cikkszam" clearable=true></q-input>
+          <span class="min-space"></span>
+          <q-input prefix="Osztály: " v-on:change="checkOsztaly" v-model="osztaly" upper-case></q-input>
+        </div>
+
         <q-input placeholder="Megnevezés" v-model="cikk.megnevezes" readonly></q-input>
-        <q-input prefix="Osztály: " v-on:change="checkOsztaly" v-model="osztaly" upper-case></q-input>
-        <br>
 
         <div v-if="keszlet.length" class="full-width" label="Készlet" labelWidth=3>
           <table class="q-table striped cell-separator bordered">
@@ -45,6 +48,7 @@
 <script>
 import odoo from '../odoo-jsonrpc'
 import {
+  QItem,
   QField,
   QInput,
   QAutocomplete
@@ -62,6 +66,7 @@ function parseHelyek (helyek) {
 export default {
   name: 'app',
   components: {
+    QItem,
     QField,
     QInput,
     QAutocomplete
@@ -161,8 +166,14 @@ export default {
 </script>
 
 <style scoped lang="stylus">
+.q-if
+  margin-top unset
 .text-margin-top
   margin-top 0.4em
-.q-btn
-  margin-top 1em
+.flex-container
+  display flex
+  justify-content space-between
+.min-space
+  display inline
+  min-width 2em
 </style>

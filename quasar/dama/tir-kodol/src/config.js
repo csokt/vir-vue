@@ -124,6 +124,7 @@ views:
   fields:
   - name:     Cikkszám
     filter:   egyenlő
+    default:  filterCikkszam
   - name:     Műveletkód
     type:     number
     filter:   egyenlő

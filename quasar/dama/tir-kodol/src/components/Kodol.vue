@@ -13,8 +13,8 @@
 
         <template v-if="store.kodol.dolgozo">
             <q-field class="full-width" label="Munkalap" labelWidth=3 >
-              <q-input ref="munkalap" type="number" v-model="store.kodol.munkalap" clearable=true @keyup.enter="$refs.gepkod.focus()"></q-input>
-              <qrcode-reader v-if="!store.kodol.munkalap" :video-constraints="store.video" @decode="gotMunkalapQR"> </qrcode-reader>
+              <q-input ref="munkalap" type="number" v-model="store.kodol.munkalap" clearable=true @keyup.enter="gotMunkalap(null)"></q-input>
+              <qrcode-reader v-if="!store.kodol.munkalap" :video-constraints="store.video" @decode="gotMunkalap"> </qrcode-reader>
             </q-field>
             <q-field class="full-width" label="Gépkód" labelWidth=3 >
               <q-input ref="gepkod" type="number" v-model="store.kodol.gepkod" clearable=true @keyup.enter="$refs.muveletkod.focus()"></q-input>
@@ -109,9 +109,19 @@ export default {
       }
     },
 
-    gotMunkalapQR (value) {
-      this.store.kodol.munkalap = value
-      this.$refs.gepkod.focus()
+    async gotMunkalap (value) {
+      this.message = ''
+      if (value) { this.store.kodol.munkalap = value }
+      if (!this.store.kodol.munkalap) { return }
+      const response = await RpcRaw('select [cikkszam], [itszam] from [rendelesmunkalap] where [munkalapazonosito] = ' + this.store.kodol.munkalap.toString())
+      if (response.result && response.result.length) {
+        console.log('response', response.result[0])
+        this.store.user.filterCikkszam = response.result[0].cikkszam.trim()
+        this.$refs.gepkod.focus()
+      }
+      else {
+        this.message = 'Érvénytelen munkalap!'
+      }
     },
 
     gotGepkodQR (value) {
