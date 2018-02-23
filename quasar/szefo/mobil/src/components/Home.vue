@@ -22,9 +22,9 @@
           </q-item>
         </q-collapsible>
 
-        <q-collapsible group="szefo" image="/statics/quasar-logo.png" label="Chance">
+        <q-collapsible group="szefo" image="/statics/chance.png" label="Chance">
           <q-item link @click="location.href = 'https://chance-keszlet.szefo.local'">
-            <q-item-side avatar="/statics/quasar-logo.png" />
+            <q-item-side avatar="/statics/chance.png" />
             <q-item-main label="Készlet információk" />
           </q-item>
         </q-collapsible>

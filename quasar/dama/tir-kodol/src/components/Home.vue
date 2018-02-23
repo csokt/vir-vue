@@ -1,40 +1,38 @@
 <template>
   <div class="row justify-center">
     <div style="width: 350px; max-width: 95vw;">
-      <q-list no-border dense>
+      <div class="text-faded text-bold text-center text-margin-top">Termelés információs rendszer</div>
+      <hr>
+      <template v-if="store.user">
         <q-item>
-          <span class="text-faded text-bold">Termelés információs rendszer</span>
+          <span class="name">{{ store.user.name }}</span>
         </q-item>
-        <template v-if="store.user">
-          <q-item>
-            <span class="name">{{ store.user.name }}</span>
-          </q-item>
-          <q-item>
-            <q-btn @click="$router.push('kodol')" push color="primary">Kódolás</q-btn>
-            <q-btn @click="store.user=null;scanUser=true; store.userError=''" push color="negative">Kijelentkezés</q-btn>
-          </q-item>
-          <q-item>
-            <h5>Táblázatok </h5>
-          </q-item>
-          <q-item separator v-for="view in userviews" :key="view.id" :to="'/table/'+view.id">
-            {{view.label}}
-          </q-item>
-        </template>
-        <template v-if="!store.user">
-          <q-item>
-            Jelentkezzen be kártyájával!
-          </q-item>
-          <q-item>
-          <q-field class="full-width" label="Kód" labelWidth=2 >
-            <q-input v-if="scanUser && !store.user" type="number" v-model="qrcode" @keyup.enter="gotUserQR(qrcode)"></q-input>
-            <qrcode-reader v-show="scanUser" :video-constraints="store.video" @decode="gotUserQR"> </qrcode-reader>
-          </q-field>
-          </q-item>
-        </template>
         <q-item>
-          <h5 class="text-negative"> {{store.userError}} </h5>
+          <q-btn @click="$router.push('kodol')" push color="primary">Kódolás</q-btn>
+          <q-btn @click="store.user=null;scanUser=true; store.userError=''" push color="negative">Kijelentkezés</q-btn>
         </q-item>
-      </q-list>
+        <q-item>
+          <h5>Táblázatok </h5>
+        </q-item>
+        <q-item separator v-for="view in userviews" :key="view.id" :to="'/table/'+view.id">
+          {{view.label}}
+        </q-item>
+      </template>
+
+      <template v-if="!store.user">
+        <q-item>
+          Jelentkezzen be kártyájával!
+        </q-item>
+        <q-item>
+        <q-field class="full-width" label="Kód" labelWidth=2 >
+          <q-input v-if="scanUser && !store.user" type="number" v-model="qrcode" @keyup.enter="gotUserQR(qrcode)"></q-input>
+          <qrcode-reader v-show="scanUser" :video-constraints="store.video" @decode="gotUserQR"> </qrcode-reader>
+        </q-field>
+        </q-item>
+      </template>
+      <q-item>
+        <h5 class="text-negative"> {{store.userError}} </h5>
+      </q-item>
     </div>
   </div>
 <!--
@@ -51,7 +49,6 @@ import {
   QField,
   QInput,
   QBtn,
-  QList,
   QItem
 } from 'quasar'
 
@@ -61,7 +58,6 @@ export default {
     QField,
     QInput,
     QBtn,
-    QList,
     QItem
   },
   data () {
@@ -97,7 +93,7 @@ export default {
         const response = await RpcRaw("select [dolgozokod], [dolgozonev] from [dolgtr] where [aktiv] = 'A' and [dolgozokod] = " + dolgozokod.toString())
         // console.log(response)
         if (response.result && response.result.length) {
-          this.store.user = {name: response.result[0].dolgozonev.trim(), role: 'varró', belepokod: response.result[0].dolgozokod + 20000, filterCikkszam: ''}
+          this.store.user = {name: response.result[0].dolgozonev.trim(), role: 'varró', belepokod: response.result[0].dolgozokod + 20000}
           this.store.kodol = {
             telephelykod: 0,
             telephely: 'Szeged, Tavasz u. 2.',
@@ -158,6 +154,8 @@ export default {
 </script>
 
 <style scoped lang="stylus">
+.text-margin-top
+  margin-top 0.4em
 .name
   font-size 1.7rem
   margin-bottom 0.3em
