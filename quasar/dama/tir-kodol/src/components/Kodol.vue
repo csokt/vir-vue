@@ -13,7 +13,7 @@
 
         <template v-if="store.kodol.dolgozo">
           <q-field class="full-width" label="Munkalap" labelWidth=3 >
-            <q-input ref="munkalap" type="number" v-model="store.kodol.munkalap" clearable=true @keyup.enter="gotMunkalap(null)"></q-input>
+            <q-input ref="munkalap" type="number" v-model="store.kodol.munkalap" clearable=true @keyup.enter="gotMunkalap(null)" @blur="gotMunkalap(null)"></q-input>
             <qrcode-reader v-if="!store.kodol.munkalap" :video-constraints="store.video" @decode="gotMunkalap"> </qrcode-reader>
           </q-field>
           <q-field class="full-width" label="Gépkód" labelWidth=3 >
@@ -38,19 +38,13 @@
         <thead>
           <tr>
             <th>Eredmény</th>
-            <th>Dolgozó</th>
-            <th>Munkalap</th>
-            <th>Műveletkód</th>
-            <th>Mennyiség</th>
+            <th class="text-right">db</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="doc in store.kodolasok">
-            <td>{{doc.eredmeny}}</td>
-            <td>{{doc.dolgozo}}</td>
-            <td>{{doc.munkalap}}</td>
-            <td>{{doc.muveletkod}}</td>
-            <td>{{doc.mennyiseg}}</td>
+          <tr v-for="row in store.kodolasok">
+            <td>{{row.eredmeny}}</td>
+            <td class="text-right">{{row.mennyiseg}}</td>
           </tr>
         </tbody>
       </table>
@@ -115,7 +109,6 @@ export default {
       if (!this.store.kodol.munkalap) { return }
       const response = await RpcRaw('select [cikkszam], [itszam] from [rendelesmunkalap] where [munkalapazonosito] = ' + this.store.kodol.munkalap.toString())
       if (response.result && response.result.length) {
-        console.log('response', response.result[0])
         this.store.user.filterCikkszam = response.result[0].cikkszam.trim()
         this.$refs.gepkod.focus()
       }
@@ -125,7 +118,6 @@ export default {
     },
 
     gotGepkodQR (value) {
-      console.log(value)
       this.store.kodol.gepkod = value
       this.$refs.muveletkod.focus()
     },
@@ -138,7 +130,6 @@ export default {
       this.store.kodolasok.unshift(doc)
       this.store.menthet = false
       const response = await RpcKodol(doc)
-      console.log(response)
       if (response.result) {
         this.store.kodolasok[0].eredmeny = response.result.message
       }

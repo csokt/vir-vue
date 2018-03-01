@@ -5,6 +5,17 @@
         <q-item>
           <h5>TIR TV </h5>
         </q-item>
+        <q-item>
+          <span>Lejátszási listák</span>
+        </q-item>
+        <q-item v-for="list in config.playlists" :key="list.id" :to="'/playlist/'+list.id">
+          {{list.label}}
+        </q-item>
+        <q-item>
+        </q-item>
+        <q-item>
+          <span>Táblázatok</span>
+        </q-item>
         <q-item v-for="view in config.views" :key="view.id" :to="'/table/'+view.id">
           {{view.label}}
         </q-item>
@@ -22,7 +33,7 @@ import {
 } from 'quasar'
 
 export default {
-  name: 'index',
+  name: 'home',
   components: {
     QList,
     QItem

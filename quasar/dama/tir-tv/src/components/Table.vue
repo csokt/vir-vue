@@ -15,56 +15,41 @@
         </tr>
       </tbody>
     </table>
+    <q-spinner v-if="spinner" :size="40"/>
   </div>
 </template>
 
 <script>
 import Config from '../config'
+import { RpcView } from '../rpc'
+import {
+  QSpinner
+} from 'quasar'
 
 export default {
   name: 'table',
   components: {
+    QSpinner
   },
   data () {
     return {
-      result: {}
+      result: {},
+      spinner: true
     }
   },
   computed: {
-    cid () {
-      return Math.random().toString(16).substr(2)
-    },
     view () {
       return Config.views.find(o => o.id === this.$route.params.id)
     }
   },
   methods: {
-    requestData () {
-      const request = {
-        jsonrpc: '2.0',
-        method: 'view',
-        params: {
-          view: this.view,
-          filter: {}
-        },
-        id: this.cid
-      }
-      this.$mqtt.publish('mssql/request/' + this.cid + '/tir/tv', JSON.stringify(request))
-    },
-    clearData () {
-      this.result = {}
-    }
-  },
-  mqtt: {
-    'mssql/response/+/tir/tv' (message, topic) {
-      const response = JSON.parse(message.toString())
-      if (response.id === this.cid) {
-        this.result = response.result || {}
-      }
+    async requestData () {
+      const response = await RpcView(this.view, null)
+      this.result = response.result || {}
+      this.spinner = false
     }
   },
   mounted () {
-    this.$mqtt.subscribe('mssql/response/' + this.cid + '/tir/tv')
     if (this.view.refresh) {
       this.myInterval = setInterval(() => {
         this.requestData()
@@ -73,7 +58,6 @@ export default {
     this.requestData()
   },
   beforeDestroy () {
-    this.$mqtt.unsubscribe('mssql/response/' + this.cid + '/tir/tv')
     if (this.myInterval) {
       clearInterval(this.myInterval)
     }

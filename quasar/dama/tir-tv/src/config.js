@@ -2,7 +2,6 @@ import yaml from 'js-yaml'
 const configYaml = `
 
 views:
-###############################################################################  TV  ###
 -
   id:         varrodaleadas_tv
   database:   SzefoModulKeszlet
@@ -33,6 +32,7 @@ views:
   - name:     Hibák száma
   - name:     Hátralék
     label:    Gyártandó
+
 -
   id:         vasaloleadas_tv
   database:   SzefoModulKeszlet
@@ -121,6 +121,28 @@ views:
   - name:     Szükséglet
   - name:     Gyártási ütem
 
+playlists:
+-
+  id:         playlist1
+  label:      Első lejátszási lista
+  views:
+  - id:       varrodaleadas_tv
+    interval: 5
+  - id:       vasaloleadas_tv
+    interval: 5
+  - id:       szabaszatleadas_tv
+    interval: 5
+  - id:       fonalstatusz
+    interval: 5
+
+-
+  id:         playlist2
+  label:      Második lejátszási lista
+  views:
+  - id:       szabaszatleadas_tv
+    interval: 30
+  - id:       fonalstatusz
+    interval: 30
 `
 
 let Config = null

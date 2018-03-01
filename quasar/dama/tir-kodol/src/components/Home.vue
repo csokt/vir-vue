@@ -23,11 +23,11 @@
         <q-item>
           Jelentkezzen be kártyájával!
         </q-item>
-        <q-item>
-        <q-field class="full-width" label="Kód" labelWidth=2 >
+        <q-field v-if="store.teszt" class="full-width" label="Belépési kód" labelWidth=5 >
           <q-input v-if="scanUser && !store.user" type="number" v-model="qrcode" @keyup.enter="gotUserQR(qrcode)"></q-input>
-          <qrcode-reader v-show="scanUser" :video-constraints="store.video" @decode="gotUserQR"> </qrcode-reader>
         </q-field>
+        <q-item>
+          <qrcode-reader v-show="scanUser" :video-constraints="store.video" @decode="gotUserQR"> </qrcode-reader>
         </q-item>
       </template>
       <q-item>
@@ -40,7 +40,6 @@
 </template>
 
 <script>
-
 import Config from '../config'
 import Store from '../store'
 import { RpcRaw } from '../rpc'
@@ -91,7 +90,6 @@ export default {
       else if (qr < 50000) {
         const dolgozokod = qr - 20000
         const response = await RpcRaw("select [dolgozokod], [dolgozonev] from [dolgtr] where [aktiv] = 'A' and [dolgozokod] = " + dolgozokod.toString())
-        // console.log(response)
         if (response.result && response.result.length) {
           this.store.user = {name: response.result[0].dolgozonev.trim(), role: 'varró', belepokod: response.result[0].dolgozokod + 20000}
           this.store.kodol = {
@@ -121,7 +119,6 @@ export default {
       else {
         const userid = qr - 50000
         const response = await RpcRaw('select [userid], [fullname] from [users] where [userid] = ' + userid.toString())
-        // console.log(response)
         if (response.result && response.result.length) {
           this.store.user = {name: response.result[0].fullname.trim(), role: 'kódoló', belepokod: response.result[0].userid + 50000}
           this.store.kodol = {
