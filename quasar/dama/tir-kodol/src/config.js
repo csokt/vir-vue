@@ -12,8 +12,7 @@ views:
   roles:
   - varró
   - varrodavezető
-#  refresh:    60
-#  where:
+  refresh:    10
   order:      '[Kódolás ideje] DESC'
   head_after: 15
   limit:      100

@@ -1,25 +1,24 @@
 <template>
   <div class="row justify-center">
     <div style="width: 500px; max-width: 95vw;">
-      <q-list  separator no-border>
-        <q-item>
-          <h5>TIR TV </h5>
-        </q-item>
-        <q-item>
-          <span>Lejátszási listák</span>
-        </q-item>
-        <q-item v-for="list in config.playlists" :key="list.id" :to="'/playlist/'+list.id">
-          {{list.label}}
-        </q-item>
-        <q-item>
-        </q-item>
-        <q-item>
-          <span>Táblázatok</span>
-        </q-item>
-        <q-item v-for="view in config.views" :key="view.id" :to="'/table/'+view.id">
-          {{view.label}}
-        </q-item>
+
+      <h5 class="text-center">Termelés Információs Rendszer TV</h5>
+      <q-list separator>
+
+        <q-collapsible group="szefo" label="Lejátszási listák">
+          <q-item v-for="list in config.playlists" :key="list.id" :to="'/playlist/'+list.id">
+            {{list.label}}
+          </q-item>
+        </q-collapsible>
+
+        <q-collapsible group="szefo" label="Táblázatok">
+          <q-item v-for="view in config.views" :key="view.id" :to="'/table/'+view.id">
+            {{view.label}}
+          </q-item>
+        </q-collapsible>
+
       </q-list>
+
     </div>
   </div>
 </template>
@@ -29,14 +28,16 @@ import Config from '../config'
 
 import {
   QList,
-  QItem
+  QItem,
+  QCollapsible
 } from 'quasar'
 
 export default {
   name: 'home',
   components: {
     QList,
-    QItem
+    QItem,
+    QCollapsible
   },
   data () {
     return {
@@ -45,3 +46,10 @@ export default {
   }
 }
 </script>
+
+<style lang="stylus">
+.q-item-label
+  font-size 1.5rem
+.q-item-link
+  font-size 1.3rem
+</style>

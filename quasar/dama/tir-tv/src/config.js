@@ -11,7 +11,7 @@ views:
   refresh:    300
   where:
   order:      '[Cikk/IT]'
-  head_after: 15
+  head_after: 40
   limit:      20
   sum:
   - Rendelt db
@@ -96,53 +96,47 @@ views:
     label:    Gyártandó
 
 -
-  id:         fonalstatusz
+  id:         varrodatermeles_tv
   database:   SzefoModulKeszlet
-  name:       Monitor_FonalStatuszView
-  label:      SZ.J. - Fonal státusz
+  name:       monitor_szegedvarrodatermeles
+  label:      Szeged varroda heti gyártási terve
   device:     tv
   refresh:    300
-  order:      Partiszám
-  head_after: 15
+  where:
+  order:      Rendelésszám
+  head_after: 40
   limit:      20
   fields:
-  - name:     Partiszám
-  - name:     Szállítólevél
-  - name:     Partner rend szám
-  - name:     SZEFO rend szám
-  - name:     Dátum
-  - name:     Termék cikkszám
-  - name:     Fonal cikkszám
-  - name:     Olasz megnevezés
-  - name:     Magyar megnevezés
-  - name:     Méret
+  - name:     Rendelésszám
+    type:     number
+    filter:   egyenlő
+  - name:     IT
+    filter:   egyenlő
+  - name:     Cikkszám
+    filter:   egyenlő
+  - name:     Megnevezés
+  - name:     Model
   - name:     Szín
-  - name:     Mennyiség
-  - name:     Szükséglet
-  - name:     Gyártási ütem
+  - name:     Gyártandó
 
 playlists:
 -
-  id:         playlist1
-  label:      Első lejátszási lista
+  id:         varroda
+  label:      Varroda
   views:
   - id:       varrodaleadas_tv
-    interval: 5
-  - id:       vasaloleadas_tv
-    interval: 5
-  - id:       szabaszatleadas_tv
-    interval: 5
-  - id:       fonalstatusz
-    interval: 5
+    interval: 60
+  - id:       varrodatermeles_tv
+    interval: 60
 
 -
   id:         playlist2
   label:      Második lejátszási lista
   views:
+  - id:       vasaloleadas_tv
+    interval: 5
   - id:       szabaszatleadas_tv
-    interval: 30
-  - id:       fonalstatusz
-    interval: 30
+    interval: 5
 `
 
 let Config = null

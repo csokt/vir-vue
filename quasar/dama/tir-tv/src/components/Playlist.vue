@@ -1,6 +1,6 @@
 <template>
   <div>
-    {{playlist.label}}
+    <h5> {{$route.params.id}}: Nincs ilyen lejátszási lista! </h5>
   </div>
 </template>
 
@@ -17,17 +17,8 @@ export default {
       store: Store
     }
   },
-  computed: {
-    playlist () {
-      return Config.playlists.find(o => o.id === this.$route.params.id)
-    }
-  },
-  methods: {
-  },
   created () {
-    this.store.playlist = this.playlist
-  },
-  mounted () {
+    this.store.playlist = Config.playlists.find(o => o.id === this.$route.params.id)
   }
 }
 </script>

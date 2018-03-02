@@ -110,7 +110,7 @@ export default {
       const response = await RpcRaw('select [cikkszam], [itszam] from [rendelesmunkalap] where [munkalapazonosito] = ' + this.store.kodol.munkalap.toString())
       if (response.result && response.result.length) {
         this.store.user.filterCikkszam = response.result[0].cikkszam.trim()
-        this.$refs.gepkod.focus()
+        this.$refs.muveletkod.focus()
       }
       else {
         this.message = 'Érvénytelen munkalap!'

@@ -1,21 +1,26 @@
 <template>
   <div>
-    <table class="q-table cell-separator table-striped">
-      <thead>
-        <tr>
-          <th v-for="field in view.fields">{{field.label}}</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="row in result.stat" class="stat">
-          <td v-for="field in view.fields">{{row[field.name]}}</td>
-        </tr>
-        <tr v-for="row in result.records">
-          <td v-for="field in view.fields">{{row[field.name]}}</td>
-        </tr>
-      </tbody>
-    </table>
-    <q-spinner v-if="spinner" :size="40"/>
+    <div v-if="view">
+      <table class="q-table cell-separator table-striped">
+        <thead>
+          <tr>
+            <th v-for="field in view.fields">{{field.label}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="row in result.stat" class="stat">
+            <td v-for="field in view.fields">{{row[field.name]}}</td>
+          </tr>
+          <tr v-for="row in result.records">
+            <td v-for="field in view.fields">{{row[field.name]}}</td>
+          </tr>
+        </tbody>
+      </table>
+      <q-spinner v-if="spinner" :size="40"/>
+    </div>
+    <div v-if="!view">
+      <h5> {{$route.params.id}}: Nincs ilyen táblázat! </h5>
+    </div>
   </div>
 </template>
 
@@ -49,7 +54,7 @@ export default {
       this.spinner = false
     }
   },
-  mounted () {
+  created () {
     if (this.view.refresh) {
       this.myInterval = setInterval(() => {
         this.requestData()

@@ -18,12 +18,11 @@ export default {
   },
   watch: {
     'store.playlist': async function (playlist) {
-      // console.log('playlist', playlist)
+      if (!playlist) { return }
       let i = 0
       while (true) {
         if (i >= playlist.views.length) { i = 0 }
         let view = playlist.views[i]
-        console.log(view.id)
         this.$router.replace('/')
         await sleep(0)
         this.$router.replace('/table/' + view.id)
@@ -34,8 +33,3 @@ export default {
   }
 }
 </script>
-
-<style lang="stylus">
-.q-item
-  font-size 1.5rem
-</style>
