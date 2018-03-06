@@ -1,6 +1,6 @@
 <template>
   <div class="row justify-center">
-    <div style="width: 350px; max-width: 95vw;">
+    <div style="width: 400px; max-width: 95vw;">
       <div class="text-faded text-bold text-center text-margin-top">Termelés információs rendszer</div>
       <hr>
       <template v-if="store.user">
@@ -10,6 +10,10 @@
         <q-item>
           <q-btn @click="$router.push('kodol')" push color="primary">Kódolás</q-btn>
           <q-btn @click="store.user=null;scanUser=true; store.userError=''" push color="negative">Kijelentkezés</q-btn>
+        </q-item>
+        <br>
+        <q-item>
+          <q-btn @click="$router.push('search')" push color="secondary">Techn. dokumentációk demo</q-btn>
         </q-item>
         <q-item>
           <h5>Táblázatok </h5>

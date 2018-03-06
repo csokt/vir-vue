@@ -23,7 +23,7 @@
         </tr>
         <template v-for="(row, index) in result.records">
           <tr>
-            <td v-for="field in view.fields">{{row[field.name]}}</td>
+            <td v-for="field in view.fields" @click="clickField(row, field)">{{row[field.name]}}</td>
           </tr>
           <tr v-if="(index + 1) % view.head_after === 0">
             <th v-for="field in view.fields">{{field.label}}</th>
@@ -79,8 +79,15 @@ export default {
       const response = await RpcView(this.view, this.store.filter)
       this.result = response.result || {}
       this.spinner = false
+    },
+    clickField (row, field) {
+      if (field.search) {
+        this.store.user.filterCikkszam = row[field.name]
+        this.$router.push('/search')
+      }
     }
   },
+
   beforeCreate () {
     if (!Store.user) { this.$router.replace('/'); return }
     const view = Config.views.find(o => o.id === this.$route.params.id)
