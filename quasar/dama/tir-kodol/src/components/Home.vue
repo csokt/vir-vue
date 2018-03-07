@@ -11,7 +11,6 @@
           <q-btn @click="$router.push('kodol')" push color="primary">Kódolás</q-btn>
           <q-btn @click="store.user=null;scanUser=true; store.userError=''" push color="negative">Kijelentkezés</q-btn>
         </q-item>
-        <br>
         <q-item>
           <q-btn @click="$router.push('search')" push color="secondary">Techn. dokumentációk demo</q-btn>
         </q-item>
@@ -159,8 +158,8 @@ export default {
   margin-top 0.4em
 .name
   font-size 1.7rem
-  margin-bottom 0.3em
 .q-btn
+  margin-top 0.3em
   margin-right 1em
 .row
   font-size 1.2rem

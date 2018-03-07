@@ -102,6 +102,15 @@ export default {
 </script>
 
 <style scoped lang="stylus">
+.text-margin-top
+  margin-top 0.4em
+.name
+  font-size 1.7rem
+  margin-bottom 0.3em
 .q-btn
   margin-left 2em
+.row
+  font-size 1.2rem
+.q-item
+  font-size 1.2rem
 </style>

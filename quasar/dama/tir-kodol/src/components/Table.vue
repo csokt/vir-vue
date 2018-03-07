@@ -23,7 +23,7 @@
         </tr>
         <template v-for="(row, index) in result.records">
           <tr>
-            <td v-for="field in view.fields" @click="clickField(row, field)">{{row[field.name]}}</td>
+            <td v-for="field in view.fields" @click="clickField(row, field)" v-bind:class="{ search: field.search }">{{row[field.name]}}</td>
           </tr>
           <tr v-if="(index + 1) % view.head_after === 0">
             <th v-for="field in view.fields">{{field.label}}</th>
@@ -146,5 +146,9 @@ th {
 
 .stat {
   color: red;
+}
+
+.search {
+  color: darkgreen;
 }
 </style>

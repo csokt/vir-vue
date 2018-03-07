@@ -61,6 +61,7 @@ views:
     readonly: true
   - name:     Cikkszám
     filter:   egyenlő
+    search:   filterCikkszam
   - name:     IT
     filter:   egyenlő
   - name:     Diszpó
