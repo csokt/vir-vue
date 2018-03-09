@@ -106,7 +106,7 @@ export default {
             username: this.store.user.name,
             munkalap: null,
             gepkod: 0,
-            muveletkod: null,
+            muveletkodok: [],
             mennyiseg: null,
             role: this.store.user.role
           }
@@ -135,7 +135,7 @@ export default {
             username: this.store.user.name,
             munkalap: null,
             gepkod: 0,
-            muveletkod: null,
+            muveletkodok: [],
             mennyiseg: null,
             role: this.store.user.role
           }

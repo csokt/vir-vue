@@ -12,7 +12,7 @@
             <td v-for="field in view.fields">{{row[field.name]}}</td>
           </tr>
           <tr v-for="row in result.records">
-            <td v-for="field in view.fields">{{row[field.name]}}</td>
+            <td v-for="field in view.fields" v-bind:style="{ color: color(field, row[field.name]) }">{{row[field.name]}}</td>
           </tr>
         </tbody>
       </table>
@@ -52,6 +52,11 @@ export default {
       const response = await RpcView(this.view, null)
       this.result = response.result || {}
       this.spinner = false
+    },
+    color (field, value) {
+      if (value > 0) { return field.positive }
+      if (value === 0) { return field.zero }
+      if (value < 0) { return field.negative }
     }
   },
   created () {

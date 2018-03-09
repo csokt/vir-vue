@@ -1,7 +1,8 @@
 <template>
   <div class="row justify-center">
     <div style="width: 550px; max-width: 95vw;">
-      <h5>Teljesítmény kódolás</h5>
+      <div class="text-faded text-bold text-center text-margin-top">Teljesítmény kódolás</div>
+      <hr>
       <h5 class="text-negative"> {{message}} </h5>
 
       <template v-if="store.user">
@@ -16,19 +17,22 @@
             <q-input ref="munkalap" type="number" v-model="store.kodol.munkalap" clearable=true @keyup.enter="gotMunkalap(null)" @blur="gotMunkalap(null)"></q-input>
             <qrcode-reader v-if="!store.kodol.munkalap" :video-constraints="store.video" @decode="gotMunkalap"> </qrcode-reader>
           </q-field>
+
           <q-field class="full-width" label="Gépkód" labelWidth=3 >
-            <q-input ref="gepkod" type="number" v-model="store.kodol.gepkod" clearable=true @keyup.enter="$refs.muveletkod.focus()"></q-input>
+            <q-input ref="gepkod" type="number" v-model="store.kodol.gepkod" clearable=true @keyup.enter="$refs.muveletkodok.focus()"></q-input>
             <qrcode-reader v-if="store.kodol.gepkod === null || store.kodol.gepkod === ''" :video-constraints="store.video" @decode="gotGepkodQR"> </qrcode-reader>
           </q-field>
-          <q-field class="full-width" label="Műveletkód" labelWidth=3 >
-            <q-input ref="muveletkod" type="number" v-model="store.kodol.muveletkod" clearable=true @keyup.enter="$refs.mennyiseg.focus()"/>
+
+          <q-field class="full-width" label="Műveletkódok" labelWidth=3 >
+            <q-chips-input ref="muveletkodok" id="muveletkodok_id" v-model="store.kodol.muveletkodok" @keyup.enter="$refs.mennyiseg.focus()"/>
           </q-field>
+
           <q-field class="full-width" label="Mennyiség" labelWidth=3 >
             <q-input ref="mennyiseg" type="number" v-model="store.kodol.mennyiseg" clearable=true />
           </q-field>
         </template>
 
-        <q-btn v-if="store.menthet && store.kodol.munkalap && store.kodol.muveletkod && store.kodol.mennyiseg" @click="pubKodolas" push color="positive">Adatok mentése</q-btn>
+        <q-btn v-if="store.menthet && store.kodol.munkalap && store.kodol.muveletkodok.length && store.kodol.mennyiseg" @click="pubKodolas" push color="positive">Adatok mentése</q-btn>
         <q-btn @click="$router.go(-1)" push color="warning">Vissza</q-btn>
         <q-btn v-if="store.menthet && store.kodol.munkalap" @click="ujMunkalap" push color="tertiary">Új munkalap</q-btn>
         <q-btn v-if="store.menthet && store.kodol.dolgozo && store.user.role==='kódoló'" @click="ujDolgozo" push color="tertiary">Új dolgozó</q-btn>
@@ -37,14 +41,16 @@
       <table class="q-table striped cell-separator bordered compact">
         <thead>
           <tr>
+            <th>Műv.kód</th>
+            <th>Menny.</th>
             <th>Eredmény</th>
-            <th class="text-right">db</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="row in store.kodolasok">
+            <td>{{row.muveletkod}}</td>
+            <td>{{row.mennyiseg}}</td>
             <td>{{row.eredmeny}}</td>
-            <td class="text-right">{{row.mennyiseg}}</td>
           </tr>
         </tbody>
       </table>
@@ -61,6 +67,7 @@ import { RpcRaw, RpcKodol } from '../rpc'
 import {
   QField,
   QInput,
+  QChipsInput,
   QBtn
 } from 'quasar'
 
@@ -69,6 +76,7 @@ export default {
   components: {
     QField,
     QInput,
+    QChipsInput,
     QBtn
   },
   data () {
@@ -110,7 +118,7 @@ export default {
       const response = await RpcRaw('select [cikkszam], [itszam] from [rendelesmunkalap] where [munkalapazonosito] = ' + this.store.kodol.munkalap.toString())
       if (response.result && response.result.length) {
         this.store.user.filterCikkszam = response.result[0].cikkszam.trim()
-        this.$refs.muveletkod.focus()
+        this.$refs.muveletkodok.focus()
       }
       else {
         this.message = 'Érvénytelen munkalap!'
@@ -119,32 +127,35 @@ export default {
 
     gotGepkodQR (value) {
       this.store.kodol.gepkod = value
-      this.$refs.muveletkod.focus()
+      this.$refs.muveletkodok.focus()
     },
 
     async pubKodolas () {
       this.store.kodol.gepkod = this.store.kodol.gepkod || 0
-      let doc = Object.assign({}, this.store.kodol)
-      doc.funkcio = 99994
-      doc.createdAt = new Date()
-      this.store.kodolasok.unshift(doc)
-      this.store.menthet = false
-      const response = await RpcKodol(doc)
-      if (response.result) {
-        this.store.kodolasok[0].eredmeny = response.result.message
-      }
-      else {
-        this.store.kodolasok[0].eredmeny = 'Hiba!'
+      for (let i = 0; i < this.store.kodol.muveletkodok.length; i++) {
+        this.store.kodol.muveletkod = this.store.kodol.muveletkodok[i]
+        let doc = Object.assign({}, this.store.kodol)
+        doc.funkcio = 99994
+        doc.createdAt = new Date()
+        this.store.kodolasok.unshift(doc)
+        this.store.menthet = false
+        const response = await RpcKodol(doc)
+        if (response.result) {
+          this.store.kodolasok[0].eredmeny = response.result.message
+        }
+        else {
+          this.store.kodolasok[0].eredmeny = 'Hiba!'
+        }
       }
       this.store.menthet = true
-      this.store.kodol.muveletkod = null
+      this.store.kodol.muveletkodok = []
       this.store.kodol.mennyiseg = null
     },
 
     ujMunkalap () {
       this.store.kodol.munkalap = null
       this.store.kodol.gepkod = 0
-      this.store.kodol.muveletkod = null
+      this.store.kodol.muveletkodok = []
       this.store.kodol.mennyiseg = null
     },
 
@@ -153,7 +164,7 @@ export default {
       this.store.kodol.dolgozo = null
       this.store.kodol.munkalap = null
       this.store.kodol.gepkod = 0
-      this.store.kodol.muveletkod = null
+      this.store.kodol.muveletkodok = []
       this.store.kodol.mennyiseg = null
     }
   },
@@ -161,11 +172,20 @@ export default {
     if (!this.store.user) {
       this.$router.replace('/')
     }
+  },
+  mounted () {
+    this.$nextTick(function () {
+      document.querySelector('#muveletkodok_id > div > div > input').setAttribute('type', 'number')
+    })
   }
 }
 </script>
 
+#muveletkodok_id > div > div > input
+
 <style scoped lang="stylus">
+.text-margin-top
+  margin-top 0.4em
 .q-btn
   margin-top 0.5em
   margin-bottom 0.5em

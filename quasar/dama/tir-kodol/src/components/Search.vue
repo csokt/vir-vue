@@ -1,6 +1,6 @@
 <template>
   <div class="row justify-center">
-    <div style="width: 400px; max-width: 95vw;">
+    <div style="width: 450px; max-width: 95vw;">
       <div class="text-faded text-bold text-center text-margin-top">Technológiai dokumentációk</div>
       <h5 class="text-negative"> {{message}} </h5>
       <hr>
@@ -23,7 +23,6 @@
 const filter = {
   'varró': RegExp('^Lefordított olasz műszaki|^Konfekcionálási utasítás|^Konfekció minta elfogadás|^Fotó|^Videó')
 }
-console.log(filter)
 
 import axios from 'axios'
 import Store from '../store'

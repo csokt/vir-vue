@@ -16,7 +16,9 @@ views:
   sum:
   - Rendelt db
   - Előzőleg leadott db
+  - Tervezett db
   - Leadott db
+  - Eltérés a tervtől
   - Hibák száma
   - Hátralék
   fields:
@@ -27,11 +29,18 @@ views:
     label:    Rendelt
   - name:     Előzőleg leadott db
     label:    Előzőleg leadott
-  - name:     Leadott db
-    label:    Ma leadott
-  - name:     Hibák száma
   - name:     Hátralék
     label:    Gyártandó
+  - name:     Tervezett db
+    label:    Mai terv
+  - name:     Leadott db
+    label:    Ma leadott
+  - name:     Eltérés a tervtől
+    label:    Eltérés
+    positive: red
+    zero:     green
+    negative: green
+  - name:     Hibák száma
 
 -
   id:         vasaloleadas_tv
@@ -58,11 +67,11 @@ views:
     label:    Rendelt
   - name:     Előzőleg leadott db
     label:    Előzőleg leadott
+  - name:     Hátralék
+    label:    Gyártandó
   - name:     Leadott db
     label:    Ma leadott
   - name:     Hibák száma
-  - name:     Hátralék
-    label:    Gyártandó
 
 -
   id:         szabaszatleadas_tv
@@ -78,7 +87,9 @@ views:
   sum:
   - Rendelt db
   - Előzőleg leadott db
+  - Tervezett db
   - Leadott db
+  - Eltérés a tervtől
   - Hibák száma
   - Hátralék
   fields:
@@ -89,11 +100,99 @@ views:
     label:    Rendelt
   - name:     Előzőleg leadott db
     label:    Előzőleg leadott
-  - name:     Leadott db
-    label:    Ma leadott
-  - name:     Hibák száma
   - name:     Hátralék
     label:    Gyártandó
+  - name:     Tervezett db
+    label:    Mai terv
+  - name:     Leadott db
+    label:    Ma leadott
+  - name:     Eltérés a tervtől
+    label:    Eltérés
+    positive: red
+    zero:     green
+    negative: green
+  - name:     Hibák száma
+
+-
+  id:         aktualishetigyartasiterv_tv
+  database:   SzefoModulKeszlet
+  name:       monitor_aktualishetigyartasiterv
+  label:      Gyártási terv - aktuális hét
+  device:     tv
+  refresh:    300
+  where:
+  order:      Rendelésszám
+  head_after: 40
+  limit:      20
+  fields:
+  - name:     Cikkszám
+  - name:     IT szám
+  - name:     Kiszállítás dátuma
+  - name:     Megnevezés
+  - name:     Sürgős
+  - name:     Gyártandó mennyiség
+  - name:     Gyártásra vár
+  - name:     Átnéző
+  - name:     Mosoda
+  - name:     Fércelő
+  - name:     Félkész vasaló
+  - name:     Szabászat
+  - name:     Logisztika
+  - name:     Hímző/Szitanyomó
+    label:    Hímző / Szitanyomó
+  - name:     Szeged varroda
+  - name:     Orosháza varroda
+  - name:     Hódmezővásárhely Petőfi u
+    label:    Hmvhely Petőfi u
+
+-
+  id:         aktualishetigyartasiterv_osszes_tv
+  database:   SzefoModulKeszlet
+  name:       monitor_aktualishetigyartasiterv
+  label:      Gyártási terv - aktuális hét - összes
+  device:     tv
+  refresh:    300
+  where:
+  order:      Rendelésszám
+  head_after: 40
+  limit:      20
+  fields:
+  - name:     Cikkszám
+  - name:     Rendelésszám
+  - name:     Partner rendelésszám
+  - name:     Ütem
+  - name:     Kiszállítás dátuma
+  - name:     IT szám
+  - name:     Megnevezés
+  - name:     Finomság
+  - name:     Modellszám
+  - name:     Cikktípus
+  - name:     Sürgős
+  - name:     Rendelt mennyiség
+  - name:     Szín
+  - name:     Gyártandó mennyiség
+  - name:     Telephely
+  - name:     Fonalhiány
+  - name:     Rontott
+  - name:     Gyártásra vár
+  - name:     Átnéző
+  - name:     Mosoda
+  - name:     Fércelő
+  - name:     Félkész vasaló
+  - name:     Szabászat
+  - name:     Logisztika
+  - name:     Hímző/Szitanyomó
+  - name:     Szeged varroda
+  - name:     Orosháza varroda
+  - name:     Külső gyártók
+  - name:     Kiskunhalas varroda
+  - name:     Hódmezővásárhely Bocskai u
+  - name:     Hódmezővásárhely Petőfi u
+  - name:     Olaszország
+  - name:     Készáru vasaló
+  - name:     Meo
+  - name:     Kivezetve
+  - name:     Kiszállítva
 
 -
   id:         varrodatermeles_tv
@@ -108,12 +207,8 @@ views:
   limit:      20
   fields:
   - name:     Rendelésszám
-    type:     number
-    filter:   egyenlő
   - name:     IT
-    filter:   egyenlő
   - name:     Cikkszám
-    filter:   egyenlő
   - name:     Megnevezés
   - name:     Model
   - name:     Szín
