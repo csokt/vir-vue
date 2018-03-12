@@ -3,6 +3,126 @@ const configYaml = `
 
 views:
 -
+  id:         kotodeleadas_tv
+  database:   SzefoModulKeszlet
+  name:       monitor_szegedkotodeleadas
+  label:      Szeged kötöde napi leadás
+  device:     tv
+  refresh:    300
+  where:
+  order:      '[Cikk/IT]'
+  head_after: 40
+  limit:      20
+  sum:
+  - Rendelt db
+  - Előzőleg leadott db
+  - Tervezett db
+  - Leadott db
+  - Eltérés a tervtől
+  - Hibák száma
+  - Hátralék
+  fields:
+  - name:     Cikk/IT
+  - name:     Megnevezés
+  - name:     Megrendelő
+  - name:     Rendelt db
+    label:    Rendelt
+  - name:     Előzőleg leadott db
+    label:    Előzőleg leadott
+  - name:     Hátralék
+    label:    Gyártandó
+  - name:     Tervezett db
+    label:    Mai terv
+  - name:     Leadott db
+    label:    Ma leadott
+  - name:     Eltérés a tervtől
+    label:    Eltérés
+    positive: red
+    zero:     green
+    negative: green
+  - name:     Hibák száma
+
+-
+  id:         elovasaloleadas_tv
+  database:   SzefoModulKeszlet
+  name:       monitor_szegedelovasaloleadas
+  label:      Szeged elővasaló napi leadás
+  device:     tv
+  refresh:    300
+  where:
+  order:      '[Cikk/IT]'
+  head_after: 40
+  limit:      20
+  sum:
+  - Rendelt db
+  - Előzőleg leadott db
+  - Tervezett db
+  - Leadott db
+  - Eltérés a tervtől
+  - Hibák száma
+  - Hátralék
+  fields:
+  - name:     Cikk/IT
+  - name:     Megnevezés
+  - name:     Megrendelő
+  - name:     Rendelt db
+    label:    Rendelt
+  - name:     Előzőleg leadott db
+    label:    Előzőleg leadott
+  - name:     Hátralék
+    label:    Gyártandó
+  - name:     Tervezett db
+    label:    Mai terv
+  - name:     Leadott db
+    label:    Ma leadott
+  - name:     Eltérés a tervtől
+    label:    Eltérés
+    positive: red
+    zero:     green
+    negative: green
+  - name:     Hibák száma
+
+-
+  id:         szabaszatleadas_tv
+  database:   SzefoModulKeszlet
+  name:       monitor_szegedszabaszatleadas
+  label:      Szeged szabászat napi leadás
+  device:     tv
+  refresh:    300
+  where:
+  order:      '[Cikk/IT]'
+  head_after: 40
+  limit:      20
+  sum:
+  - Rendelt db
+  - Előzőleg leadott db
+  - Tervezett db
+  - Leadott db
+  - Eltérés a tervtől
+  - Hibák száma
+  - Hátralék
+  fields:
+  - name:     Cikk/IT
+  - name:     Megnevezés
+  - name:     Megrendelő
+  - name:     Rendelt db
+    label:    Rendelt
+  - name:     Előzőleg leadott db
+    label:    Előzőleg leadott
+  - name:     Hátralék
+    label:    Gyártandó
+  - name:     Tervezett db
+    label:    Mai terv
+  - name:     Leadott db
+    label:    Ma leadott
+  - name:     Eltérés a tervtől
+    label:    Eltérés
+    positive: red
+    zero:     green
+    negative: green
+  - name:     Hibák száma
+
+-
   id:         varrodaleadas_tv
   database:   SzefoModulKeszlet
   name:       monitor_szegedvarrodaleadas
@@ -43,41 +163,10 @@ views:
   - name:     Hibák száma
 
 -
-  id:         vasaloleadas_tv
+  id:         utovasaloleadas_tv
   database:   SzefoModulKeszlet
-  name:       monitor_szegedvasaloleadas
-  label:      Szeged vasaló napi leadás
-  device:     tv
-  refresh:    300
-  where:
-  order:      '[Cikk/IT]'
-  head_after: 40
-  limit:      20
-  sum:
-  - Rendelt db
-  - Előzőleg leadott db
-  - Leadott db
-  - Hibák száma
-  - Hátralék
-  fields:
-  - name:     Cikk/IT
-  - name:     Megnevezés
-  - name:     Megrendelő
-  - name:     Rendelt db
-    label:    Rendelt
-  - name:     Előzőleg leadott db
-    label:    Előzőleg leadott
-  - name:     Hátralék
-    label:    Gyártandó
-  - name:     Leadott db
-    label:    Ma leadott
-  - name:     Hibák száma
-
--
-  id:         szabaszatleadas_tv
-  database:   SzefoModulKeszlet
-  name:       monitor_szegedszabaszatleadas
-  label:      Szeged szabászat napi leadás
+  name:       monitor_szegedutovasaloleadas
+  label:      Szeged utóvasaló napi leadás
   device:     tv
   refresh:    300
   where:
@@ -96,6 +185,211 @@ views:
   - name:     Cikk/IT
   - name:     Megnevezés
   - name:     Megrendelő
+  - name:     Rendelt db
+    label:    Rendelt
+  - name:     Előzőleg leadott db
+    label:    Előzőleg leadott
+  - name:     Hátralék
+    label:    Gyártandó
+  - name:     Tervezett db
+    label:    Mai terv
+  - name:     Leadott db
+    label:    Ma leadott
+  - name:     Eltérés a tervtől
+    label:    Eltérés
+    positive: red
+    zero:     green
+    negative: green
+  - name:     Hibák száma
+
+-
+  id:         kotodeleadasszinszerint_tv
+  database:   SzefoModulKeszlet
+  name:       monitor_szegedkotodeleadasszinszerint
+  label:      Szeged kötöde napi leadás szín szerint
+  device:     tv
+  refresh:    300
+  where:
+  order:      '[Cikk/IT]'
+  head_after: 40
+  limit:      20
+  sum:
+  - Rendelt db
+  - Előzőleg leadott db
+  - Tervezett db
+  - Leadott db
+  - Eltérés a tervtől
+  - Hibák száma
+  - Hátralék
+  fields:
+  - name:     Cikk/IT
+  - name:     Megnevezés
+  - name:     Megrendelő
+  - name:     Szín
+  - name:     Rendelt db
+    label:    Rendelt
+  - name:     Előzőleg leadott db
+    label:    Előzőleg leadott
+  - name:     Hátralék
+    label:    Gyártandó
+  - name:     Tervezett db
+    label:    Mai terv
+  - name:     Leadott db
+    label:    Ma leadott
+  - name:     Eltérés a tervtől
+    label:    Eltérés
+    positive: red
+    zero:     green
+    negative: green
+  - name:     Hibák száma
+
+-
+  id:         elovasaloleadasszinszerint_tv
+  database:   SzefoModulKeszlet
+  name:       monitor_szegedelovasaloleadasszinszerint
+  label:      Szeged elővasaló napi leadás szín szerint
+  device:     tv
+  refresh:    300
+  where:
+  order:      '[Cikk/IT]'
+  head_after: 40
+  limit:      20
+  sum:
+  - Rendelt db
+  - Előzőleg leadott db
+  - Tervezett db
+  - Leadott db
+  - Eltérés a tervtől
+  - Hibák száma
+  - Hátralék
+  fields:
+  - name:     Cikk/IT
+  - name:     Megnevezés
+  - name:     Megrendelő
+  - name:     Szín
+  - name:     Rendelt db
+    label:    Rendelt
+  - name:     Előzőleg leadott db
+    label:    Előzőleg leadott
+  - name:     Hátralék
+    label:    Gyártandó
+  - name:     Tervezett db
+    label:    Mai terv
+  - name:     Leadott db
+    label:    Ma leadott
+  - name:     Eltérés a tervtől
+    label:    Eltérés
+    positive: red
+    zero:     green
+    negative: green
+  - name:     Hibák száma
+
+-
+  id:         szabaszatleadasszinszerint_tv
+  database:   SzefoModulKeszlet
+  name:       monitor_szegedszabaszatleadasszinszerint
+  label:      Szeged szabászat napi leadás szín szerint
+  device:     tv
+  refresh:    300
+  where:
+  order:      '[Cikk/IT]'
+  head_after: 40
+  limit:      20
+  sum:
+  - Rendelt db
+  - Előzőleg leadott db
+  - Tervezett db
+  - Leadott db
+  - Eltérés a tervtől
+  - Hibák száma
+  - Hátralék
+  fields:
+  - name:     Cikk/IT
+  - name:     Megnevezés
+  - name:     Megrendelő
+  - name:     Szín
+  - name:     Rendelt db
+    label:    Rendelt
+  - name:     Előzőleg leadott db
+    label:    Előzőleg leadott
+  - name:     Hátralék
+    label:    Gyártandó
+  - name:     Tervezett db
+    label:    Mai terv
+  - name:     Leadott db
+    label:    Ma leadott
+  - name:     Eltérés a tervtől
+    label:    Eltérés
+    positive: red
+    zero:     green
+    negative: green
+  - name:     Hibák száma
+
+-
+  id:         varrodaleadasszinszerint_tv
+  database:   SzefoModulKeszlet
+  name:       monitor_szegedvarrodaleadasszinszerint
+  label:      Szeged varroda napi leadás szín szerint
+  device:     tv
+  refresh:    300
+  where:
+  order:      '[Cikk/IT]'
+  head_after: 40
+  limit:      20
+  sum:
+  - Rendelt db
+  - Előzőleg leadott db
+  - Tervezett db
+  - Leadott db
+  - Eltérés a tervtől
+  - Hibák száma
+  - Hátralék
+  fields:
+  - name:     Cikk/IT
+  - name:     Megnevezés
+  - name:     Megrendelő
+  - name:     Szín
+  - name:     Rendelt db
+    label:    Rendelt
+  - name:     Előzőleg leadott db
+    label:    Előzőleg leadott
+  - name:     Hátralék
+    label:    Gyártandó
+  - name:     Tervezett db
+    label:    Mai terv
+  - name:     Leadott db
+    label:    Ma leadott
+  - name:     Eltérés a tervtől
+    label:    Eltérés
+    positive: red
+    zero:     green
+    negative: green
+  - name:     Hibák száma
+
+-
+  id:         utovasaloleadasszinszerint_tv
+  database:   SzefoModulKeszlet
+  name:       monitor_szegedutovasaloleadasszinszerint
+  label:      Szeged utóvasaló napi leadás szín szerint
+  device:     tv
+  refresh:    300
+  where:
+  order:      '[Cikk/IT]'
+  head_after: 40
+  limit:      20
+  sum:
+  - Rendelt db
+  - Előzőleg leadott db
+  - Tervezett db
+  - Leadott db
+  - Eltérés a tervtől
+  - Hibák száma
+  - Hátralék
+  fields:
+  - name:     Cikk/IT
+  - name:     Megnevezés
+  - name:     Megrendelő
+  - name:     Szín
   - name:     Rendelt db
     label:    Rendelt
   - name:     Előzőleg leadott db
@@ -228,8 +522,6 @@ playlists:
   id:         playlist2
   label:      Második lejátszási lista
   views:
-  - id:       vasaloleadas_tv
-    interval: 5
   - id:       szabaszatleadas_tv
     interval: 5
 `

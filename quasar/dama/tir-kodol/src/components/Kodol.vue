@@ -18,6 +18,10 @@
             <qrcode-reader v-if="!store.kodol.munkalap" :video-constraints="store.video" @decode="gotMunkalap"> </qrcode-reader>
           </q-field>
 
+          <q-field class="full-width" label="Kartoninfo" labelWidth=3>
+            <q-input v-model="store.kodol.kartoninfo" readonly></q-input>
+          </q-field>
+
           <q-field class="full-width" label="Gépkód" labelWidth=3 >
             <q-input ref="gepkod" type="number" v-model="store.kodol.gepkod" clearable=true @keyup.enter="$refs.muveletkodok.focus()"></q-input>
             <qrcode-reader v-if="store.kodol.gepkod === null || store.kodol.gepkod === ''" :video-constraints="store.video" @decode="gotGepkodQR"> </qrcode-reader>
@@ -115,12 +119,15 @@ export default {
       this.message = ''
       if (value) { this.store.kodol.munkalap = value }
       if (!this.store.kodol.munkalap) { return }
-      const response = await RpcRaw('select [cikkszam], [itszam] from [rendelesmunkalap] where [munkalapazonosito] = ' + this.store.kodol.munkalap.toString())
+      const response = await RpcRaw('select [cikkszam], [rendelesszam], [kartonszam], [db] from [rendelesmunkalap] where [munkalapazonosito] = ' + this.store.kodol.munkalap.toString())
       if (response.result && response.result.length) {
-        this.store.user.filterCikkszam = response.result[0].cikkszam.trim()
+        const row = response.result[0]
+        this.store.kodol.kartoninfo = row.cikkszam.trim() + '/' + parseInt(row.rendelesszam.trim().slice(-4).toString()) + ' ' + row.kartonszam.trim() + ' ' + row.db.toString()
+        this.store.user.filterCikkszam = row.cikkszam.trim()
         this.$refs.muveletkodok.focus()
       }
       else {
+        this.store.kodol.kartoninfo = null
         this.message = 'Érvénytelen munkalap!'
       }
     },
@@ -154,6 +161,7 @@ export default {
 
     ujMunkalap () {
       this.store.kodol.munkalap = null
+      this.store.kodol.kartoninfo = null
       this.store.kodol.gepkod = 0
       this.store.kodol.muveletkodok = []
       this.store.kodol.mennyiseg = null
@@ -163,6 +171,7 @@ export default {
       this.store.kodol.dolgozokod = null
       this.store.kodol.dolgozo = null
       this.store.kodol.munkalap = null
+      this.store.kodol.kartoninfo = null
       this.store.kodol.gepkod = 0
       this.store.kodol.muveletkodok = []
       this.store.kodol.mennyiseg = null
