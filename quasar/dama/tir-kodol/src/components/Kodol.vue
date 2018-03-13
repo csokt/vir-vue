@@ -36,7 +36,7 @@
           </q-field>
         </template>
 
-        <q-btn v-if="store.menthet && store.kodol.munkalap && store.kodol.muveletkodok.length && store.kodol.mennyiseg" @click="pubKodolas" push color="positive">Adatok mentése</q-btn>
+        <q-btn v-if="store.menthet && store.kodol.kartoninfo && store.kodol.muveletkodok.length && store.kodol.mennyiseg" @click="pubKodolas" push color="positive">Adatok mentése</q-btn>
         <q-btn @click="$router.go(-1)" push color="warning">Vissza</q-btn>
         <q-btn v-if="store.menthet && store.kodol.munkalap" @click="ujMunkalap" push color="tertiary">Új munkalap</q-btn>
         <q-btn v-if="store.menthet && store.kodol.dolgozo && store.user.role==='kódoló'" @click="ujDolgozo" push color="tertiary">Új dolgozó</q-btn>
@@ -67,7 +67,7 @@
 
 <script>
 import Store from '../store'
-import { RpcRaw, RpcKodol } from '../rpc'
+import { RpcRaw, RpcKodol, Log } from '../rpc'
 import {
   QField,
   QInput,
@@ -178,9 +178,8 @@ export default {
     }
   },
   created () {
-    if (!this.store.user) {
-      this.$router.replace('/')
-    }
+    if (!this.store.user) { this.$router.replace('/'); return }
+    Log('open')
   },
   mounted () {
     this.$nextTick(function () {

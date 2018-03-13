@@ -26,6 +26,7 @@ const filter = {
 
 import axios from 'axios'
 import Store from '../store'
+import { Log } from '../rpc'
 import {
   QSearch,
   QBtn,
@@ -61,6 +62,7 @@ export default {
   },
   methods: {
     async doSearch () {
+      Log('search', {string: this.search})
       this.spinner = true
       this.message = ''
       try {
@@ -88,10 +90,8 @@ export default {
   },
 
   created () {
-    if (!this.store.user) {
-      this.$router.replace('/')
-      return
-    }
+    if (!this.store.user) { this.$router.replace('/'); return }
+    Log('open')
     if (this.store.user.filterCikkszam) {
       this.search = this.store.user.filterCikkszam
       this.doSearch()

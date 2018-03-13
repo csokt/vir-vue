@@ -2,6 +2,7 @@
   <div class="row justify-center">
     <div style="width: 400px; max-width: 95vw;">
       <div class="text-faded text-bold text-center text-margin-top">Termelés információs rendszer</div>
+      <h5 class="text-negative"> {{message}} </h5>
       <hr>
       <template v-if="store.user">
         <q-item>
@@ -9,7 +10,7 @@
         </q-item>
         <q-item>
           <q-btn @click="$router.push('kodol')" push color="primary">Kódolás</q-btn>
-          <q-btn @click="store.user=null;scanUser=true; store.userError=''" push color="negative">Kijelentkezés</q-btn>
+          <q-btn @click="logout" push color="negative">Kijelentkezés</q-btn>
         </q-item>
         <q-item>
           <q-btn @click="$router.push('search')" push color="secondary">Techn. dokumentációk demo</q-btn>
@@ -33,9 +34,6 @@
           <qrcode-reader v-show="scanUser" :video-constraints="store.video" @decode="gotUserQR"> </qrcode-reader>
         </q-item>
       </template>
-      <q-item>
-        <h5 class="text-negative"> {{store.userError}} </h5>
-      </q-item>
     </div>
   </div>
 <!--
@@ -45,7 +43,7 @@
 <script>
 import Config from '../config'
 import Store from '../store'
-import { RpcRaw } from '../rpc'
+import { RpcRaw, Log } from '../rpc'
 
 import {
   QField,
@@ -67,7 +65,8 @@ export default {
       config: Config,
       store: Store,
       scanUser: true,
-      qrcode: null
+      qrcode: null,
+      message: ''
     }
   },
   computed: {
@@ -84,11 +83,11 @@ export default {
     async gotUserQR (value) {
       const qr = parseInt(value)
       if (!qr) {
-        this.store.userError = 'Csak számot lehet megadni!'
+        this.message = 'Csak számot lehet megadni!'
         return
       }
       if (qr < 20000) {
-        this.store.userError = 'A kód 20000-nél nem lehet kisebb!'
+        this.message = 'A kód 20000-nél nem lehet kisebb!'
       }
       else if (qr < 50000) {
         const dolgozokod = qr - 20000
@@ -114,10 +113,11 @@ export default {
           this.store.kodolasok = []
           this.store.menthet = true
           this.scanUser = false
-          this.store.userError = ''
+          this.message = ''
+          Log('login')
         }
         else {
-          this.store.userError = 'Érvénytelen felhasználó kód!'
+          this.message = 'Érvénytelen felhasználó kód!'
         }
       }
       else {
@@ -144,13 +144,23 @@ export default {
           this.store.kodolasok = []
           this.store.menthet = true
           this.scanUser = false
-          this.store.userError = ''
+          this.message = ''
+          Log('login')
         }
         else {
-          this.store.userError = 'Érvénytelen felhasználó kód!'
+          this.message = 'Érvénytelen felhasználó kód!'
         }
       }
+    },
+    logout () {
+      Log('logout')
+      this.store.user = null
+      this.scanUser = true
+      this.message = ''
     }
+  },
+  created () {
+    Log('open')
   }
 }
 </script>

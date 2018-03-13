@@ -7,7 +7,7 @@
     </div>
 
     <div v-if="isFilter" class="panel-body">
-      <vue-form-generator :schema="view.schema" :model="store.filter" :options="formOptions"></vue-form-generator>
+      <vue-form-generator :schema="view.schema" :model="filter" :options="formOptions"></vue-form-generator>
       <q-btn @click="result = {}; spinner = true; isFilter = false; requestData()" push color="positive">Ment</q-btn>
     </div>
 
@@ -45,7 +45,7 @@ Vue.use(VueFormGenerator)
 // import "vue-form-generator/dist/vfg-core.css"
 import Config from '../config'
 import Store from '../store'
-import { RpcView } from '../rpc'
+import { RpcView, Log } from '../rpc'
 import {
   QBtn,
   QSpinner
@@ -61,6 +61,7 @@ export default {
     return {
       result: {},
       store: Store,
+      filter: {},
       isFilter: false,
       spinner: true,
       formOptions: {
@@ -76,7 +77,7 @@ export default {
   },
   methods: {
     async requestData () {
-      const response = await RpcView(this.view, this.store.filter)
+      const response = await RpcView(this.view, this.filter)
       this.result = response.result || {}
       this.spinner = false
     },
@@ -88,20 +89,21 @@ export default {
     }
   },
 
-  beforeCreate () {
-    if (!Store.user) { this.$router.replace('/'); return }
+  created () {
+    if (!this.store.user) { this.$router.replace('/'); return }
+    Log('open')
     const view = Config.views.find(o => o.id === this.$route.params.id)
     let model = {}
     for (let field of view.fields) {
       if (!field.filter) { continue }
       if (field.default) {
-        model[field.name] = Store.user[field.default]
+        model[field.name] = this.store.user[field.default]
       }
       else {
         model[field.name] = null
       }
     }
-    Store.filter = model
+    this.filter = model
   },
   mounted () {
     if (this.view.refresh) {

@@ -14,10 +14,7 @@ let Store = {
   user: null,
   kodol: null,
   kodolasok: [],
-  filter: null,
-  menthet: true,
-
-  userError: ''
+  menthet: true
 }
 
 export default Store

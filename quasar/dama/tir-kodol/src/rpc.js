@@ -1,3 +1,4 @@
+import router from './router'
 import mqtt from 'mqtt'
 import Store from './store'
 
@@ -23,6 +24,17 @@ client.on('message', function (topic, message) {
   }
 })
 
+function Log (event, data = {}) {
+  let message = {
+    program: 'tir-kodol',
+    event: event,
+    path: router.app._route.path,
+    data: data,
+    user: Store.user
+  }
+  client.publish(prefix + 'log/' + message.program + '/' + message.event, JSON.stringify(message))
+}
+
 function rpcPublish (method, params, requestBase) {
   return new Promise((resolve, reject) => {
     const id = Math.random().toString(36).replace('0.', '')
@@ -42,6 +54,7 @@ function RpcRaw (query) {
     database: 'SzefoModulKeszlet',
     query: query
   }
+  Log('rpcraw', params)
   return rpcPublish('raw', params, mssqlRequestBase)
 }
 
@@ -50,11 +63,13 @@ function RpcView (view, filter) {
     view: view,
     filter: filter
   }
+  Log('rpcview', filter)
   return rpcPublish('view', params, mssqlRequestBase)
 }
 
 function RpcKodol (params) {
+  Log('kodol', params)
   return rpcPublish('kodol', params, damakodolRequestBase)
 }
 
-export { RpcRaw, RpcView, RpcKodol }
+export { RpcRaw, RpcView, RpcKodol, Log }
