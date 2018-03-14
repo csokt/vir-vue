@@ -114,7 +114,7 @@ export default {
           this.store.menthet = true
           this.scanUser = false
           this.message = ''
-          Log('login')
+          Log('login', this.store.user)
         }
         else {
           this.message = 'Érvénytelen felhasználó kód!'
@@ -145,7 +145,7 @@ export default {
           this.store.menthet = true
           this.scanUser = false
           this.message = ''
-          Log('login')
+          Log('login', this.store.user)
         }
         else {
           this.message = 'Érvénytelen felhasználó kód!'
@@ -153,14 +153,14 @@ export default {
       }
     },
     logout () {
-      Log('logout')
+      Log('logout', this.store.user)
       this.store.user = null
       this.scanUser = true
       this.message = ''
     }
   },
   created () {
-    Log('open')
+    Log('navigate')
   }
 }
 </script>

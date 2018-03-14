@@ -24,15 +24,21 @@ client.on('message', function (topic, message) {
   }
 })
 
+let lastPayload = null
+
 function Log (event, data = {}) {
-  let message = {
+  const message = {
     program: 'tir-kodol',
     event: event,
     path: router.app._route.path,
-    data: data,
-    user: Store.user
+    user: Store.user && Store.user.name,
+    data: data
   }
-  client.publish(prefix + 'log/' + message.program + '/' + message.event, JSON.stringify(message))
+  const payload = JSON.stringify(message)
+  if (lastPayload !== payload) {
+    client.publish(prefix + 'log/' + message.program + '/' + message.event, payload)
+    lastPayload = payload
+  }
 }
 
 function rpcPublish (method, params, requestBase) {

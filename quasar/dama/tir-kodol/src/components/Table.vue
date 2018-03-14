@@ -91,7 +91,7 @@ export default {
 
   created () {
     if (!this.store.user) { this.$router.replace('/'); return }
-    Log('open')
+    Log('navigate')
     const view = Config.views.find(o => o.id === this.$route.params.id)
     let model = {}
     for (let field of view.fields) {

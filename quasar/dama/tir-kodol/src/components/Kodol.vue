@@ -179,7 +179,7 @@ export default {
   },
   created () {
     if (!this.store.user) { this.$router.replace('/'); return }
-    Log('open')
+    Log('navigate')
   },
   mounted () {
     this.$nextTick(function () {

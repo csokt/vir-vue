@@ -83,6 +83,7 @@ export default {
     },
 
     openUrl (path) {
+      Log('show', {file: path})
       let win = window.open(publicUrl + 'files/?p=' + path, '_blank')
       if (win) { win.focus() }
       else { alert('Engedélyezze a felugró ablakokat ezen az oldalon!') }
@@ -91,7 +92,7 @@ export default {
 
   created () {
     if (!this.store.user) { this.$router.replace('/'); return }
-    Log('open')
+    Log('navigate')
     if (this.store.user.filterCikkszam) {
       this.search = this.store.user.filterCikkszam
       this.doSearch()
