@@ -95,11 +95,13 @@ export default {
       const qr = parseInt(value)
       if (!qr) {
         this.message = 'Csak számot lehet megadni!'
+        Log('message', {message: this.message})
         return
       }
       this.message = ''
       if (qr < 20000) {
         this.message = 'A kód 20000-nél nem lehet kisebb!'
+        Log('message', {message: this.message})
       }
       else {
         this.store.kodol.dolgozokod = value
@@ -107,10 +109,14 @@ export default {
         const response = await RpcRaw("select [dolgozokod], [dolgozonev] from [dolgtr] where [aktiv] = 'A' and [dolgozokod] = " + dolgozokod.toString())
         if (response.result && response.result.length) {
           this.store.kodol.dolgozo = response.result[0].dolgozonev.trim()
-          this.$refs.munkalap.focus()
+          this.$nextTick(function () {
+            document.querySelector('#muveletkodok_id input').setAttribute('type', 'number')
+            this.$refs.munkalap.focus()
+          })
         }
         else {
           this.message = 'Érvénytelen dolgozó kód!'
+          Log('message', {message: this.message})
         }
       }
     },
@@ -129,6 +135,7 @@ export default {
       else {
         this.store.kodol.kartoninfo = null
         this.message = 'Érvénytelen munkalap!'
+        Log('message', {message: this.message})
       }
     },
 
@@ -139,6 +146,7 @@ export default {
 
     async pubKodolas () {
       this.store.kodol.gepkod = this.store.kodol.gepkod || 0
+      Log('kodol', this.store.kodol)
       for (let i = 0; i < this.store.kodol.muveletkodok.length; i++) {
         this.store.kodol.muveletkod = this.store.kodol.muveletkodok[i]
         let doc = Object.assign({}, this.store.kodol)
@@ -160,6 +168,7 @@ export default {
     },
 
     ujMunkalap () {
+      Log('clickbutton', {button: 'Új munkalap'})
       this.store.kodol.munkalap = null
       this.store.kodol.kartoninfo = null
       this.store.kodol.gepkod = 0
@@ -168,6 +177,7 @@ export default {
     },
 
     ujDolgozo () {
+      Log('clickbutton', {button: 'Új dolgozó'})
       this.store.kodol.dolgozokod = null
       this.store.kodol.dolgozo = null
       this.store.kodol.munkalap = null
@@ -183,7 +193,7 @@ export default {
   },
   mounted () {
     this.$nextTick(function () {
-      document.querySelector('#muveletkodok_id > div > div > input').setAttribute('type', 'number')
+      document.querySelector('#muveletkodok_id input').setAttribute('type', 'number')
     })
   }
 }

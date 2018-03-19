@@ -19,11 +19,6 @@
 </template>
 
 <script>
-
-const filter = {
-  'varró': RegExp('^Lefordított olasz műszaki|^Konfekcionálási utasítás|^Konfekció minta elfogadás|^Fotó|^Videó')
-}
-
 import axios from 'axios'
 import Store from '../store'
 import { Log } from '../rpc'
@@ -66,6 +61,10 @@ export default {
       this.spinner = true
       this.message = ''
       try {
+        const filter = {
+          'varró': RegExp('^Lefordított olasz műszaki|^Konfekcionálási utasítás|^Konfekció minta elfogadás|^Fotó|^Videó'),
+          'kódoló': RegExp('^Fotó')
+        }
         const response = await HTTP.get('api2/search/?q=' + this.search)
         const regexp1 = filter[this.store.user.role]
         const regexp2 = RegExp(this.search + '\\.')
@@ -73,10 +72,12 @@ export default {
         this.results = results.sort(function (a, b) { return a.name > b.name })
         if (!results.length) {
           this.message = 'Nincs adat!'
+          Log('message', {message: this.message})
         }
       }
       catch (e) {
         this.message = 'Keresési hiba!'
+        Log('message', {message: this.message})
         console.log(e)
       }
       this.spinner = false

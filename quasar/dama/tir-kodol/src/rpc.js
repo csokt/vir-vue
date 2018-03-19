@@ -36,7 +36,7 @@ function Log (event, data = {}) {
   }
   const payload = JSON.stringify(message)
   if (lastPayload !== payload) {
-    client.publish(prefix + 'log/' + message.program + '/' + message.event, payload)
+    client.publish(prefix + 'log/ui/' + message.program + '/' + message.event, payload)
     lastPayload = payload
   }
 }
@@ -60,7 +60,6 @@ function RpcRaw (query) {
     database: 'SzefoModulKeszlet',
     query: query
   }
-  Log('rpcraw', params)
   return rpcPublish('raw', params, mssqlRequestBase)
 }
 
@@ -69,12 +68,10 @@ function RpcView (view, filter) {
     view: view,
     filter: filter
   }
-  Log('rpcview', filter)
   return rpcPublish('view', params, mssqlRequestBase)
 }
 
 function RpcKodol (params) {
-  Log('kodol', params)
   return rpcPublish('kodol', params, damakodolRequestBase)
 }
 

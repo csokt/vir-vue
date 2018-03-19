@@ -84,10 +84,12 @@ export default {
       const qr = parseInt(value)
       if (!qr) {
         this.message = 'Csak számot lehet megadni!'
+        Log('message', {message: this.message})
         return
       }
       if (qr < 20000) {
         this.message = 'A kód 20000-nél nem lehet kisebb!'
+        Log('message', {message: this.message})
       }
       else if (qr < 50000) {
         const dolgozokod = qr - 20000
@@ -118,6 +120,7 @@ export default {
         }
         else {
           this.message = 'Érvénytelen felhasználó kód!'
+          Log('message', {message: this.message})
         }
       }
       else {
@@ -149,6 +152,7 @@ export default {
         }
         else {
           this.message = 'Érvénytelen felhasználó kód!'
+          Log('message', {message: this.message})
         }
       }
     },

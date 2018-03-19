@@ -83,6 +83,9 @@ export default {
     },
     clickField (row, field) {
       if (field.search) {
+        let data = {}
+        data[field.name] = row[field.name]
+        Log('clickfield', data)
         this.store.user.filterCikkszam = row[field.name]
         this.$router.push('/search')
       }
