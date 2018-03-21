@@ -145,54 +145,162 @@ views:
   roles:
   - varró
   - varrodavezető
+  where:
   order:      '[Cikk/IT]'
   head_after: 15
   limit:      100
   sum:
   - Rendelt db
   - Előzőleg leadott db
+  - Tervezett db
   - Leadott db
+  - Eltérés a tervtől
   - Hibák száma
   - Hátralék
   fields:
   - name:     Cikk/IT
-    filter:   egyenlő
   - name:     Megnevezés
   - name:     Megrendelő
   - name:     Rendelt db
     label:    Rendelt
   - name:     Előzőleg leadott db
     label:    Előzőleg leadott
-  - name:     Leadott db
-    label:    Ma leadott
-  - name:     Hibák száma
   - name:     Hátralék
     label:    Gyártandó
+    positive: red
+    zero:     green
+    negative: green
+  - name:     Tervezett db
+    label:    Mai terv
+  - name:     Leadott db
+    label:    Ma leadott
+  - name:     Eltérés a tervtől
+    label:    Eltérés
+    positive: green
+    zero:     green
+    negative: red
+  - name:     Hibák száma
+    label:    Hibák
 
 -
-  id:         varrodatermeles
+  id:         aktualishetigyartasiterv_tablet
   database:   SzefoModulKeszlet
-  name:       monitor_szegedvarrodatermeles
-  label:      Szeged varroda heti gyártási terve
+  name:       monitor_aktualishetigyartasiterv
+  label:      Gyártási terv - aktuális hét
   device:     tablet
   roles:
   - varró
   - varrodavezető
-  order:      Rendelésszám
+  where:
+  order:      Cikkszám
   head_after: 15
   limit:      100
+  sum:
+  - Gyártandó mennyiség
+  - Gyártásra vár
+  - Átnéző
+  - Mosoda
+  - Fércelő
+  - Félkész vasaló
+  - Szabászat
+  - Logisztika
+  - Hímző/Szitanyomó
+  - Szeged varroda
+  - Orosháza varroda
+  - Hódmezővásárhely Petőfi u
   fields:
-  - name:     Rendelésszám
-    type:     number
-    filter:   egyenlő
-  - name:     IT
-    filter:   egyenlő
   - name:     Cikkszám
-    filter:   egyenlő
+    label:    Cikk
+  - name:     IT szám
+    label:    IT
+  - name:     Kiszállítás dátuma
+    label:    Kiszáll. dátum
   - name:     Megnevezés
-  - name:     Model
-  - name:     Szín
-  - name:     Gyártandó
+  - name:     Sürgős
+  - name:     Gyártandó mennyiség
+    label:    Gyárt. menny.
+  - name:     Gyártásra vár
+    label:    Gyárt. vár
+  - name:     Átnéző
+    label:    Átn.
+  - name:     Mosoda
+    label:    Mos.
+  - name:     Fércelő
+    label:    Férc.
+  - name:     Félkész vasaló
+    label:    Félk. vas.
+  - name:     Szabászat
+    label:    Szab.
+  - name:     Logisztika
+    label:    Log.
+  - name:     Hímző/Szitanyomó
+    label:    Hímző
+  - name:     Szeged varroda
+    label:    Szeged varr.
+  - name:     Orosháza varroda
+    label:    Orosh. varr.
+  - name:     Hódmezővásárhely Petőfi u
+    label:    Hmvh. varr.
+
+-
+  id:         kovetkezohetigyartasiterv_tablet
+  database:   SzefoModulKeszlet
+  name:       monitor_kovetkezohetigyartasiterv
+  label:      Gyártási terv - következő hét
+  device:     tablet
+  roles:
+  - varró
+  - varrodavezető
+  where:
+  order:      Cikkszám
+  head_after: 15
+  limit:      100
+  sum:
+  - Gyártandó mennyiség
+  - Gyártásra vár
+  - Átnéző
+  - Mosoda
+  - Fércelő
+  - Félkész vasaló
+  - Szabászat
+  - Logisztika
+  - Hímző/Szitanyomó
+  - Szeged varroda
+  - Orosháza varroda
+  - Hódmezővásárhely Petőfi u
+  fields:
+  - name:     Cikkszám
+    label:    Cikk
+  - name:     IT szám
+    label:    IT
+  - name:     Kiszállítás dátuma
+    label:    Kiszáll. dátum
+  - name:     Megnevezés
+  - name:     Sürgős
+  - name:     Gyártandó mennyiség
+    label:    Gyárt. menny.
+  - name:     Gyártásra vár
+    label:    Gyárt. vár
+  - name:     Átnéző
+    label:    Átn.
+  - name:     Mosoda
+    label:    Mos.
+  - name:     Fércelő
+    label:    Férc.
+  - name:     Félkész vasaló
+    label:    Félk. vas.
+  - name:     Szabászat
+    label:    Szab.
+  - name:     Logisztika
+    label:    Log.
+  - name:     Hímző/Szitanyomó
+    label:    Hímző
+  - name:     Szeged varroda
+    label:    Szeged varr.
+  - name:     Orosháza varroda
+    label:    Orosh. varr.
+  - name:     Hódmezővásárhely Petőfi u
+    label:    Hmvh. varr.
 
 -
   id:         mitkodoltamma

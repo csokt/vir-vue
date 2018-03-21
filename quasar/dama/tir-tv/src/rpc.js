@@ -10,7 +10,8 @@ const damakodolResponseBase = prefix + 'tir/dama/kodol/response/' + cid + '/'
 
 let resolver = {}
 
-const client = mqtt.connect('wss://mqtts.szefo.local:8880', {username: 'admin', password: 'Szefo1953'})
+// const client = mqtt.connect('wss://mqtts.szefo.local:8880', {username: 'admin', password: 'Szefo1953'})
+const client = mqtt.connect('ws://mqtt.szefo.local:8080', {username: 'admin', password: 'Szefo1953'})
 client.subscribe(mssqlResponseBase + '#')
 client.subscribe(damakodolResponseBase + '#')
 

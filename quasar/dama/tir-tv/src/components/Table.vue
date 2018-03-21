@@ -1,7 +1,8 @@
 <template>
   <div>
     <div v-if="view">
-      <table class="q-table cell-separator table-striped">
+      <h6 class="text-center">{{view.label}}</h6>
+      <table class="q-table cell-separator table-striped compact">
         <thead>
           <tr>
             <th v-for="field in view.fields">{{field.label}}</th>
@@ -79,7 +80,7 @@ export default {
 table {
   border-collapse: collapse;
   width: 100%;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: bold;
 }
 

@@ -13,7 +13,7 @@
           <q-btn @click="logout" push color="negative">Kijelentkezés</q-btn>
         </q-item>
         <q-item>
-          <q-btn @click="$router.push('search')" push color="secondary">Techn. dokumentációk demo</q-btn>
+          <q-btn @click="$router.push('search')" push color="secondary">Technológiai dokumentációk</q-btn>
         </q-item>
         <q-item>
           <h5>Táblázatok </h5>

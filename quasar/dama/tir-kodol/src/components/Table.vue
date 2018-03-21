@@ -23,7 +23,7 @@
         </tr>
         <template v-for="(row, index) in result.records">
           <tr>
-            <td v-for="field in view.fields" @click="clickField(row, field)" v-bind:class="{ search: field.search }">{{row[field.name]}}</td>
+            <td v-for="field in view.fields" @click="clickField(row, field)" v-bind:class="{ search: field.search }" v-bind:style="{ color: color(field, row[field.name]) }">{{row[field.name]}}</td>
           </tr>
           <tr v-if="(index + 1) % view.head_after === 0">
             <th v-for="field in view.fields">{{field.label}}</th>
@@ -89,6 +89,11 @@ export default {
         this.store.user.filterCikkszam = row[field.name]
         this.$router.push('/search')
       }
+    },
+    color (field, value) {
+      if (value > 0) { return field.positive }
+      if (value === 0) { return field.zero }
+      if (value < 0) { return field.negative }
     }
   },
 
