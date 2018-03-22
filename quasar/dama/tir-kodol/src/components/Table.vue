@@ -11,21 +11,21 @@
       <q-btn @click="result = {}; spinner = true; isFilter = false; requestData()" push color="positive">Ment</q-btn>
     </div>
 
-    <table class="q-table cell-separator table-striped">
-      <thead>
+    <table class="q-table cell-separator table-striped compact" v-bind:style="{ 'font-size': view.tablefontsize }">
+      <thead v-bind:style="{ 'font-size': view.headfontsize }">
         <tr>
           <th v-for="field in view.fields">{{field.label}}</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody v-bind:style="{ 'font-size': view.bodyfontsize }">
         <tr v-for="row in result.stat" class="stat">
-          <td v-for="field in view.fields">{{row[field.name]}}</td>
+          <td v-for="field in view.fields" v-bind:style="{'font-size': field.fontsize }">{{row[field.name]}}</td>
         </tr>
         <template v-for="(row, index) in result.records">
           <tr>
-            <td v-for="field in view.fields" @click="clickField(row, field)" v-bind:class="{ search: field.search }" v-bind:style="{ color: color(field, row[field.name]) }">{{row[field.name]}}</td>
+            <td v-for="field in view.fields" @click="clickField(row, field)" v-bind:class="{ search: field.search }" v-bind:style="{ color: color(field, row[field.name]), 'font-size': field.fontsize }">{{row[field.name]}}</td>
           </tr>
-          <tr v-if="(index + 1) % view.head_after === 0">
+          <tr v-if="(index + 1) % view.head_after === 0" v-bind:style="{ 'font-size': view.headfontsize }">
             <th v-for="field in view.fields">{{field.label}}</th>
           </tr>
         </template>

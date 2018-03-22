@@ -11,8 +11,11 @@ views:
   refresh:    70
   where:
   order:      Cikkszám
-  head_after: 40
-  limit:      20
+  head_after: 100
+  limit:      50
+#  tablefontsize:  14px
+#  headfontsize:   10px
+#  bodyfontsize:   10px
   sum:
   - Gyártandó mennyiség
   - Gyártásra vár
@@ -37,6 +40,7 @@ views:
   - name:     Sürgős
   - name:     Gyártandó mennyiség
     label:    Gyárt. menny.
+#    fontsize: 24px
   - name:     Gyártásra vár
     label:    Gyárt. vár
   - name:     Átnéző
@@ -69,8 +73,9 @@ views:
   refresh:    70
   where:
   order:      Cikkszám
-  head_after: 40
-  limit:      20
+  head_after: 100
+  limit:      50
+  fontsize:   14px
   sum:
   - Gyártandó mennyiség
   - Gyártásra vár
@@ -127,8 +132,22 @@ views:
   refresh:    70
   where:
   order:      Rendelésszám
-  head_after: 40
-  limit:      20
+  head_after: 100
+  limit:      50
+  fontsize:   14px
+  sum:
+  - Gyártandó mennyiség
+  - Gyártásra vár
+  - Átnéző
+  - Mosoda
+  - Fércelő
+  - Félkész vasaló
+  - Szabászat
+  - Logisztika
+  - Hímző/Szitanyomó
+  - Szeged varroda
+  - Orosháza varroda
+  - Hódmezővásárhely Petőfi u
   fields:
   - name:     Cikkszám
   - name:     Rendelésszám
@@ -176,8 +195,8 @@ views:
   refresh:    70
   where:
   order:      '[Cikk/IT]'
-  head_after: 40
-  limit:      20
+  head_after: 100
+  limit:      50
   sum:
   - Rendelt db
   - Előzőleg leadott db
@@ -220,8 +239,8 @@ views:
   refresh:    300
   where:
   order:      '[Cikk/IT]'
-  head_after: 40
-  limit:      20
+  head_after: 100
+  limit:      50
   sum:
   - Rendelt db
   - Előzőleg leadott db
@@ -260,8 +279,8 @@ views:
   refresh:    300
   where:
   order:      '[Cikk/IT]'
-  head_after: 40
-  limit:      20
+  head_after: 100
+  limit:      50
   sum:
   - Rendelt db
   - Előzőleg leadott db
@@ -300,8 +319,8 @@ views:
   refresh:    300
   where:
   order:      '[Cikk/IT]'
-  head_after: 40
-  limit:      20
+  head_after: 100
+  limit:      50
   sum:
   - Rendelt db
   - Előzőleg leadott db
@@ -340,8 +359,8 @@ views:
   refresh:    300
   where:
   order:      '[Cikk/IT]'
-  head_after: 40
-  limit:      20
+  head_after: 100
+  limit:      50
   sum:
   - Rendelt db
   - Előzőleg leadott db
@@ -380,8 +399,8 @@ views:
   refresh:    300
   where:
   order:      '[Cikk/IT]'
-  head_after: 40
-  limit:      20
+  head_after: 100
+  limit:      50
   sum:
   - Rendelt db
   - Előzőleg leadott db
@@ -421,8 +440,8 @@ views:
   refresh:    300
   where:
   order:      '[Cikk/IT]'
-  head_after: 40
-  limit:      20
+  head_after: 100
+  limit:      50
   sum:
   - Rendelt db
   - Előzőleg leadott db
@@ -462,8 +481,8 @@ views:
   refresh:    300
   where:
   order:      '[Cikk/IT]'
-  head_after: 40
-  limit:      20
+  head_after: 100
+  limit:      50
   sum:
   - Rendelt db
   - Előzőleg leadott db
@@ -503,8 +522,8 @@ views:
   refresh:    300
   where:
   order:      '[Cikk/IT]'
-  head_after: 40
-  limit:      20
+  head_after: 100
+  limit:      50
   sum:
   - Rendelt db
   - Előzőleg leadott db

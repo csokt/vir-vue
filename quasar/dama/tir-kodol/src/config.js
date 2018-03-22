@@ -16,6 +16,9 @@ views:
   order:      '[Kódolás ideje] DESC'
   head_after: 15
   limit:      100
+#  tablefontsize:  14px
+#  headfontsize:   10px
+#  bodyfontsize:   10px
   fields:
   - name:     Dolgozó kód
     type:     number
@@ -23,8 +26,10 @@ views:
     default:  belepokod
     readonly: true
   - name:     Cikkszám
+    label:    Cikk
     filter:   egyenlő
     search:   filterCikkszam
+#    fontsize: 24px
   - name:     IT
     filter:   egyenlő
   - name:     Diszpó
@@ -60,6 +65,7 @@ views:
     default:  belepokod
     readonly: true
   - name:     Cikkszám
+    label:    Cikk
     filter:   egyenlő
     search:   filterCikkszam
   - name:     IT
@@ -124,8 +130,10 @@ views:
   limit:      500
   fields:
   - name:     Cikkszám
+    label:    Cikk
     filter:   egyenlő
     default:  filterCikkszam
+    search:   filterCikkszam
   - name:     Műveletkód
     type:     number
     filter:   egyenlő
@@ -146,7 +154,7 @@ views:
   - varró
   - varrodavezető
   where:
-  order:      '[Cikk/IT]'
+  order:      Cikkszám
   head_after: 15
   limit:      100
   sum:
@@ -158,7 +166,10 @@ views:
   - Hibák száma
   - Hátralék
   fields:
-  - name:     Cikk/IT
+  - name:     Cikkszám
+    label:    Cikk
+    search:   filterCikkszam
+  - name:     IT
   - name:     Megnevezés
   - name:     Megrendelő
   - name:     Rendelt db
@@ -211,12 +222,16 @@ views:
   fields:
   - name:     Cikkszám
     label:    Cikk
+    search:   filterCikkszam
   - name:     IT szám
     label:    IT
   - name:     Kiszállítás dátuma
     label:    Kiszáll. dátum
+    fontsize: 14px
   - name:     Megnevezés
+    fontsize: 14px
   - name:     Sürgős
+    fontsize: 14px
   - name:     Gyártandó mennyiség
     label:    Gyárt. menny.
   - name:     Gyártásra vár
@@ -271,12 +286,16 @@ views:
   fields:
   - name:     Cikkszám
     label:    Cikk
+    search:   filterCikkszam
   - name:     IT szám
     label:    IT
   - name:     Kiszállítás dátuma
     label:    Kiszáll. dátum
+    fontsize: 14px
   - name:     Megnevezés
+    fontsize: 14px
   - name:     Sürgős
+    fontsize: 14px
   - name:     Gyártandó mennyiség
     label:    Gyárt. menny.
   - name:     Gyártásra vár
@@ -320,6 +339,7 @@ views:
     default:  belepokod
     readonly: true
   - name:     Cikkszám
+    label:    Cikk
     filter:   egyenlő
   - name:     IT
     filter:   egyenlő
@@ -350,6 +370,7 @@ views:
   limit:      500
   fields:
   - name:     Cikkszám
+    label:    Cikk
     filter:   egyenlő
   - name:     IT
     filter:   egyenlő

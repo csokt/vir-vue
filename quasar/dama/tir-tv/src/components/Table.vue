@@ -2,18 +2,18 @@
   <div>
     <div v-if="view">
       <h6 class="text-center">{{view.label}}</h6>
-      <table class="q-table cell-separator table-striped compact">
-        <thead>
+      <table class="q-table cell-separator table-striped compact" v-bind:style="{ 'font-size': view.tablefontsize }">
+        <thead v-bind:style="{ 'font-size': view.headfontsize }">
           <tr>
             <th v-for="field in view.fields">{{field.label}}</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody v-bind:style="{ 'font-size': view.bodyfontsize }">
           <tr v-for="row in result.stat" class="stat">
-            <td v-for="field in view.fields">{{row[field.name]}}</td>
+            <td v-for="field in view.fields" v-bind:style="{'font-size': field.fontsize }">{{row[field.name]}}</td>
           </tr>
           <tr v-for="row in result.records">
-            <td v-for="field in view.fields" v-bind:style="{ color: color(field, row[field.name]) }">{{row[field.name]}}</td>
+            <td v-for="field in view.fields" v-bind:style="{ color: color(field, row[field.name]), 'font-size': field.fontsize }">{{row[field.name]}}</td>
           </tr>
         </tbody>
       </table>
