@@ -28,10 +28,12 @@ let lastPayload = null
 
 function Log (event, data = {}) {
   const message = {
+    user: (Store.user && Store.user.name) || 'nincs',
+    privateip: Store.privateIP,
     program: 'tir-kodol',
     event: event,
     path: router.app._route.path,
-    user: Store.user && Store.user.name,
+    publicip: Store.publicIP,
     data: data
   }
   const payload = JSON.stringify(message)

@@ -5,6 +5,8 @@ const facingMode = device === 'phone' ? 'environment' : 'user'
 
 let Store = {
   teszt: null,
+  privateIP: '',
+  publicIP: '',
   device: device,
   video: {
     facingMode: facingMode,

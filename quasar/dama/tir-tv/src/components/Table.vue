@@ -1,6 +1,7 @@
 <template>
   <div>
     <div v-if="view">
+      <title>{{view.label}}</title>
       <h6 class="text-center">{{view.label}}</h6>
       <table class="q-table cell-separator table-striped compact" v-bind:style="{ 'font-size': view.tablefontsize }">
         <thead v-bind:style="{ 'font-size': view.headfontsize }">

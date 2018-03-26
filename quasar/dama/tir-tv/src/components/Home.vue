@@ -1,5 +1,6 @@
 <template>
   <div class="row justify-center">
+    <title>TV App</title>
     <div style="width: 500px; max-width: 95vw;">
 
       <h5 class="text-center">Termelés Információs Rendszer TV</h5>
