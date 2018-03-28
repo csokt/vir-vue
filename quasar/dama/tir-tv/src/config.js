@@ -14,7 +14,7 @@ views:
   head_after: 100
   limit:      50
 #  tablefontsize:  14px
-#  headfontsize:   10px
+  headfontsize:   16px
 #  bodyfontsize:   10px
   sum:
   - Gyártandó mennyiség
@@ -35,14 +35,16 @@ views:
   - name:     IT szám
     label:    IT
   - name:     Kiszállítás dátuma
-    label:    Kiszáll. dátum
+    label:    Kiszállítás
+    fontsize: 16px
   - name:     Megnevezés
+    fontsize: 16px
   - name:     Sürgős
+    fontsize: 16px
   - name:     Gyártandó mennyiség
-    label:    Gyárt. menny.
-#    fontsize: 24px
+    label:    Gyártandó
   - name:     Gyártásra vár
-    label:    Gyárt. vár
+    label:    Gyárt.vár
   - name:     Átnéző
     label:    Átn.
   - name:     Mosoda
@@ -50,7 +52,7 @@ views:
   - name:     Fércelő
     label:    Férc.
   - name:     Félkész vasaló
-    label:    Félk. vas.
+    label:    Félk.vas.
   - name:     Szabászat
     label:    Szab.
   - name:     Logisztika
@@ -58,11 +60,11 @@ views:
   - name:     Hímző/Szitanyomó
     label:    Hímző
   - name:     Szeged varroda
-    label:    Szeged varr.
+    label:    Szeged
   - name:     Orosháza varroda
-    label:    Orosh. varr.
+    label:    Orosh.
   - name:     Hódmezővásárhely Petőfi u
-    label:    Hmvh. varr.
+    label:    Hmvh.
 
 -
   id:         kovetkezohetigyartasiterv_tv
@@ -75,7 +77,8 @@ views:
   order:      Cikkszám
   head_after: 100
   limit:      50
-  fontsize:   14px
+  headfontsize:   16px
+#  bodyfontsize:   14px
   sum:
   - Gyártandó mennyiség
   - Gyártásra vár
@@ -95,13 +98,16 @@ views:
   - name:     IT szám
     label:    IT
   - name:     Kiszállítás dátuma
-    label:    Kiszáll. dátum
+    label:    Kiszállítás
+    fontsize: 16px
   - name:     Megnevezés
+    fontsize: 16px
   - name:     Sürgős
+    fontsize: 16px
   - name:     Gyártandó mennyiség
-    label:    Gyárt. menny.
+    label:    Gyártandó
   - name:     Gyártásra vár
-    label:    Gyárt. vár
+    label:    Gyárt.vár
   - name:     Átnéző
     label:    Átn.
   - name:     Mosoda
@@ -109,7 +115,7 @@ views:
   - name:     Fércelő
     label:    Férc.
   - name:     Félkész vasaló
-    label:    Félk. vas.
+    label:    Félk.vas.
   - name:     Szabászat
     label:    Szab.
   - name:     Logisztika
@@ -117,11 +123,11 @@ views:
   - name:     Hímző/Szitanyomó
     label:    Hímző
   - name:     Szeged varroda
-    label:    Szeged varr.
+    label:    Szeged
   - name:     Orosháza varroda
-    label:    Orosh. varr.
+    label:    Orosh.
   - name:     Hódmezővásárhely Petőfi u
-    label:    Hmvh. varr.
+    label:    Hmvh.
 
 -
   id:         aktualishetigyartasiterv_osszes_tv
@@ -339,16 +345,20 @@ views:
     label:    Előzőleg leadott
   - name:     Hátralék
     label:    Gyártandó
+    positive: red
+    zero:     green
+    negative: green
   - name:     Tervezett db
     label:    Mai terv
   - name:     Leadott db
     label:    Ma leadott
   - name:     Eltérés a tervtől
     label:    Eltérés
-    positive: red
+    positive: green
     zero:     green
-    negative: green
+    negative: red
   - name:     Hibák száma
+    label:    Hibák
 
 -
   id:         utovasaloleadas_tv
@@ -502,15 +512,18 @@ views:
     label:    Előzőleg leadott
   - name:     Hátralék
     label:    Gyártandó
+    positive: red
+    zero:     green
+    negative: green
   - name:     Tervezett db
     label:    Mai terv
   - name:     Leadott db
     label:    Ma leadott
   - name:     Eltérés a tervtől
     label:    Eltérés
-    positive: red
+    positive: green
     zero:     green
-    negative: green
+    negative: red
   - name:     Hibák száma
 
 -
@@ -567,11 +580,15 @@ playlists:
     interval: 60
 
 -
-  id:         playlist2
-  label:      Második lejátszási lista
+  id:         szabaszat
+  label:      Szabászat
   views:
-  - id:       szabaszatleadas_tv
-    interval: 5
+  - id:       aktualishetigyartasiterv_tv
+    interval: 300
+  - id:       kovetkezohetigyartasiterv_tv
+    interval: 300
+  - id:       szabaszatleadasszinszerint_tv
+    interval: 300
 `
 
 let Config = null
