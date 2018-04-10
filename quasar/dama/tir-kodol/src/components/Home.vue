@@ -13,7 +13,8 @@
           <q-btn @click="logout" push color="negative">Kijelentkezés</q-btn>
         </q-item>
         <q-item>
-          <q-btn @click="$router.push('search')" push color="secondary">Technológiai dokumentációk</q-btn>
+          <q-btn @click="$router.push('search')" push color="secondary">Dokumentációk</q-btn>
+          <q-btn v-if="store.user.role=='varró'" @click="$router.push('norma')" push color="primary">Mai %</q-btn>
         </q-item>
         <q-item>
           <h5>Táblázatok </h5>

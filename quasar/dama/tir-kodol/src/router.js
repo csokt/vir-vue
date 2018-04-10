@@ -29,6 +29,7 @@ export default new VueRouter({
     { path: '/kodol', component: load('Kodol') },
     { path: '/table/:id', component: load('Table') },
     { path: '/search', component: load('Search') },
+    { path: '/norma', component: load('Norma') },
 
     // Always leave this last one
     { path: '*', component: load('Error404') } // Not found

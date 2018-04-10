@@ -19,6 +19,8 @@ views:
 #  tablefontsize:  14px
 #  headfontsize:   10px
 #  bodyfontsize:   10px
+  sum:
+  - Összes normaperc
   fields:
   - name:     Dolgozó kód
     type:     number
@@ -42,6 +44,7 @@ views:
   - name:     Művelet név
   - name:     Normaperc
     label:    Norma perc
+  - name:     Összes normaperc
   - name:     Megjegyzés
   - name:     Kódoló
   - name:     Kódolás ideje
@@ -88,7 +91,7 @@ views:
   id:         becsultszazalek
   database:   SzefoModulKeszlet
   name:       monitor_becsultszazalek
-  label:      Becsült teljesítmények %
+  label:      Teljesítmény %
   device:     tablet
   roles:
   - varró

@@ -27,6 +27,7 @@
                 <th>Szín</th>
                 <th>Előrejelzés</th>
                 <th>Raktáron</th>
+                <th>Vonalkód</th>
               </tr>
             </thead>
             <tbody>
@@ -35,6 +36,7 @@
                 <td>{{row.szin}}</td>
                 <td class="text-right">{{row.varhato}}</td>
                 <td class="text-right">{{row.raktaron}}</td>
+                <td class="text-right">{{row.vonalkod}}</td>
               </tr>
             </tbody>
           </table>
