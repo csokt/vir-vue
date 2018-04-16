@@ -43,7 +43,7 @@ function Log (event, data = {}) {
   }
 }
 
-function rpcPublish (method, params, requestBase) {
+function rpcPublish (method, params, requestBase, timeout = 3000) {
   return new Promise((resolve, reject) => {
     const id = Math.random().toString(36).replace('0.', '')
     let request = {
@@ -54,6 +54,11 @@ function rpcPublish (method, params, requestBase) {
     }
     client.publish(requestBase + id, JSON.stringify(request))
     resolver[id] = {resolve: resolve, reject: reject}
+    setTimeout(() => {
+      if (resolver[id]) {
+        reject(new Error('MQTT request timeout!'))
+      }
+    }, timeout)
   })
 }
 

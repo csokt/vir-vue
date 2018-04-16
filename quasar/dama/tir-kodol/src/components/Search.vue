@@ -62,8 +62,8 @@ export default {
       this.message = ''
       try {
         const filter = {
-          'varró': RegExp('^Lefordított olasz műszaki|^Konfekcionálási utasítás|^Konfekció minta elfogadás|^Fotó|^Teljes fotó|^Videó'),
-          'kódoló': RegExp('^Fotó')
+          'varró': RegExp('^Lefordított olasz műszaki|^Konfekcionálási utasítás|^Konfekció minta elfogadás|^Fotó|^Teljes fotó|^Videó|^Egyéb'),
+          'kódoló': RegExp('^Fotó|^Egyéb')
         }
         const response = await HTTP.get('api2/search/?q=' + this.search)
         const regexp1 = filter[this.store.user.role]

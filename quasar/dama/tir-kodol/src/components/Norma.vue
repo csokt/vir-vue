@@ -6,7 +6,7 @@
       <hr>
       <template v-if="store.user">
         <q-field class="full-width" label="Munkaidő kezdete" labelWidth=6>
-          <q-datetime color="blue" v-model="store.kezdIdo" type="time" format24h no-clear cancel-label="Elvet" ok-label="Ment"/>
+          <q-datetime color="blue" v-model="store.kezdIdo" type="datetime" format24h no-clear cancel-label="Elvet" ok-label="Ment"/>
         </q-field>
 
         <q-field class="full-width" label="Aktuális idő" labelWidth=6>

@@ -150,24 +150,36 @@ export default {
     async pubKodolas () {
       this.store.kodol.gepkod = this.store.kodol.gepkod || 0
       Log('kodol', this.store.kodol)
+      this.message = ''
+      this.store.menthet = false
       for (let i = 0; i < this.store.kodol.muveletkodok.length; i++) {
         this.store.kodol.muveletkod = this.store.kodol.muveletkodok[i]
         let doc = Object.assign({}, this.store.kodol)
         doc.funkcio = 99994
         doc.createdAt = new Date()
         this.store.kodolasok.unshift(doc)
-        this.store.menthet = false
-        const response = await RpcKodol(doc)
-        if (response.result) {
-          this.store.kodolasok[0].eredmeny = response.result.message
+        try {
+          const response = await RpcKodol(doc)
+          if (response.result) {
+            this.store.kodolasok[0].eredmeny = response.result.message
+          }
+          else {
+            this.store.kodolasok[0].eredmeny = 'Nem jött eredmény!'
+          }
         }
-        else {
-          this.store.kodolasok[0].eredmeny = 'Hiba!'
+        catch (e) {
+          this.message = 'Kódoló szerver hiba!'
+          this.store.kodolasok[0].eredmeny = this.message
+          Log('message', {message: e.message})
+          console.log(e)
+          break
         }
       }
+      if (!this.message) {
+        this.store.kodol.muveletkodok = []
+        this.store.kodol.mennyiseg = null
+      }
       this.store.menthet = true
-      this.store.kodol.muveletkodok = []
-      this.store.kodol.mennyiseg = null
     },
 
     ujMunkalap () {
