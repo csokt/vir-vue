@@ -9,7 +9,7 @@
           <span class="name">{{ store.user.name }}</span>
         </q-item>
         <q-item>
-          <q-btn @click="$router.push('kodol')" push color="primary">Kódolás</q-btn>
+          <q-btn v-if="store.user.role!='meo'" @click="$router.push('kodol')" push color="primary">Kódolás</q-btn>
           <q-btn @click="logout" push color="negative">Kijelentkezés</q-btn>
         </q-item>
         <q-item>
@@ -88,11 +88,7 @@ export default {
         Log('message', {message: this.message})
         return
       }
-      if (qr < 20000) {
-        this.message = 'A kód 20000-nél nem lehet kisebb!'
-        Log('message', {message: this.message})
-      }
-      else if (qr < 50000) {
+      if (qr < 50000) {
         const dolgozokod = qr - 20000
         const response = await RpcRaw("select [dolgozokod], [dolgozonev] from [dolgtr] where [aktiv] = 'A' and [dolgozokod] = " + dolgozokod.toString())
         if (response.result && response.result.length) {
@@ -118,13 +114,10 @@ export default {
           this.scanUser = false
           this.message = ''
           Log('login', this.store.user)
-        }
-        else {
-          this.message = 'Érvénytelen felhasználó kód!'
-          Log('message', {message: this.message})
+          return
         }
       }
-      else {
+      else if (qr < 51000) {
         const userid = qr - 50000
         const response = await RpcRaw('select [userid], [fullname] from [users] where [userid] = ' + userid.toString())
         if (response.result && response.result.length) {
@@ -150,12 +143,18 @@ export default {
           this.scanUser = false
           this.message = ''
           Log('login', this.store.user)
-        }
-        else {
-          this.message = 'Érvénytelen felhasználó kód!'
-          Log('message', {message: this.message})
+          return
         }
       }
+      else if (qr < 54000) {}
+      else if (qr < 55000) {
+        this.store.user = {name: 'MEO', role: 'meo', belepokod: qr, filterUzem: 1, filterMunkalap: '0'}
+        this.message = ''
+        Log('login', this.store.user)
+        return
+      }
+      this.message = 'Érvénytelen felhasználó kód!'
+      Log('message', {message: this.message})
     },
     logout () {
       Log('logout', this.store.user)

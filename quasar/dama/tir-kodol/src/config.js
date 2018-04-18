@@ -4,6 +4,42 @@ var configYaml = `
 views:
 ###############################################################################  Tablet  ###
 -
+  id:         kodolasok
+  database:   SzefoModulKeszlet
+  name:       monitor_kodolasok
+  label:      Kódolások
+  device:     tablet
+  roles:
+  - meo
+  - varrodavezető
+  order:      '[Művelet], [Kódolás ideje]'
+  head_after: 15
+  limit:      500
+  fields:
+  - name:     Üzemkód
+    label:    Üzem
+    type:     number
+    filter:   egyenlő
+    default:  filterUzem
+  - name:     Munkalap kód
+    type:     number
+    filter:   egyenlő
+    default:  filterMunkalap
+  - name:     Cikk
+  - name:     IT
+  - name:     Diszpó
+  - name:     Szín
+  - name:     Csomag
+  - name:     Méret
+  - name:     Darab
+  - name:     Művelet
+  - name:     Művelet név
+  - name:     Norma perc
+  - name:     Dolgozó név
+  - name:     Kódolás ideje
+  - name:     Kódoló
+
+-
   id:         napikodolas
   database:   SzefoModulKeszlet
   name:       monitor_napikodolas
@@ -12,7 +48,7 @@ views:
   roles:
   - varró
   - varrodavezető
-  refresh:    10
+  refresh:    60
   order:      '[Kódolás ideje] DESC'
   head_after: 15
   limit:      100
@@ -127,6 +163,7 @@ views:
   roles:
   - varró
   - kódoló
+  - meo
   - varrodavezető
   order:      Műveletkód
   head_after: 15
@@ -155,6 +192,7 @@ views:
   device:     tablet
   roles:
   - varró
+  - meo
   - varrodavezető
   where:
   order:      Cikkszám
@@ -204,6 +242,7 @@ views:
   device:     tablet
   roles:
   - varró
+  - meo
   - varrodavezető
   where:
   order:      Cikkszám
@@ -268,6 +307,7 @@ views:
   device:     tablet
   roles:
   - varró
+  - meo
   - varrodavezető
   where:
   order:      Cikkszám

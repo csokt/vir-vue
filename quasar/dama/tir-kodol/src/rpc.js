@@ -75,7 +75,7 @@ function RpcView (view, filter) {
     view: view,
     filter: filter
   }
-  return rpcPublish('view', params, mssqlRequestBase)
+  return rpcPublish('view', params, mssqlRequestBase, 14000)
 }
 
 function RpcKodol (params) {

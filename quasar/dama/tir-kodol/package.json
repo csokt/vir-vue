@@ -19,7 +19,7 @@
     "quasar-framework": "^0.14.9",
     "vue": "^2.5.13",
     "vue-form-generator": "^2.2.0",
-    "vue-qrcode-reader": "^0.7.1",
+    "vue-qrcode-reader": "^0.7.3",
     "vue-router": "^3.0.1"
   },
   "devDependencies": {
