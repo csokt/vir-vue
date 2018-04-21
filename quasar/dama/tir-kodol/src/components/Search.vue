@@ -63,6 +63,7 @@ export default {
       try {
         const filter = {
           'varró': RegExp('^Lefordított olasz műszaki|^Konfekcionálási utasítás|^Konfekció minta elfogadás|^Fotó|^Teljes fotó|^Videó|^Egyéb'),
+          'meo': RegExp('^Lefordított olasz műszaki|^Konfekcionálási utasítás|^Konfekció minta elfogadás|^Fotó|^Teljes fotó|^Videó|^Egyéb'),
           'kódoló': RegExp('^Fotó|^Egyéb')
         }
         const response = await HTTP.get('api2/search/?q=' + this.search)
