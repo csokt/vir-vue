@@ -62,6 +62,7 @@ export default {
       this.message = ''
       try {
         const filter = {
+          'szabó': RegExp('^Lefordított olasz műszaki|^Konfekcionálási utasítás|^Konfekció minta elfogadás|^Fotó|^Teljes fotó|^Videó|^Egyéb'),
           'varró': RegExp('^Lefordított olasz műszaki|^Konfekcionálási utasítás|^Konfekció minta elfogadás|^Fotó|^Teljes fotó|^Videó|^Egyéb'),
           'meo': RegExp('^Lefordított olasz műszaki|^Konfekcionálási utasítás|^Konfekció minta elfogadás|^Fotó|^Teljes fotó|^Videó|^Egyéb'),
           'kódoló': RegExp('^Fotó|^Egyéb')

@@ -46,6 +46,7 @@ views:
   label:      Mai napi kódolások
   device:     tablet
   roles:
+  - szabó
   - varró
   - varrodavezető
   refresh:    60
@@ -92,6 +93,7 @@ views:
   label:      Aktuális havi kódolások
   device:     tablet
   roles:
+  - szabó
   - varró
   - varrodavezető
   order:      '[Kódolás ideje] DESC'
@@ -130,6 +132,7 @@ views:
   label:      Teljesítmény %
   device:     tablet
   roles:
+  - szabó
   - varró
   - varrodavezető
   order:      '[Dolgozó kód]'
@@ -161,6 +164,7 @@ views:
   label:      Konfekció normalapok
   device:     tablet
   roles:
+  - szabó
   - varró
   - kódoló
   - meo
@@ -183,6 +187,56 @@ views:
   - name:     Előkészítő
   - name:     Normatípus
   - name:     Gép
+
+-
+  id:         szabaszatleadas_tablet
+  database:   SzefoModulKeszlet
+  name:       monitor_szegedszabaszatleadas
+  label:      Szeged szabászat napi leadás
+  device:     tablet
+  roles:
+  - szabó
+  - meo
+  - varrodavezető
+  where:
+  order:      Cikkszám
+  head_after: 15
+  limit:      100
+  sum:
+  - Rendelt db
+  - Előzőleg leadott db
+  - Tervezett db
+  - Leadott db
+  - Eltérés a tervtől
+  - Hibák száma
+  - Hátralék
+  fields:
+  - name:     Cikkszám
+    label:    Cikk
+    search:   filterCikkszam
+  - name:     IT
+  - name:     Megnevezés
+  - name:     Megrendelő
+  - name:     Rendelt db
+    label:    Rendelt
+  - name:     Előzőleg leadott db
+    label:    Előzőleg leadott
+  - name:     Hátralék
+    label:    Gyártandó
+    positive: red
+    zero:     green
+    negative: green
+  - name:     Tervezett db
+    label:    Mai terv
+  - name:     Leadott db
+    label:    Ma leadott
+  - name:     Eltérés a tervtől
+    label:    Eltérés
+    positive: green
+    zero:     green
+    negative: red
+  - name:     Hibák száma
+    label:    Hibák
 
 -
   id:         varrodaleadas_tablet
@@ -241,6 +295,7 @@ views:
   label:      Gyártási terv - aktuális hét
   device:     tablet
   roles:
+  - szabó
   - varró
   - meo
   - varrodavezető
@@ -306,6 +361,7 @@ views:
   label:      Gyártási terv - következő hét
   device:     tablet
   roles:
+  - szabó
   - varró
   - meo
   - varrodavezető

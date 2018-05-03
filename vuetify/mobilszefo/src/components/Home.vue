@@ -29,7 +29,7 @@
                   <input class="input" type="password" v-model="password">
                 </div>
               </div>
-              <button type="submit" class="button is-primary" v-on:click="signIn">Sign-in</button>
+              <button type="submit" class="button is-primary" v-on:click="signIn(email, password)">Sign-in</button>
               <button class="button is-primary" v-on:click="signOut">Sign-out</button>
             </form>
           </div>
@@ -50,9 +50,8 @@
 // import VueQrcodeReader from 'vue-qrcode-reader'
 // Vue.use(VueQrcodeReader)
 
-import firebase from 'firebase/app'
-import 'firebase/auth'
 import Store from '../store'
+import { signIn, signOut } from '../firebase'
 
 export default {
   name: 'home',
@@ -64,31 +63,8 @@ export default {
     }
   },
   methods: {
-    signIn: function () {
-      firebase.auth()
-        .signInWithEmailAndPassword(this.email, this.password)
-//        .signInWithEmailAndPassword('fekete.alicja@szefo.local', 'fekete.alicja')
-        .then(
-          user => {
-            console.log(user)
-          },
-          error => {
-            alert(error.message)
-          }
-        )
-    },
-    signOut: function () {
-      firebase.auth()
-        .signOut()
-        .then(
-          () => {
-            console.log('Kilépett')
-          },
-          error => {
-            alert(error.message)
-          }
-        )
-    }
+    signIn: signIn,
+    signOut: signOut
   }
 
 }

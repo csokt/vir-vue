@@ -6,7 +6,7 @@
       <hr>
       <template v-if="store.user">
         <q-item>
-          <span class="name">{{ store.user.name }}</span>
+          <span class="name">{{ store.user.name }}, {{ store.kodol.uzemnev }}</span>
         </q-item>
         <q-item>
           <q-btn v-if="store.user.role!='meo'" @click="$router.push('kodol')" push color="primary">Kódolás</q-btn>
@@ -90,12 +90,15 @@ export default {
       }
       if (qr < 50000) {
         const dolgozokod = qr - 20000
-        const response = await RpcRaw("select [dolgozokod], [dolgozonev] from [dolgtr] where [aktiv] = 'A' and [dolgozokod] = " + dolgozokod.toString())
+        const response = await RpcRaw("select dolgozokod, dolgozonev, dolgtr.uzemkod, uzemnev, telephelykod from dolgtr join uzemek on dolgtr.uzemkod = uzemek.uzemkod where aktiv = 'A' and kilepett = 0 and dolgozokod = " + dolgozokod.toString())
         if (response.result && response.result.length) {
-          this.store.user = {name: response.result[0].dolgozonev.trim(), role: 'varró', belepokod: response.result[0].dolgozokod + 20000}
+          const result = response.result[0]
+          const uzemkodRole = {1: 'varró', 2: 'varró', 3: 'varró', 4: 'vasaló', 5: 'szabó'}
+          this.store.user = {name: result.dolgozonev.trim(), role: uzemkodRole[result.uzemkod], belepokod: result.dolgozokod + 20000}
           this.store.kodol = {
-            telephelykod: 0,
+            telephelykod: result.telephelykod,
             telephely: 'Szeged, Tavasz u. 2.',
+            uzemnev: result.uzemnev.trim(),
             kodolokod: -1,
             kodolo: 'dolgozó',
             dolgozokod: this.store.user.belepokod,
@@ -159,6 +162,7 @@ export default {
     logout () {
       Log('logout', this.store.user)
       this.store.user = null
+      this.store.kodol = {}
       this.scanUser = true
       this.message = ''
     }
