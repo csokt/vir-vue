@@ -1,7 +1,7 @@
 <template>
   <!-- Don't drop "q-app" class -->
   <div id="q-app">
-    <h6 v-if="store.teszt" class="text-negative text-center">##### v1.2.0 TESZT #####<hr></h6>
+    <h6 v-if="store.teszt" class="text-negative text-center">##### v1.3.0 TESZT #####<hr></h6>
     <router-view />
   </div>
 </template>

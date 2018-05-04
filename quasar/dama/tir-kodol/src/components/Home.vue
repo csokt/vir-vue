@@ -14,7 +14,7 @@
         </q-item>
         <q-item>
           <q-btn @click="$router.push('search')" push color="secondary">Dokumentációk</q-btn>
-          <q-btn v-if="store.user.role=='varró'" @click="$router.push('norma')" push color="primary">Mai %</q-btn>
+          <q-btn v-if="store.user.role=='varró' || store.user.role=='szabó'" @click="$router.push('norma')" push color="primary">Mai %</q-btn>
         </q-item>
         <q-item>
           <h5>Táblázatok </h5>
@@ -152,6 +152,7 @@ export default {
       else if (qr < 54000) {}
       else if (qr < 55000) {
         this.store.user = {name: 'MEO', role: 'meo', belepokod: qr, filterUzem: 1, filterMunkalap: '0'}
+        this.store.kodol = {}
         this.message = ''
         Log('login', this.store.user)
         return

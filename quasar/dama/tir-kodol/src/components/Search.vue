@@ -62,9 +62,9 @@ export default {
       this.message = ''
       try {
         const filter = {
-          'szabó': RegExp('^Lefordított olasz műszaki|^Konfekcionálási utasítás|^Konfekció minta elfogadás|^Fotó|^Teljes fotó|^Videó|^Egyéb'),
-          'varró': RegExp('^Lefordított olasz műszaki|^Konfekcionálási utasítás|^Konfekció minta elfogadás|^Fotó|^Teljes fotó|^Videó|^Egyéb'),
-          'meo': RegExp('^Lefordított olasz műszaki|^Konfekcionálási utasítás|^Konfekció minta elfogadás|^Fotó|^Teljes fotó|^Videó|^Egyéb'),
+          'szabó': RegExp('^Lefordított|^Konfekci|^Fotó|^Teljes fotó|^Videó|^Egyéb|^Műszaki|^Szabási|^Kötés'),
+          'varró': RegExp('^Lefordított|^Konfekci|^Fotó|^Teljes fotó|^Videó|^Egyéb'),
+          'meo': RegExp('^Lefordított|^Konfekci|^Fotó|^Teljes fotó|^Videó|^Egyéb'),
           'kódoló': RegExp('^Fotó|^Egyéb')
         }
         const response = await HTTP.get('api2/search/?q=' + this.search)

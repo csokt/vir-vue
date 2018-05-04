@@ -1,19 +1,19 @@
 <template>
   <v-app>
+
     <v-navigation-drawer
+      app
       temporary
-      :mini-variant="miniVariant"
       :clipped="clipped"
       v-model="drawer"
       enable-resize-watcher
       fixed
-      app
     >
       <v-list>
         <v-list-tile
-          value="true"
-          v-for="(item, i) in items"
-          :key="i"
+          v-for="item in menuItems"
+          :key="item.title"
+          :to="item.link">
         >
           <v-list-tile-action>
             <v-icon v-html="item.icon"></v-icon>
@@ -24,27 +24,25 @@
         </v-list-tile>
       </v-list>
     </v-navigation-drawer>
+
     <v-toolbar
       app
-      :clipped-left="clipped"
+      clipped-right
     >
       <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
-      <v-btn icon @click.stop="fixed = !fixed">
-        <v-icon>remove</v-icon>
-      </v-btn>
       <v-toolbar-title v-text="title"></v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn icon @click.stop="rightDrawer = !rightDrawer">
-        <v-icon>menu</v-icon>
-      </v-btn>
     </v-toolbar>
+
     <v-content>
       <h6 v-if="store.state.teszt" class="text-negative text-center">##### v1.1.1 TESZT #####<hr></h6>
       <router-view/>
     </v-content>
+
     <v-footer :fixed="fixed" app>
       <span>&copy; 2017</span>
     </v-footer>
+
   </v-app>
 </template>
 
@@ -58,13 +56,31 @@ export default {
 
       clipped: true,
       drawer: false,
-      fixed: false,
       items: [{
         icon: 'bubble_chart',
         title: 'Inspire'
       }],
       miniVariant: false,
-      title: 'Vuetify.js'
+      title: 'SZEFO mobil alkalmazások'
+    }
+  },
+  computed: {
+    menuItems () {
+      let menuItems = [
+        {icon: 'face', title: 'Sign up', link: '/signup'},
+        {icon: 'lock_open', title: 'Sign in', link: '/signin'}
+      ]
+      if (this.userIsAuthenticated) {
+        menuItems = [
+          {icon: 'supervisor_account', title: 'View Meetups', link: '/meetups'},
+          {icon: 'room', title: 'Organize Meetup', link: '/meetup/new'},
+          {icon: 'person', title: 'Profile', link: '/profile'}
+        ]
+      }
+      return menuItems
+    },
+    userIsAuthenticated () {
+      return this.store.fireUser !== null && this.store.fireUser !== undefined
     }
   }
 }

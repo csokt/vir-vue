@@ -128,10 +128,17 @@ export default {
       this.message = ''
       if (value) { this.store.kodol.munkalap = value }
       if (!this.store.kodol.munkalap) { return }
-      const response = await RpcRaw('select [cikkszam], [rendelesszam], [kartonszam], [db] from [rendelesmunkalap] where [munkalapazonosito] = ' + this.store.kodol.munkalap.toString())
+      const kellek = Math.floor(this.store.kodol.munkalap / 10000000) === 3
+      const munkalap = kellek ? this.store.kodol.munkalap - 10000000 : this.store.kodol.munkalap
+      const response = await RpcRaw('select t1.cikkszam, t1.rendelesszam, t1.kartonszam, t1.db, t2.mennyiseg from rendelesmunkalap t1 join rendelesfej t2 on t1.rendelesszam = t2.rendelesszam where munkalapazonosito = ' + munkalap.toString())
       if (response.result && response.result.length) {
         const row = response.result[0]
-        this.store.kodol.kartoninfo = row.cikkszam.trim() + '/' + parseInt(row.rendelesszam.trim().slice(-4).toString()) + ' ' + row.kartonszam.trim() + ' ' + row.db.toString()
+        if (kellek) {
+          this.store.kodol.kartoninfo = row.cikkszam.trim() + '/' + parseInt(row.rendelesszam.trim().slice(-4).toString()) + ' ' + row.mennyiseg.toString() + ' db'
+        }
+        else {
+          this.store.kodol.kartoninfo = row.cikkszam.trim() + '/' + parseInt(row.rendelesszam.trim().slice(-4).toString()) + ' ' + row.kartonszam.trim() + ' ' + row.db.toString() + ' db'
+        }
         this.store.user.filterCikkszam = row.cikkszam.trim()
         this.$refs.muveletkodok.focus()
       }
