@@ -2,18 +2,18 @@
   <v-app>
 
     <v-navigation-drawer
-      app
       temporary
       :clipped="clipped"
       v-model="drawer"
       enable-resize-watcher
       fixed
+      app
     >
       <v-list>
         <v-list-tile
           v-for="item in menuItems"
           :key="item.title"
-          :to="item.link">
+          :to="item.link"
         >
           <v-list-tile-action>
             <v-icon v-html="item.icon"></v-icon>
@@ -27,11 +27,17 @@
 
     <v-toolbar
       app
-      clipped-right
+      :clipped-left="clipped"
     >
       <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
+      <v-btn icon @click.stop="fixed = !fixed">
+        <v-icon>remove</v-icon>
+      </v-btn>
       <v-toolbar-title v-text="title"></v-toolbar-title>
       <v-spacer></v-spacer>
+      <v-btn icon @click.stop="rightDrawer = !rightDrawer">
+        <v-icon>menu</v-icon>
+      </v-btn>
     </v-toolbar>
 
     <v-content>
@@ -42,7 +48,6 @@
     <v-footer :fixed="fixed" app>
       <span>&copy; 2017</span>
     </v-footer>
-
   </v-app>
 </template>
 
@@ -56,12 +61,13 @@ export default {
 
       clipped: true,
       drawer: false,
+      fixed: false,
       items: [{
         icon: 'bubble_chart',
         title: 'Inspire'
       }],
       miniVariant: false,
-      title: 'SZEFO mobil alkalmazások'
+      title: 'Vuetify.js'
     }
   },
   computed: {

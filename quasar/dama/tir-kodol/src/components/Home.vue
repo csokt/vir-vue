@@ -93,7 +93,7 @@ export default {
         const response = await RpcRaw("select dolgozokod, dolgozonev, dolgtr.uzemkod, uzemnev, telephelykod from dolgtr join uzemek on dolgtr.uzemkod = uzemek.uzemkod where aktiv = 'A' and kilepett = 0 and dolgozokod = " + dolgozokod.toString())
         if (response.result && response.result.length) {
           const result = response.result[0]
-          const uzemkodRole = {1: 'varró', 2: 'varró', 3: 'varró', 4: 'vasaló', 5: 'szabó'}
+          const uzemkodRole = {1: 'varró', 2: 'varró', 3: 'varró', 4: 'félkész vasaló', 5: 'szabó', 6: 'technológus', 7: 'síkkötő', 8: 'körkötő', 9: 'logisztikus', 26: 'készáru vasaló'}
           this.store.user = {name: result.dolgozonev.trim(), role: uzemkodRole[result.uzemkod], belepokod: result.dolgozokod + 20000}
           this.store.kodol = {
             telephelykod: result.telephelykod,

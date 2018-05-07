@@ -183,7 +183,9 @@ export default {
         }
       }
       if (!this.message) {
-        this.store.kodol.muveletkodok = []
+        if (this.store.user.role !== 'szabó') {
+          this.store.kodol.muveletkodok = []
+        }
         this.store.kodol.mennyiseg = null
       }
       this.store.menthet = true
@@ -194,7 +196,9 @@ export default {
       this.store.kodol.munkalap = null
       this.store.kodol.kartoninfo = null
       this.store.kodol.gepkod = 0
-      this.store.kodol.muveletkodok = []
+      if (this.store.user.role !== 'szabó') {
+        this.store.kodol.muveletkodok = []
+      }
       this.store.kodol.mennyiseg = null
     },
 

@@ -47,6 +47,7 @@ views:
   device:     tablet
   roles:
   - szabó
+  - logisztikus
   - varró
   - varrodavezető
   refresh:    60
@@ -94,6 +95,7 @@ views:
   device:     tablet
   roles:
   - szabó
+  - logisztikus
   - varró
   - varrodavezető
   order:      '[Kódolás ideje] DESC'
@@ -133,6 +135,7 @@ views:
   device:     tablet
   roles:
   - szabó
+  - logisztikus
   - varró
   - varrodavezető
   order:      '[Dolgozó kód]'
@@ -165,6 +168,7 @@ views:
   device:     tablet
   roles:
   - szabó
+  - logisztikus
   - varró
   - kódoló
   - meo
@@ -196,6 +200,7 @@ views:
   device:     tablet
   roles:
   - szabó
+  - logisztikus
   - meo
   - varrodavezető
   where:
@@ -296,6 +301,7 @@ views:
   device:     tablet
   roles:
   - szabó
+  - logisztikus
   - varró
   - meo
   - varrodavezető
@@ -362,6 +368,7 @@ views:
   device:     tablet
   roles:
   - szabó
+  - logisztikus
   - varró
   - meo
   - varrodavezető
