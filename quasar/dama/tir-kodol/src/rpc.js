@@ -33,6 +33,9 @@ function Log (event, data = {}) {
     program: 'tir-kodol',
     event: event,
     path: router.app._route.path,
+    role: (Store.user && Store.user.role) || '',
+    uzem: (Store.kodol && Store.kodol.uzemnev) || '',
+    version: Store.version,
     publicip: Store.publicIP,
     data: data
   }

@@ -14,7 +14,7 @@
 
         <template v-if="store.kodol.dolgozo">
           <q-field class="full-width" label="Munkalap" labelWidth=3 >
-            <q-input ref="munkalap" type="number" v-model="store.kodol.munkalap" clearable=true @keyup.enter="gotMunkalap(null)" @blur="gotMunkalap(null)"></q-input>
+            <q-input ref="munkalap" type="number" v-model="store.kodol.munkalap" clearable=true @change="store.kodol.kartoninfo=null" @keyup.enter="gotMunkalap(null)" @blur="gotMunkalap(null)"></q-input>
             <qrcode-reader v-if="!store.kodol.munkalap" :video-constraints="store.video" @decode="gotMunkalap"> </qrcode-reader>
           </q-field>
 
@@ -35,6 +35,8 @@
             <q-input ref="mennyiseg" type="number" v-model="store.kodol.mennyiseg" clearable=true />
           </q-field>
         </template>
+
+        <h5 class="text-negative"> {{message}} </h5>
 
         <q-btn v-if="store.menthet && store.kodol.kartoninfo && store.kodol.muveletkodok.length && store.kodol.mennyiseg" @click="pubKodolas" push color="positive">Adatok mentése</q-btn>
         <q-btn @click="$router.go(-1)" push color="warning">Vissza</q-btn>
@@ -126,8 +128,17 @@ export default {
 
     async gotMunkalap (value) {
       this.message = ''
-      if (value) { this.store.kodol.munkalap = value }
-      if (!this.store.kodol.munkalap) { return }
+      try {
+        if (value) { this.store.kodol.munkalap = parseInt(value) }
+        if (!this.store.kodol.munkalap) { return }
+        this.store.kodol.munkalap = parseInt(JSON.stringify(this.store.kodol.munkalap))
+      }
+      catch (e) {
+        this.message = 'Érvénytelen munkalap!'
+        Log('message', {message: e.message})
+        console.log(e)
+        return
+      }
       const kellek = Math.floor(this.store.kodol.munkalap / 10000000) === 3
       const munkalap = kellek ? this.store.kodol.munkalap - 10000000 : this.store.kodol.munkalap
       const response = await RpcRaw('select t1.cikkszam, t1.rendelesszam, t1.kartonszam, t1.db, t2.mennyiseg from rendelesmunkalap t1 join rendelesfej t2 on t1.rendelesszam = t2.rendelesszam where munkalapazonosito = ' + munkalap.toString())
@@ -155,6 +166,43 @@ export default {
     },
 
     async pubKodolas () {
+      try {
+        if (this.store.kodol.gepkod !== parseInt(this.store.kodol.gepkod) || this.store.kodol.gepkod < 0) {
+          throw new TypeError('Érvénytelen gépkód!')
+        }
+      }
+      catch (e) {
+        this.message = 'Érvénytelen gépkód!'
+        Log('message', {message: e.message})
+        console.log(e)
+        return
+      }
+      for (let i = 0; i < this.store.kodol.muveletkodok.length; i++) {
+        try {
+          const kod = this.store.kodol.muveletkodok[i]
+          if (Math.ceil(parseFloat(kod)) !== parseInt(kod) || parseInt(kod) <= 0) {
+            throw new TypeError('Érvénytelen műveletkód!')
+          }
+        }
+        catch (e) {
+          this.message = 'Érvénytelen műveletkód!'
+          Log('message', {message: e.message})
+          console.log(e)
+          return
+        }
+      }
+      try {
+        if (this.store.kodol.mennyiseg !== parseInt(this.store.kodol.mennyiseg) || this.store.kodol.mennyiseg <= 0) {
+          throw new TypeError('Érvénytelen mennyiség!')
+        }
+      }
+      catch (e) {
+        this.message = 'Érvénytelen mennyiség!'
+        Log('message', {message: e.message})
+        console.log(e)
+        return
+      }
+
       this.store.kodol.gepkod = this.store.kodol.gepkod || 0
       Log('kodol', this.store.kodol)
       this.message = ''

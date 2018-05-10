@@ -1,7 +1,7 @@
 <template>
   <div class="row justify-center">
     <div style="width: 400px; max-width: 95vw;">
-      <div class="text-faded text-bold text-center text-margin-top">Termelés információs rendszer</div>
+      <div class="text-faded text-bold text-center text-margin-top">Termelés információs rendszer {{store.version}}</div>
       <h5 class="text-negative"> {{message}} </h5>
       <hr>
       <template v-if="store.user">
