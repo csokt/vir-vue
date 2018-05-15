@@ -14,12 +14,13 @@
     </v-navigation-drawer>
 
     <v-toolbar color="indigo" dark fixed app>
-      <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
-      <v-toolbar-title v-text="title"></v-toolbar-title>
+      <v-toolbar-side-icon v-if="store.rootPage" @click.stop="drawer = !drawer"></v-toolbar-side-icon>
+      <v-icon v-if="!store.rootPage" @click.stop="$router.go(-1)">arrow_back</v-icon>
+      <v-toolbar-title v-text="store.pageTitle"></v-toolbar-title>
     </v-toolbar>
 
     <v-content>
-      <h6 v-if="store.state.teszt" class="text-negative text-center">##### v1.1.1 TESZT #####<hr></h6>
+      <h6 v-if="store.teszt" class="text-negative text-center">##### TESZT #####<hr></h6>
       <router-view/>
     </v-content>
   </v-app>
@@ -34,21 +35,18 @@ export default {
     return {
       store: Store,
 
-      drawer: null,
-      title: 'SZEFO mobil alkalmazások'
+      drawer: null
     }
   },
   computed: {
     menuItems () {
       let menuItems = [
-        {icon: 'face', title: 'Hitelesítés', link: '/login'},
-        {icon: 'lock_open', title: 'Sign in', link: '/signin'}
+        {icon: 'help', title: 'Segítség', link: '/help'}
       ]
       if (this.userIsAuthenticated) {
         menuItems = [
-          {icon: 'supervisor_account', title: 'View Meetups', link: '/meetups'},
-          {icon: 'room', title: 'Organize Meetup', link: '/meetup/new'},
-          {icon: 'person', title: 'Profile', link: '/profile'}
+          {icon: 'person', title: 'Profile', link: '/profile'},
+          {icon: 'help', title: 'Segítség', link: '/help'}
         ]
       }
       return menuItems

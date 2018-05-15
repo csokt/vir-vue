@@ -29,7 +29,9 @@ function signIn (email, password) {
         console.log(user)
       },
       error => {
-        alert(error.message)
+        console.log(error)
+        // alert(error.message)
+        alert('A hitelesítés nem sikerült')
       }
     )
 }
