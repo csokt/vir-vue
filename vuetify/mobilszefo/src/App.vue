@@ -1,22 +1,11 @@
 <template>
-  <v-app id="inspire">
-    <v-navigation-drawer v-model="drawer" fixed app>
-      <v-list>
-        <v-list-tile v-for="item in menuItems" :key="item.title" :to="item.link">
-          <v-list-tile-action>
-            <v-icon v-html="item.icon"></v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title v-text="item.title"></v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
-      </v-list>
-    </v-navigation-drawer>
-
+  <v-app id="szefo">
     <v-toolbar color="indigo" dark fixed app>
-      <v-toolbar-side-icon v-if="store.rootPage" @click.stop="drawer = !drawer"></v-toolbar-side-icon>
-      <v-icon v-if="!store.rootPage" @click.stop="$router.go(-1)">arrow_back</v-icon>
+      <v-icon v-if="$route.path !== '/'" @click.stop="$router.go(-1)">arrow_back</v-icon>
       <v-toolbar-title v-text="store.pageTitle"></v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-btn v-if="$route.path === '/'" icon @click="$router.push('help')" > <v-icon>help</v-icon> </v-btn>
+      <v-btn v-if="$route.path === '/'" icon @click="$router.push('setup')" > <v-icon>settings</v-icon> </v-btn>
     </v-toolbar>
 
     <v-content>
@@ -33,9 +22,7 @@ export default {
   name: 'App',
   data () {
     return {
-      store: Store,
-
-      drawer: null
+      store: Store
     }
   },
   computed: {

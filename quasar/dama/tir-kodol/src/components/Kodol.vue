@@ -14,7 +14,7 @@
 
         <template v-if="store.kodol.dolgozo">
           <q-field class="full-width" label="Munkalap" labelWidth=3 >
-            <q-input ref="munkalap" type="number" v-model="store.kodol.munkalap" clearable=true @change="store.kodol.kartoninfo=null" @keyup.enter="gotMunkalap(null)" @blur="gotMunkalap(null)"></q-input>
+            <q-input ref="munkalap" type="number" v-model="store.kodol.munkalap" @change="store.kodol.kartoninfo=null" @keyup.enter="gotMunkalap(null)" @blur="gotMunkalap(null)"></q-input>
             <qrcode-reader v-if="!store.kodol.munkalap" :video-constraints="store.video" @decode="gotMunkalap"> </qrcode-reader>
           </q-field>
 
@@ -23,7 +23,7 @@
           </q-field>
 
           <q-field class="full-width" label="Gépkód" labelWidth=3 >
-            <q-input ref="gepkod" type="number" v-model="store.kodol.gepkod" clearable=true @keyup.enter="$refs.muveletkodok.focus()"></q-input>
+            <q-input ref="gepkod" type="number" v-model="store.kodol.gepkod" @keyup.enter="$refs.muveletkodok.focus()"></q-input>
             <qrcode-reader v-if="store.kodol.gepkod === null || store.kodol.gepkod === ''" :video-constraints="store.video" @decode="gotGepkodQR"> </qrcode-reader>
           </q-field>
 
@@ -32,7 +32,7 @@
           </q-field>
 
           <q-field class="full-width" label="Mennyiség" labelWidth=3 >
-            <q-input ref="mennyiseg" type="number" v-model="store.kodol.mennyiseg" clearable=true />
+            <q-input ref="mennyiseg" type="number" v-model="store.kodol.mennyiseg" />
           </q-field>
         </template>
 

@@ -4,6 +4,7 @@ import axios from 'axios'
 const Store = {
   version: '18.05.20',
   pageTitle: 'Home',
+  path: '/',
   rootPage: true,
   teszt: null,
   privateIP: '',

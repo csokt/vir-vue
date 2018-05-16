@@ -24,7 +24,7 @@ export default {
 
   created () {
     this.store.pageTitle = 'Segítség'
-    this.store.rootPage = false
+    // this.store.rootPage = false
   }
 }
 </script>

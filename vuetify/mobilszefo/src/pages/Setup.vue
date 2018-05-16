@@ -174,8 +174,8 @@ export default {
   }),
 
   created () {
-    this.store.pageTitle = 'SZEFO mobil alkalmazások'
-    this.store.rootPage = true
+    this.store.pageTitle = 'Beállítások'
+    // this.store.rootPage = false
   },
 
   methods: {
