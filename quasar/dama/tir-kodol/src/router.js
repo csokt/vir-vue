@@ -27,6 +27,7 @@ export default new VueRouter({
   routes: [
     { path: '/', component: load('Home') },
     { path: '/kodol', component: load('Kodol') },
+    { path: '/info', component: load('Info') },
     { path: '/table/:id', component: load('Table') },
     { path: '/search', component: load('Search') },
     { path: '/norma', component: load('Norma') },

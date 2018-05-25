@@ -150,6 +150,7 @@ export default {
         else {
           this.store.kodol.kartoninfo = row.cikkszam.trim() + '/' + parseInt(row.rendelesszam.trim().slice(-4).toString()) + ' ' + row.kartonszam.trim() + ' ' + row.db.toString() + ' db'
         }
+        this.store.user.filterMunkalap = munkalap
         this.store.user.filterCikkszam = row.cikkszam.trim()
         this.$refs.muveletkodok.focus()
       }

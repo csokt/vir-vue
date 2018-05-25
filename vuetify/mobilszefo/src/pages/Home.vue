@@ -19,7 +19,12 @@
           <v-divider v-if="index + 1 < items.length" inset :key="index"></v-divider>
           </template>
         </v-list>
+
         <v-divider></v-divider>
+        <v-card-actions>
+          <v-btn color="primary" @click="teszt">Teszt</v-btn>
+        </v-card-actions>
+
       </v-card>
     </v-flex>
   </v-layout>
@@ -28,6 +33,26 @@
 
 <script>
 import Store from '../store'
+import jaysonBrowserClient from 'jayson/lib/client/browser'
+
+var callServer = function (request, callback) {
+  var options = {
+    method: 'POST',
+    body: request,
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }
+
+  fetch('http://localhost:3000', options)
+    .then(function (res) { return res.text() })
+    .then(function (text) { callback(null, text) })
+    .catch(function (err) { callback(err) })
+}
+
+var client = jaysonBrowserClient(callServer, {
+  // other options go here
+})
 
 export default {
   name: 'home',
@@ -44,6 +69,16 @@ export default {
 
   created () {
     this.store.pageTitle = 'SZEFO alkalmazások'
+  },
+
+  methods: {
+    teszt () {
+      console.log('Teszt')
+      client.request('multiply', [5, 5], function (err, error, result) {
+        if (err) throw err
+        console.log(result) // 25
+      })
+    }
   }
 }
 </script>

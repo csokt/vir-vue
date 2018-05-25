@@ -16,6 +16,13 @@ firebase.initializeApp(config)
 firebase.auth().onAuthStateChanged((user) => {
   console.log('onAuthStateChanged')
   Store.fireUser = user
+  // if (user) {
+  //   firebase.auth().currentUser.getIdToken(/* forceRefresh */ true).then(function (idToken) {
+  //     console.log(idToken)
+  //   }).catch(function (error) {
+  //     console.log(error)
+  //   })
+  // }
 })
 
 const db = firebase.firestore()

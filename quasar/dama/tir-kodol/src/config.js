@@ -7,20 +7,20 @@ views:
   id:         kodolasok
   database:   SzefoModulKeszlet
   name:       monitor_kodolasok
-  label:      Kódolások
+  label:      Kódolások a munkalapon
   device:     tablet
   roles:
-  - meo
   - varrodavezető
-  order:      '[Művelet], [Kódolás ideje]'
+  order:      '[Üzemkód], [Művelet], [Kódolás ideje]'
   head_after: 15
   limit:      500
   fields:
   - name:     Üzemkód
-    label:    Üzem
+    label:    Üzem kód
     type:     number
-    filter:   egyenlő
-    default:  filterUzem
+#    filter:   egyenlő
+#    default:  filterUzem
+  - name:     Üzemnév
   - name:     Munkalap kód
     type:     number
     filter:   egyenlő

@@ -13,6 +13,9 @@
           <q-btn @click="logout" push color="negative">Kijelentkezés</q-btn>
         </q-item>
         <q-item>
+          <q-btn @click="$router.push('info')" push color="secondary">Munkalap információk</q-btn>
+        </q-item>
+        <q-item>
           <q-btn @click="$router.push('search')" push color="secondary">Dokumentációk</q-btn>
           <q-btn v-if="store.user.role=='varró' || store.user.role=='szabó'" @click="$router.push('norma')" push color="primary">Mai %</q-btn>
         </q-item>
@@ -151,8 +154,12 @@ export default {
       }
       else if (qr < 54000) {}
       else if (qr < 55000) {
-        this.store.user = {name: 'MEO', role: 'meo', belepokod: qr, filterUzem: 1, filterMunkalap: '0'}
-        this.store.kodol = {}
+        // this.store.user = {name: 'MEO', role: 'meo', belepokod: qr, filterUzem: 1, filterMunkalap: 0}
+        this.store.user = {name: 'MEO', role: 'meo', belepokod: qr, filterUzem: null, filterMunkalap: null}
+        this.store.kodol = {
+          munkalap: null,
+          kartoninfo: null
+        }
         this.message = ''
         Log('login', this.store.user)
         return
@@ -164,6 +171,7 @@ export default {
       Log('logout', this.store.user)
       this.store.user = null
       this.store.kodol = {}
+      this.store.infok = []
       this.scanUser = true
       this.message = ''
     }
