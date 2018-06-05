@@ -109,6 +109,7 @@ export default {
         }
         this.store.user.filterMunkalap = munkalap
         this.store.user.filterCikkszam = row.cikkszam.trim()
+        Log('info', this.store.kodol)
         // this.$refs.muveletkodok.focus()
       }
       else {

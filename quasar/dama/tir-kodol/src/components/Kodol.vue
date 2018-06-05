@@ -38,7 +38,7 @@
 
         <h5 class="text-negative"> {{message}} </h5>
 
-        <q-btn v-if="store.menthet && store.kodol.kartoninfo && store.kodol.muveletkodok.length && store.kodol.mennyiseg" @click="pubKodolas" push color="positive">Adatok mentése</q-btn>
+        <q-btn v-if="store.menthet && store.kodol.munkalap && store.kodol.kartoninfo && store.kodol.muveletkodok.length && store.kodol.mennyiseg" @click="pubKodolas" push color="positive">Adatok mentése</q-btn>
         <q-btn @click="$router.go(-1)" push color="warning">Vissza</q-btn>
         <q-btn v-if="store.user.role=='varró'" @click="$router.push('norma')" push color="secondary">Mai %</q-btn>
         <q-btn v-if="store.menthet && store.kodol.munkalap" @click="ujMunkalap" push color="tertiary">Új munkalap</q-btn>
@@ -56,7 +56,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="row in store.kodolasok">
+          <tr v-for="row in store.kodolasok" v-bind:class="{ 'text-negative': row.error }">
             <td>{{row.muveletkod}}</td>
             <td>{{row.mennyiseg}}</td>
             <td>{{row.eredmeny}}</td>
@@ -218,14 +218,17 @@ export default {
           const response = await RpcKodol(doc)
           if (response.result) {
             this.store.kodolasok[0].eredmeny = response.result.message
+            this.store.kodolasok[0].error = parseInt(response.result.error)
           }
           else {
             this.store.kodolasok[0].eredmeny = 'Nem jött eredmény!'
+            this.store.kodolasok[0].error = 1
           }
         }
         catch (e) {
-          this.message = 'Kódoló szerver hiba!'
-          this.store.kodolasok[0].eredmeny = this.message
+          this.message = 'Kódoló szerver hiba, értesítse a rendszergazdát!'
+          this.store.kodolasok[0].eredmeny = 'Kódoló szerver hiba!'
+          this.store.kodolasok[0].error = 1
           Log('message', {message: e.message})
           console.log(e)
           break

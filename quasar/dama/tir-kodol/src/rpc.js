@@ -46,7 +46,7 @@ function Log (event, data = {}) {
   }
 }
 
-function rpcPublish (method, params, requestBase, timeout = 3000) {
+function rpcPublish (method, params, requestBase, timeout = 5000) {
   return new Promise((resolve, reject) => {
     const id = Math.random().toString(36).replace('0.', '')
     let request = {

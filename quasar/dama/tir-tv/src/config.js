@@ -10,7 +10,7 @@ views:
   device:     tv
   refresh:    70
   where:
-  order:      Cikkszám
+  order:      '[Cikkszám], [IT szám], [Szín]'
   head_after: 100
   limit:      50
 #  tablefontsize:  14px
@@ -34,6 +34,7 @@ views:
     label:    Cikk
   - name:     IT szám
     label:    IT
+  - name:     Szín
   - name:     Kiszállítás dátuma
     label:    Kiszállítás
     fontsize: 16px
@@ -74,7 +75,7 @@ views:
   device:     tv
   refresh:    70
   where:
-  order:      Cikkszám
+  order:      '[Cikkszám], [IT szám], [Szín]'
   head_after: 100
   limit:      50
   headfontsize:   16px
@@ -97,6 +98,7 @@ views:
     label:    Cikk
   - name:     IT szám
     label:    IT
+  - name:     Szín
   - name:     Kiszállítás dátuma
     label:    Kiszállítás
     fontsize: 16px

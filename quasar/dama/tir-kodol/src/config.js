@@ -306,7 +306,7 @@ views:
   - meo
   - varrodavezető
   where:
-  order:      Cikkszám
+  order:      '[Cikkszám], [IT szám], [Szín]'
   head_after: 15
   limit:      100
   sum:
@@ -328,6 +328,7 @@ views:
     search:   filterCikkszam
   - name:     IT szám
     label:    IT
+  - name:     Szín
   - name:     Kiszállítás dátuma
     label:    Kiszáll. dátum
     fontsize: 14px
@@ -373,7 +374,7 @@ views:
   - meo
   - varrodavezető
   where:
-  order:      Cikkszám
+  order:      '[Cikkszám], [IT szám], [Szín]'
   head_after: 15
   limit:      100
   sum:
@@ -395,6 +396,7 @@ views:
     search:   filterCikkszam
   - name:     IT szám
     label:    IT
+  - name:     Szín
   - name:     Kiszállítás dátuma
     label:    Kiszáll. dátum
     fontsize: 14px
