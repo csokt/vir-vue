@@ -17,6 +17,7 @@ let Store = {
   user: null,
   kodol: null,
   kodolasok: [],
+  atadasok: [],
   kezdIdo: new Date(new Date().toJSON().slice(0, 10) + 'T05:30:00'),
   menthet: true
 }

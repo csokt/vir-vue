@@ -1,49 +1,45 @@
 <template>
   <div class="row justify-center">
     <div style="width: 550px; max-width: 95vw;">
-      <div class="text-faded text-bold text-center text-margin-top">Teljesítmény kódolás</div>
+      <div class="text-faded text-bold text-center text-margin-top">Átadás</div>
       <hr>
       <h5 class="text-negative"> {{message}} </h5>
 
       <template v-if="store.user">
-        <q-field class="full-width" label="Dolgozó" labelWidth=3>
-          <q-input v-if="store.kodol.dolgozo" v-model="store.kodol.dolgozo" readonly></q-input>
-          <q-input v-if="!store.kodol.dolgozo" type="number" v-model="qrcode" @keyup.enter="gotDolgozoQR(qrcode)"></q-input>
-          <qrcode-reader v-if="!store.kodol.dolgozo" :video-constraints="store.video" @decode="gotDolgozoQR"> </qrcode-reader>
+        <q-field class="full-width" label="Helykód" labelWidth=3 >
+          <q-input ref="hely" type="number" v-model="store.kodol.hely" @change="store.kodol.helynev=null" @keyup.enter="gotHely(null)" @blur="gotHely(null)"></q-input>
+          <qrcode-reader v-if="!store.kodol.hely" :video-constraints="store.video" @decode="gotHely"> </qrcode-reader>
         </q-field>
 
-        <template v-if="store.kodol.dolgozo">
-          <q-field class="full-width" label="Munkalap" labelWidth=3 >
-            <q-input ref="munkalap" type="number" v-model="store.kodol.munkalap" @change="store.kodol.kartoninfo=null" @keyup.enter="gotMunkalap(null)" @blur="gotMunkalap(null)"></q-input>
-            <qrcode-reader v-if="!store.kodol.munkalap" :video-constraints="store.video" @decode="gotMunkalap"> </qrcode-reader>
-          </q-field>
+        <q-field class="full-width" label="Helynév" labelWidth=3>
+          <q-input v-model="store.kodol.helynev" readonly></q-input>
+        </q-field>
 
-          <q-field class="full-width" label="Kartoninfo" labelWidth=3>
-            <q-input v-model="store.kodol.kartoninfo" readonly></q-input>
-          </q-field>
+        <q-field v-if="store.kodol.hely == 90026" class="full-width" label="Uzemkód" labelWidth=3 >
+          <q-input ref="uzemkod" type="number" v-model="store.kodol.uzemkod" @change="store.kodol.uzemnev=null" @keyup.enter="gotUzemkod(null)" @blur="gotUzemkod(null)"></q-input>
+          <qrcode-reader v-if="!store.kodol.uzemkod && store.kodol.helynev" :video-constraints="store.video" @decode="gotUzemkod"> </qrcode-reader>
+        </q-field>
 
-          <q-field class="full-width" label="Gépkód" labelWidth=3 >
-            <q-input ref="gepkod" type="number" v-model="store.kodol.gepkod" @keyup.enter="$refs.muveletkodok.focus()"></q-input>
-            <qrcode-reader v-if="store.kodol.gepkod === null || store.kodol.gepkod === ''" :video-constraints="store.video" @decode="gotGepkodQR"> </qrcode-reader>
-          </q-field>
+        <q-field v-if="store.kodol.hely == 90026" class="full-width" label="Üzemnév" labelWidth=3>
+          <q-input v-model="store.kodol.uzemnev" readonly></q-input>
+        </q-field>
 
-          <q-field class="full-width" label="Műveletkódok" labelWidth=3 >
-            <q-chips-input ref="muveletkodok" id="muveletkodok_id" v-model="store.kodol.muveletkodok" @keyup.enter="$refs.mennyiseg.focus()"/>
-          </q-field>
+        <q-field class="full-width" label="Munkalap" labelWidth=3 >
+          <q-input ref="munkalap" type="number" v-model="store.kodol.munkalap" @change="store.kodol.kartoninfo=null" @keyup.enter="gotMunkalap(null)" @blur="gotMunkalap(null)"></q-input>
+          <qrcode-reader v-if="!store.kodol.munkalap && store.kodol.helynev && (store.kodol.hely == 90026 && store.kodol.uzemnev || store.kodol.hely != 90026)" :video-constraints="store.video" @decode="gotMunkalap"> </qrcode-reader>
+        </q-field>
 
-          <q-field class="full-width" label="Mennyiség" labelWidth=3 >
-            <q-input ref="mennyiseg" type="number" v-model="store.kodol.mennyiseg" />
-          </q-field>
-        </template>
+        <q-field class="full-width" label="Kartoninfo" labelWidth=3>
+          <q-input v-model="store.kodol.kartoninfo" readonly></q-input>
+        </q-field>
 
         <h5 class="text-negative"> {{message}} </h5>
 
         <q-btn v-if="store.menthet && store.kodol.munkalap && store.kodol.kartoninfo && store.kodol.muveletkodok.length && store.kodol.mennyiseg" @click="pubKodolas" push color="positive">Adatok mentése</q-btn>
         <q-btn @click="pubKodolas" push color="positive">Adatok mentése!!!</q-btn>
         <q-btn @click="$router.go(-1)" push color="warning">Vissza</q-btn>
-        <q-btn v-if="store.user.role=='varró'" @click="$router.push('norma')" push color="secondary">Mai %</q-btn>
+        <q-btn v-if="store.menthet && store.kodol.hely" @click="ujHely" push color="tertiary">Új Hely</q-btn>
         <q-btn v-if="store.menthet && store.kodol.munkalap" @click="ujMunkalap" push color="tertiary">Új munkalap</q-btn>
-        <q-btn v-if="store.menthet && store.kodol.dolgozo && store.user.role==='kódoló'" @click="ujDolgozo" push color="tertiary">Új dolgozó</q-btn>
         <q-btn v-if="store.menthet && store.kodol.kartoninfo && !store.kodol.mennyiseg" @click="$router.push('search')" push color="secondary">Dokumentációk</q-btn>
         <q-btn v-if="store.menthet && store.kodol.kartoninfo && !store.kodol.mennyiseg" @click="$router.push('table/cikknormai')" push color="secondary">Konfekció normalapok</q-btn>
 
@@ -57,7 +53,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="row in store.kodolasok" v-bind:class="{ 'text-negative': row.error }">
+          <tr v-for="row in store.atadasok" v-bind:class="{ 'text-negative': row.error }">
             <td>{{row.muveletkod}}</td>
             <td>{{row.mennyiseg}}</td>
             <td>{{row.eredmeny}}</td>
@@ -82,7 +78,7 @@ import {
 } from 'quasar'
 
 export default {
-  name: 'kodol',
+  name: 'atad',
   components: {
     QField,
     QInput,
@@ -97,33 +93,61 @@ export default {
     }
   },
   methods: {
-    async gotDolgozoQR (value) {
-      const qr = parseInt(value)
-      if (!qr) {
-        this.message = 'Csak számot lehet megadni!'
-        Log('message', {message: this.message})
+    async gotHely (value) {
+      this.message = ''
+      try {
+        if (value) { this.store.kodol.hely = parseInt(value) }
+        if (!this.store.kodol.hely) { return }
+        this.store.kodol.hely = parseInt(JSON.stringify(this.store.kodol.hely))
+      }
+      catch (e) {
+        this.message = 'Érvénytelen hely!'
+        Log('message', {message: e.message})
+        console.log(e)
         return
       }
-      this.message = ''
-      if (qr < 20000) {
-        this.message = 'A kód 20000-nél nem lehet kisebb!'
-        Log('message', {message: this.message})
-      }
-      else {
-        this.store.kodol.dolgozokod = value
-        const dolgozokod = qr - 20000
-        const response = await RpcRaw("select [dolgozokod], [dolgozonev] from [dolgtr] where [aktiv] = 'A' and [dolgozokod] = " + dolgozokod.toString())
-        if (response.result && response.result.length) {
-          this.store.kodol.dolgozo = response.result[0].dolgozonev.trim()
-          this.$nextTick(function () {
-            document.querySelector('#muveletkodok_id input').setAttribute('type', 'number')
-            this.$refs.munkalap.focus()
-          })
+      const response = await RpcRaw('select kod, kodnev from vonalkodok where kod = ' + this.store.kodol.hely.toString())
+      if (response.result && response.result.length) {
+        const row = response.result[0]
+        this.store.kodol.helynev = row.kodnev
+        if (this.store.kodol.hely === 90026) {
+          this.$refs.uzemkod.focus()
         }
         else {
-          this.message = 'Érvénytelen dolgozó kód!'
-          Log('message', {message: this.message})
+          this.$refs.munkalap.focus()
         }
+      }
+      else {
+        this.store.kodol.helynev = null
+        this.message = 'Érvénytelen hely!'
+        Log('message', {message: this.message})
+      }
+    },
+
+    async gotUzemkod (value) {
+      this.message = ''
+      try {
+        if (value) { this.store.kodol.uzemkod = parseInt(value) }
+        if (!this.store.kodol.uzemkod) { return }
+        this.store.kodol.uzemkod = parseInt(JSON.stringify(this.store.kodol.uzemkod))
+      }
+      catch (e) {
+        this.message = 'Érvénytelen üzemkód!'
+        Log('message', {message: e.message})
+        console.log(e)
+        return
+      }
+      const uzemkod = this.store.kodol.uzemkod - 54000
+      const response = await RpcRaw('select uzemkod, uzemnev from uzemek where uzemkod = ' + uzemkod.toString())
+      if (response.result && response.result.length) {
+        const row = response.result[0]
+        this.store.kodol.uzemnev = row.uzemnev
+        this.$refs.munkalap.focus()
+      }
+      else {
+        this.store.kodol.uzemnev = null
+        this.message = 'Érvénytelen uzemkod!'
+        Log('message', {message: this.message})
       }
     },
 
@@ -153,18 +177,12 @@ export default {
         }
         this.store.user.filterMunkalap = munkalap
         this.store.user.filterCikkszam = row.cikkszam.trim()
-        this.$refs.muveletkodok.focus()
       }
       else {
         this.store.kodol.kartoninfo = null
         this.message = 'Érvénytelen munkalap!'
         Log('message', {message: this.message})
       }
-    },
-
-    gotGepkodQR (value) {
-      this.store.kodol.gepkod = value
-      this.$refs.muveletkodok.focus()
     },
 
     async pubKodolas () {
@@ -214,22 +232,22 @@ export default {
         let doc = Object.assign({}, this.store.kodol)
         doc.funkcio = 99994
         doc.createdAt = new Date()
-        this.store.kodolasok.unshift(doc)
+        this.store.atadasok.unshift(doc)
         try {
           const response = await RpcKodol(doc)
           if (response.result) {
-            this.store.kodolasok[0].eredmeny = response.result.message
-            this.store.kodolasok[0].error = parseInt(response.result.error)
+            this.store.atadasok[0].eredmeny = response.result.message
+            this.store.atadasok[0].error = parseInt(response.result.error)
           }
           else {
-            this.store.kodolasok[0].eredmeny = 'Nem jött eredmény!'
-            this.store.kodolasok[0].error = 1
+            this.store.atadasok[0].eredmeny = 'Nem jött eredmény!'
+            this.store.atadasok[0].error = 1
           }
         }
         catch (e) {
           this.message = 'Kódoló szerver hiba, értesítse a rendszergazdát!'
-          this.store.kodolasok[0].eredmeny = 'Kódoló szerver hiba!'
-          this.store.kodolasok[0].error = 1
+          this.store.atadasok[0].eredmeny = 'Kódoló szerver hiba!'
+          this.store.atadasok[0].error = 1
           Log('message', {message: e.message})
           console.log(e)
           break
@@ -244,26 +262,20 @@ export default {
       this.store.menthet = true
     },
 
+    ujHely () {
+      Log('clickbutton', {button: 'Új hely'})
+      this.store.kodol.hely = null
+      this.store.kodol.helynev = null
+      this.store.kodol.uzemkod = 0
+      this.store.kodol.uzemnev = null
+      this.store.kodol.munkalap = null
+      this.store.kodol.kartoninfo = null
+    },
+
     ujMunkalap () {
       Log('clickbutton', {button: 'Új munkalap'})
       this.store.kodol.munkalap = null
       this.store.kodol.kartoninfo = null
-      this.store.kodol.gepkod = 0
-      if (this.store.user.role !== 'szabó') {
-        this.store.kodol.muveletkodok = []
-      }
-      this.store.kodol.mennyiseg = null
-    },
-
-    ujDolgozo () {
-      Log('clickbutton', {button: 'Új dolgozó'})
-      this.store.kodol.dolgozokod = null
-      this.store.kodol.dolgozo = null
-      this.store.kodol.munkalap = null
-      this.store.kodol.kartoninfo = null
-      this.store.kodol.gepkod = 0
-      this.store.kodol.muveletkodok = []
-      this.store.kodol.mennyiseg = null
     }
   },
   created () {

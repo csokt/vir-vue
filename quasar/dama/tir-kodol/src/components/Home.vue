@@ -6,11 +6,12 @@
       <hr>
       <template v-if="store.user">
         <q-item>
-          <span class="name">{{ store.user.name }}, {{ store.kodol.uzemnev }}</span>
+          <span class="name">{{ store.user.name }}, {{ store.user.uzemnev }}</span>
         </q-item>
         <q-item>
           <q-btn v-if="store.user.role!='meo'" @click="$router.push('kodol')" push color="primary">Kódolás</q-btn>
-          <q-btn @click="logout" push color="negative">Kijelentkezés</q-btn>
+          <q-btn v-if="store.user.role=='kódoló'" @click="$router.push('atad')" push color="primary">Átadás</q-btn>
+          <q-btn @click="logout" push color="negative">Kilépés</q-btn>
         </q-item>
         <q-item>
           <q-btn @click="$router.push('info')" push color="secondary">Munkalap információk</q-btn>
@@ -97,11 +98,10 @@ export default {
         if (response.result && response.result.length) {
           const result = response.result[0]
           const uzemkodRole = {1: 'varró', 2: 'varró', 3: 'varró', 4: 'félkész vasaló', 5: 'szabó', 6: 'technológus', 7: 'síkkötő', 8: 'körkötő', 9: 'logisztikus', 26: 'készáru vasaló'}
-          this.store.user = {name: result.dolgozonev.trim(), role: uzemkodRole[result.uzemkod], belepokod: result.dolgozokod + 20000}
+          this.store.user = {name: result.dolgozonev.trim(), role: uzemkodRole[result.uzemkod], uzemnev: result.uzemnev.trim(), belepokod: result.dolgozokod + 20000}
           this.store.kodol = {
             telephelykod: result.telephelykod,
             telephely: 'Szeged, Tavasz u. 2.',
-            uzemnev: result.uzemnev.trim(),
             kodolokod: -1,
             kodolo: 'dolgozó',
             dolgozokod: this.store.user.belepokod,
@@ -142,9 +142,15 @@ export default {
             gepkod: 0,
             muveletkodok: [],
             mennyiseg: null,
+            hely: null,
+            helynev: null,
+            uzemkod: 0,
+            uzemnev: null,
+            polckod: 0,
             role: this.store.user.role
           }
           this.store.kodolasok = []
+          this.store.atadasok = []
           this.store.menthet = true
           this.scanUser = false
           this.message = ''
