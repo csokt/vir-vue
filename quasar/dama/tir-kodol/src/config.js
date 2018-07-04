@@ -489,6 +489,47 @@ views:
   - name:     darab
     label:    Összes bekódolt db.
 
+-
+  id:         utovasaloleadas_tablet
+  database:   SzefoModulKeszlet
+  name:       monitor_szegedutovasaloleadas
+  label:      Szeged utóvasaló napi leadás
+  device:     tablet
+  roles:
+  - meo
+  where:
+  order:      '[Cikk/IT]'
+  head_after: 15
+  limit:      100
+  sum:
+  - Rendelt db
+  - Előzőleg leadott db
+  - Tervezett db
+  - Leadott db
+  - Eltérés a tervtől
+  - Hibák száma
+  - Hátralék
+  fields:
+  - name:     Cikk/IT
+  - name:     Megnevezés
+  - name:     Megrendelő
+  - name:     Rendelt db
+    label:    Rendelt
+  - name:     Előzőleg leadott db
+    label:    Előzőleg leadott
+  - name:     Hátralék
+    label:    Gyártandó
+  - name:     Tervezett db
+    label:    Mai terv
+  - name:     Leadott db
+    label:    Ma leadott
+  - name:     Eltérés a tervtől
+    label:    Eltérés
+    positive: red
+    zero:     green
+    negative: green
+  - name:     Hibák száma
+
 
 `
 

@@ -1,11 +1,14 @@
 import { dom } from 'quasar'
+const url = new URL(window.location.href)
+const teszt = url.searchParams.get('teszt') !== null
+
 const viewport = dom.viewport()
 const device = Math.max(viewport.height, viewport.width) < 800 ? 'phone' : 'tablet'
 const facingMode = device === 'phone' ? 'environment' : 'user'
 
 let Store = {
-  version: '18.06.06',
-  teszt: null,
+  version: '18.06.12',
+  teszt: teszt,
   privateIP: '',
   publicIP: '',
   device: device,

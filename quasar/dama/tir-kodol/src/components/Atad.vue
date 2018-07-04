@@ -7,7 +7,7 @@
 
       <template v-if="store.user">
         <q-field class="full-width" label="Helykód" labelWidth=3 >
-          <q-input ref="hely" type="number" v-model="store.kodol.hely" @change="store.kodol.helynev=null" @keyup.enter="gotHely(null)" @blur="gotHely(null)"></q-input>
+          <q-input ref="hely" type="number" v-model="store.kodol.hely" @change="store.kodol.helynev=null;store.kodol.uzemkod = 0;store.kodol.uzemnev = null" @keyup.enter="gotHely(null)" @blur="gotHely(null)"></q-input>
           <qrcode-reader v-if="!store.kodol.hely" :video-constraints="store.video" @decode="gotHely"> </qrcode-reader>
         </q-field>
 
@@ -15,7 +15,7 @@
           <q-input v-model="store.kodol.helynev" readonly></q-input>
         </q-field>
 
-        <q-field v-if="store.kodol.hely == 90026" class="full-width" label="Uzemkód" labelWidth=3 >
+        <q-field v-if="store.kodol.hely == 90026" class="full-width" label="Üzemkód" labelWidth=3 >
           <q-input ref="uzemkod" type="number" v-model="store.kodol.uzemkod" @change="store.kodol.uzemnev=null" @keyup.enter="gotUzemkod(null)" @blur="gotUzemkod(null)"></q-input>
           <qrcode-reader v-if="!store.kodol.uzemkod && store.kodol.helynev" :video-constraints="store.video" @decode="gotUzemkod"> </qrcode-reader>
         </q-field>
@@ -35,27 +35,26 @@
 
         <h5 class="text-negative"> {{message}} </h5>
 
-        <q-btn v-if="store.menthet && store.kodol.munkalap && store.kodol.kartoninfo && store.kodol.muveletkodok.length && store.kodol.mennyiseg" @click="pubKodolas" push color="positive">Adatok mentése</q-btn>
-        <q-btn @click="pubKodolas" push color="positive">Adatok mentése!!!</q-btn>
+        <q-btn v-if="store.menthet && store.kodol.helynev && store.kodol.munkalap && store.kodol.kartoninfo && (store.kodol.hely != 90026 || store.kodol.uzemnev)" @click="pubAtadas" push color="positive">Adatok mentése</q-btn>
         <q-btn @click="$router.go(-1)" push color="warning">Vissza</q-btn>
         <q-btn v-if="store.menthet && store.kodol.hely" @click="ujHely" push color="tertiary">Új Hely</q-btn>
         <q-btn v-if="store.menthet && store.kodol.munkalap" @click="ujMunkalap" push color="tertiary">Új munkalap</q-btn>
-        <q-btn v-if="store.menthet && store.kodol.kartoninfo && !store.kodol.mennyiseg" @click="$router.push('search')" push color="secondary">Dokumentációk</q-btn>
-        <q-btn v-if="store.menthet && store.kodol.kartoninfo && !store.kodol.mennyiseg" @click="$router.push('table/cikknormai')" push color="secondary">Konfekció normalapok</q-btn>
+        <q-btn v-if="store.menthet && store.kodol.kartoninfo" @click="$router.push('search')" push color="secondary">Dokumentációk</q-btn>
+        <q-btn v-if="store.menthet && store.kodol.kartoninfo" @click="$router.push('table/cikknormai')" push color="secondary">Konfekció normalapok</q-btn>
 
       </template>
       <table class="q-table striped cell-separator bordered compact">
         <thead>
           <tr>
-            <th>Műv.kód</th>
-            <th>Menny.</th>
+            <th>Helykód</th>
+            <th>Munkalap</th>
             <th>Eredmény</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="row in store.atadasok" v-bind:class="{ 'text-negative': row.error }">
-            <td>{{row.muveletkod}}</td>
-            <td>{{row.mennyiseg}}</td>
+            <td>{{row.hely}}</td>
+            <td>{{row.munkalap}}</td>
             <td>{{row.eredmeny}}</td>
           </tr>
         </tbody>
@@ -185,79 +184,38 @@ export default {
       }
     },
 
-    async pubKodolas () {
-      try {
-        if (this.store.kodol.gepkod !== parseInt(this.store.kodol.gepkod) || this.store.kodol.gepkod < 0) {
-          throw new TypeError('Érvénytelen gépkód!')
-        }
-      }
-      catch (e) {
-        this.message = 'Érvénytelen gépkód!'
-        Log('message', {message: e.message})
-        console.log(e)
-        return
-      }
-      for (let i = 0; i < this.store.kodol.muveletkodok.length; i++) {
-        try {
-          const kod = this.store.kodol.muveletkodok[i]
-          if (Math.ceil(parseFloat(kod)) !== parseInt(kod) || parseInt(kod) <= 0) {
-            throw new TypeError('Érvénytelen műveletkód!')
-          }
-        }
-        catch (e) {
-          this.message = 'Érvénytelen műveletkód!'
-          Log('message', {message: e.message})
-          console.log(e)
-          return
-        }
-      }
-      try {
-        if (this.store.kodol.mennyiseg !== parseInt(this.store.kodol.mennyiseg) || this.store.kodol.mennyiseg <= 0) {
-          throw new TypeError('Érvénytelen mennyiség!')
-        }
-      }
-      catch (e) {
-        this.message = 'Érvénytelen mennyiség!'
-        Log('message', {message: e.message})
-        console.log(e)
-        return
-      }
-
-      this.store.kodol.gepkod = this.store.kodol.gepkod || 0
-      Log('kodol', this.store.kodol)
+    async pubAtadas () {
+      Log('atad', this.store.kodol)
       this.message = ''
       this.store.menthet = false
-      for (let i = 0; i < this.store.kodol.muveletkodok.length; i++) {
-        this.store.kodol.muveletkod = this.store.kodol.muveletkodok[i]
-        let doc = Object.assign({}, this.store.kodol)
-        doc.funkcio = 99994
-        doc.createdAt = new Date()
-        this.store.atadasok.unshift(doc)
-        try {
-          const response = await RpcKodol(doc)
-          if (response.result) {
-            this.store.atadasok[0].eredmeny = response.result.message
-            this.store.atadasok[0].error = parseInt(response.result.error)
-          }
-          else {
-            this.store.atadasok[0].eredmeny = 'Nem jött eredmény!'
-            this.store.atadasok[0].error = 1
-          }
+      let doc = Object.assign({}, this.store.kodol)
+      doc.funkcio = doc.hely
+      doc.createdAt = new Date()
+      this.store.atadasok.unshift(doc)
+      try {
+        const response = await RpcKodol(doc)
+        if (response.result) {
+          this.store.atadasok[0].eredmeny = response.result.message
+          this.store.atadasok[0].error = parseInt(response.result.error)
         }
-        catch (e) {
-          this.message = 'Kódoló szerver hiba, értesítse a rendszergazdát!'
-          this.store.atadasok[0].eredmeny = 'Kódoló szerver hiba!'
+        else {
+          this.store.atadasok[0].eredmeny = 'Nem jött eredmény!'
           this.store.atadasok[0].error = 1
-          Log('message', {message: e.message})
-          console.log(e)
-          break
+        }
+        if (this.store.atadasok[0].error) {
+          this.message = this.store.atadasok[0].eredmeny
         }
       }
+      catch (e) {
+        this.message = 'Kódoló szerver hiba, értesítse a rendszergazdát!'
+        this.store.atadasok[0].eredmeny = 'Kódoló szerver hiba!'
+        this.store.atadasok[0].error = 1
+        Log('message', {message: e.message})
+        console.log(e)
+      }
       if (!this.message) {
-        if (this.store.user.role !== 'szabó') {
-          this.store.kodol.muveletkodok = []
-        }
-        this.store.kodol.mennyiseg = null
+        this.store.kodol.munkalap = null
+        this.store.kodol.kartoninfo = null
       }
       this.store.menthet = true
     },
@@ -280,17 +238,13 @@ export default {
   },
   created () {
     if (!this.store.user) { this.$router.replace('/'); return }
+    this.store.kodol.dolgozokod = 0
+    this.store.kodol.dolgozo = null
+    this.store.kodol.mennyiseg = 0
     Log('navigate')
-  },
-  mounted () {
-    this.$nextTick(function () {
-      document.querySelector('#muveletkodok_id input').setAttribute('type', 'number')
-    })
   }
 }
 </script>
-
-#muveletkodok_id > div > div > input
 
 <style scoped lang="stylus">
 .text-margin-top

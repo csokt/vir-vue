@@ -39,9 +39,6 @@ export default {
         console.log(error)
       })
 
-    const url = new URL(window.location.href)
-    this.store.teszt = url.searchParams.get('teszt') !== null
-
     window.RTCPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection // compatibility for Firefox and chrome
     const pc = new RTCPeerConnection({iceServers: []}), noop = function () {}
     pc.createDataChannel('') // create a bogus data channel

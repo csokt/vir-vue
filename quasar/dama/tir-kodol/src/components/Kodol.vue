@@ -39,7 +39,6 @@
         <h5 class="text-negative"> {{message}} </h5>
 
         <q-btn v-if="store.menthet && store.kodol.munkalap && store.kodol.kartoninfo && store.kodol.muveletkodok.length && store.kodol.mennyiseg" @click="pubKodolas" push color="positive">Adatok mentése</q-btn>
-        <q-btn @click="pubKodolas" push color="positive">Adatok mentése!!!</q-btn>
         <q-btn @click="$router.go(-1)" push color="warning">Vissza</q-btn>
         <q-btn v-if="store.user.role=='varró'" @click="$router.push('norma')" push color="secondary">Mai %</q-btn>
         <q-btn v-if="store.menthet && store.kodol.munkalap" @click="ujMunkalap" push color="tertiary">Új munkalap</q-btn>
@@ -225,6 +224,9 @@ export default {
             this.store.kodolasok[0].eredmeny = 'Nem jött eredmény!'
             this.store.kodolasok[0].error = 1
           }
+          if (this.store.kodolasok[0].error) {
+            this.message = 'Nem minden tételt sikerült bekódolni!'
+          }
         }
         catch (e) {
           this.message = 'Kódoló szerver hiba, értesítse a rendszergazdát!'
@@ -268,6 +270,8 @@ export default {
   },
   created () {
     if (!this.store.user) { this.$router.replace('/'); return }
+    this.store.kodol.hely = 0
+    this.store.kodol.helynev = null
     Log('navigate')
   },
   mounted () {
