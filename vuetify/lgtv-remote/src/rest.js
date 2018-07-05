@@ -1,12 +1,12 @@
 import axios from 'axios'
 
-const token = 'f5dde53149a19f988d8292b10026b6eecace2596'
-const REST = axios.create({
-  baseURL: 'http://tibor.szefo.local:3000/api/tv/',
+const token = 'T2D8JAOzS9yFEO3q7jEQ6XZ6EidMxUnpGSHSOksAkI4EURX23XHOprnRWP1roGmR'
+const API = axios.create({
+  baseURL: 'http://tibor.szefo.local:3000/api/',
   // baseURL: 'http://localhost:3000/api/tv/',
   headers: {
-    Authorization: 'Token ' + token
+    Authorization: token
   }
 })
 
-export default REST
+export default API
