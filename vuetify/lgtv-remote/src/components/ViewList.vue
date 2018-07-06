@@ -26,12 +26,12 @@ export default {
 
   methods: {
     async getViewList () {
-      try {
-        const response = await API.get('tir/config/views/tv')
+      const response = await API.get('tir/config/views/tv')
+      if (response.ok) {
         this.viewlist = response.data
-      } catch (err) {
+      } else {
         this.viewlist = []
-        console.log(err)
+        console.log(response.problem)
       }
     }
   },

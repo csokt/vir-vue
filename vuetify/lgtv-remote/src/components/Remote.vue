@@ -60,12 +60,12 @@ export default {
 
   methods: {
     async getTv () {
-      try {
-        const response = await API.get('tv/tvlist/' + this.$route.params.id)
+      const response = await API.get('tv/tv/' + this.$route.params.id)
+      if (response.ok) {
         this.tv = response.data
-      } catch (err) {
+      } else {
         this.tv = {}
-        console.log(err)
+        console.log(response.problem)
       }
     }
   },

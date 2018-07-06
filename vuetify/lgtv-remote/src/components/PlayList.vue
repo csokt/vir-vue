@@ -26,12 +26,12 @@ export default {
 
   methods: {
     async getPlayList () {
-      try {
-        const response = await API.get('tir/config/playlists')
+      const response = await API.get('tir/config/playlists')
+      if (response.ok) {
         this.playlist = response.data
-      } catch (err) {
+      } else {
         this.playlist = []
-        console.log(err)
+        console.log(response.problem)
       }
     }
   },

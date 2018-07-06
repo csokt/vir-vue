@@ -33,24 +33,18 @@ export default {
 
   methods: {
     async getTvList () {
-      try {
-        const response = await API.get('tv/tvlist')
+      const response = await API.get('tv/tvlist')
+      if (response.ok) {
         this.tvlist = response.data
-        // console.log(this.tvlist)
-      } catch (err) {
+      } else {
         this.tvlist = []
-        console.log(err)
+        console.log(response.problem)
       }
     },
 
     async power (tvId) {
-      console.log('power', tvId)
-      try {
-        const response = await API.post('tv/power/' + tvId)
-        console.log(response.data)
-      } catch (err) {
-        console.log(err)
-      }
+      const response = await API.post('tv/power/' + tvId)
+      console.log(response.data)
     }
   },
 

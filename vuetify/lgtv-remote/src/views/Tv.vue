@@ -22,14 +22,10 @@ export default {
 
   methods: {
     async call (method, arg = null) {
-      try {
-        let url = 'tv/' + method + '/' + this.$route.params.id
-        if (arg) url = url + '/' + arg
-        // const response = await API.post(url)
-        await API.post(url)
-      } catch (err) {
-        console.log(err)
-      }
+      let url = 'tv/' + method + '/' + this.$route.params.id
+      if (arg) url = url + '/' + arg
+      const response = await API.post(url)
+      console.log(response.data)
     }
   }
 }
