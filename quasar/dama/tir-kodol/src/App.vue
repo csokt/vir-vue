@@ -23,6 +23,12 @@ export default {
   },
 
   created: function () {
+    window.oncontextmenu = function (event) {
+      event.preventDefault()
+      event.stopPropagation()
+      return false
+    }
+
     // axios.get('https://api.ipify.org/?format=json') // Limitations: none, adblock-kal nem megy
     // axios.get('https://api.ipdata.co/') // Limitations: 1,500 requests per day
     // axios.get('https://ipapi.co/json/') // Limitations: 1,000 requests per day
