@@ -9,7 +9,15 @@
 /*
  * Root component
  */
-export default {}
+export default {
+  created: function () {
+    window.oncontextmenu = function (event) {
+      event.preventDefault()
+      event.stopPropagation()
+      return false
+    }
+  }
+}
 </script>
 
 <style></style>

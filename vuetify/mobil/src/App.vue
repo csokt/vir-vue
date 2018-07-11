@@ -2,23 +2,55 @@
   <div id="app">
     <div id="nav">
       <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+      <router-link to="/login">Login</router-link>
     </div>
     <router-view/>
   </div>
 </template>
 
 <script>
-import API from '@/rest.js'
+import { getUser } from '@/backend/rest.js'
+import Store from '@/store'
 
 export default {
   name: 'app',
+  data () {
+    return {
+      store: Store
+    }
+  },
+
+  computed: {
+    menuItems () {
+      let menuItems = [
+        {icon: 'help', title: 'Segítség', link: '/help'}
+      ]
+      if (this.userIsAuthenticated) {
+        menuItems = [
+          {icon: 'person', title: 'Profile', link: '/profile'},
+          {icon: 'help', title: 'Segítség', link: '/help'}
+        ]
+      }
+      return menuItems
+    },
+    userIsAuthenticated () {
+      return this.store.user !== null && this.store.user !== undefined
+    }
+  },
+
+  methods: {
+  },
 
   created () {
-    const token = localStorage.getItem('SzefoLoopbackToken')
-    if (token) {
-      API.setHeader('Authorization', this.token)
-      console.log('token', token)
+    window.oncontextmenu = function (event) {
+      event.preventDefault()
+      event.stopPropagation()
+      return false
+    }
+
+    console.log('token', localStorage.szefo_loopback_token)
+    if (localStorage.szefo_loopback_token) {
+      getUser()
     }
   }
 
@@ -27,17 +59,6 @@ export default {
 
 <style lang="stylus">
 #app
-  font-family 'Avenir', Helvetica, Arial, sans-serif
-  -webkit-font-smoothing antialiased
-  -moz-osx-font-smoothing grayscale
   text-align center
-  color #2c3e50
-
-#nav
-  padding 30px
-  a
-    font-weight bold
-    color #2c3e50
-    &.router-link-exact-active
-      color #42b983
+  font-size 2em
 </style>
