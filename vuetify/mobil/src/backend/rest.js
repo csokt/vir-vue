@@ -10,13 +10,15 @@ const API = apisauce.create({
   }
 })
 
-async function getUser () {
+async function getUser (router) {
+  console.log('this', this)
   const response = await API.get('accounts/user')
   if (response.ok) {
     Store.user = response.data
   } else {
     Store.user = null
     delete localStorage.szefo_loopback_token
+    if (router) router.push('/login')
     console.log(response.problem)
   }
 }
@@ -48,4 +50,15 @@ async function logout () {
   }
 }
 
-export { API, getUser, login, logout }
+async function startApp (href) {
+  const token = {loopback_token: localStorage.szefo_loopback_token}
+  const response = await API.post('accounts/pushtoken', token)
+  if (response.ok) {
+    const path = href + '?token_uid=' + response.data
+    window.location.href = path
+  } else {
+    console.log(response.problem)
+  }
+}
+
+export { API, getUser, login, logout, startApp }

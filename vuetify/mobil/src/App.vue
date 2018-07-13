@@ -49,9 +49,7 @@ export default {
     }
 
     console.log('token', localStorage.szefo_loopback_token)
-    if (localStorage.szefo_loopback_token) {
-      getUser()
-    }
+    getUser(this.$router)
   }
 
 }

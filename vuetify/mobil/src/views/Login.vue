@@ -1,7 +1,7 @@
 <template>
   <div>
-    <LoopbackLogin  v-if="!isAuthenticated" msg="LoopbackLogin"/>
-    <LoopbackLogout v-if="isAuthenticated" msg="LoopbackLogout"/>
+    <LoopbackLogin  v-if="!isAuthenticated" msg="Login component"/>
+    <LoopbackLogout v-if="isAuthenticated"  msg="Logout component"/>
   </div>
 </template>
 

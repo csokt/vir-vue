@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3> Login component</h3>
+    <h3>{{ msg }}</h3>
     login name: <input v-model="username"><br>
     password: <input v-model="password"><br>
     <button v-on:click="login">Login button</button><br>
@@ -14,6 +14,10 @@ import Store from '@/store'
 
 export default {
   name: 'loopbackLogin',
+  props: {
+    msg: String
+  },
+
   components: {
   },
 

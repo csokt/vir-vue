@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3> Logout component</h3>
+    <h3>{{ msg }}</h3>
     name: {{store.user && store.user.name}} <br>
     <button v-on:click="logout">Logout button</button><br>
   </div>
@@ -12,6 +12,10 @@ import Store from '@/store'
 
 export default {
   name: 'loopbackLogout',
+  props: {
+    msg: String
+  },
+
   components: {
   },
 
@@ -25,7 +29,6 @@ export default {
     logout () {
       logout()
     }
-
   }
 }
 </script>

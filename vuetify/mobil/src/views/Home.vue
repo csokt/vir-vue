@@ -1,14 +1,16 @@
 <template>
   <div>
-    Home
+    <Appstart msg="Appstart component"/>
   </div>
 </template>
 
 <script>
+import Appstart from '@/components/Appstart.vue'
 
 export default {
   name: 'home',
   components: {
+    Appstart
   },
 
   created () {
