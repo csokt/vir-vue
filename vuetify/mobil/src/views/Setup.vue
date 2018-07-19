@@ -1,9 +1,11 @@
 <template>
   <div>
     <LoopbackLogin  v-if="!isAuthenticated" msg="Login component"/>
-    <LoopbackLogout v-if="isAuthenticated"  msg="Logout component"/>
-    <VirLogin  v-if="isAuthenticated && !isVirAuthenticated" msg="VIR login component"/>
-    <VirLogout v-if="isAuthenticated && isVirAuthenticated"  msg="VIR logout component"/>
+    <LoopbackLogout v-if="isAuthenticated && isPinAuthenticated"  msg="Logout component"/>
+    <VirLogin  v-if="isAuthenticated && isPinAuthenticated && !isVirAuthenticated" msg="VIR login component"/>
+    <VirLogout v-if="isAuthenticated && isPinAuthenticated && isVirAuthenticated"  msg="VIR logout component"/>
+    <PinSetup  v-if="isAuthenticated && isPinAuthenticated" msg="PIN setup component"/>
+    <PinLogin  v-if="isAuthenticated && !isPinAuthenticated" msg="PIN login component"/>
   </div>
 </template>
 
@@ -13,6 +15,8 @@ import LoopbackLogin from '@/components/LoopbackLogin.vue'
 import LoopbackLogout from '@/components/LoopbackLogout.vue'
 import VirLogin from '@/components/VirLogin.vue'
 import VirLogout from '@/components/VirLogout.vue'
+import PinSetup from '@/components/PinSetup.vue'
+import PinLogin from '@/components/PinLogin.vue'
 
 export default {
   name: 'setup',
@@ -26,7 +30,9 @@ export default {
     LoopbackLogin,
     LoopbackLogout,
     VirLogin,
-    VirLogout
+    VirLogout,
+    PinSetup,
+    PinLogin
   },
 
   computed: {
@@ -35,6 +41,9 @@ export default {
     },
     isVirAuthenticated () {
       return this.store.virUser !== null && this.store.virUser !== undefined
+    },
+    isPinAuthenticated () {
+      return !localStorage.szefo_pin || localStorage.szefo_pin === this.store.pin
     }
   },
 

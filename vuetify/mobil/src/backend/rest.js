@@ -15,10 +15,11 @@ async function getUser (router) {
   const response = await API.get('accounts/user')
   if (response.ok) {
     Store.user = response.data
+    if (router && localStorage.szefo_pin) router.push('/setup')
   } else {
     Store.user = null
     delete localStorage.szefo_loopback_token
-    if (router) router.push('/login')
+    if (router) router.push('/setup')
     console.log(response.problem)
   }
 }
@@ -39,9 +40,9 @@ async function login (username = 'acsai', password = '1966') {
   console.log(response)
   if (response.ok) {
     const token = response.data.id
-    console.log('login', token)
     localStorage.szefo_loopback_token = token
     API.setHeader('Authorization', token)
+    Store.pin = localStorage.szefo_pin
     getUser()
     getVirUser()
   } else {

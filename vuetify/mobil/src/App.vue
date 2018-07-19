@@ -4,6 +4,7 @@
       <router-link to="/">Home</router-link> |
       <router-link to="/setup">Setup</router-link>
     </div>
+    név: {{store.user && store.user.name}} <br>
     <router-view/>
   </div>
 </template>
