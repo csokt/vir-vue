@@ -12,6 +12,7 @@ const Store = {
     width: 320,
     height: 240
   },
+  virUser: null,
   user: null
 }
 

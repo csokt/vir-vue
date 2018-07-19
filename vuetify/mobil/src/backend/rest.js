@@ -23,7 +23,18 @@ async function getUser (router) {
   }
 }
 
-async function login (username = 'csok.tibor', password = 'tiborc') {
+async function getVirUser () {
+  const response = await API.get('vir/currentuser')
+  if (response.ok) {
+    Store.virUser = response.data
+    console.log(response)
+  } else {
+    Store.virUser = null
+    console.log(response.problem)
+  }
+}
+
+async function login (username = 'acsai', password = '1966') {
   const response = await API.post('Users/login', {username: username, password: password})
   console.log(response)
   if (response.ok) {
@@ -32,6 +43,7 @@ async function login (username = 'csok.tibor', password = 'tiborc') {
     localStorage.szefo_loopback_token = token
     API.setHeader('Authorization', token)
     getUser()
+    getVirUser()
   } else {
     console.log(response.problem)
   }
@@ -45,6 +57,28 @@ async function logout () {
     API.setHeader('Authorization', undefined)
     console.log('logged out')
     getUser()
+    getVirUser()
+  } else {
+    console.log(response.problem)
+  }
+}
+
+async function virLogin (username = 'hegedus.istvan', password = 'Godhak04') {
+  const response = await API.post('vir/login', {username: username, password: password})
+  console.log(response)
+  if (response.ok) {
+    getVirUser()
+  } else {
+    console.log(response.problem)
+  }
+}
+
+async function virLogout () {
+  const response = await API.post('vir/logout')
+  console.log(response)
+  if (response.ok) {
+    console.log('logged out')
+    getVirUser()
   } else {
     console.log(response.problem)
   }
@@ -61,4 +95,4 @@ async function startApp (href) {
   }
 }
 
-export { API, getUser, login, logout, startApp }
+export { API, getUser, login, logout, getVirUser, virLogin, virLogout, startApp }

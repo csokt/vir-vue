@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import { getUser } from '@/backend/rest.js'
+import { getUser, getVirUser } from '@/backend/rest.js'
 import Store from '@/store'
 
 export default {
@@ -50,6 +50,7 @@ export default {
 
     console.log('token', localStorage.szefo_loopback_token)
     getUser(this.$router)
+    getVirUser()
   }
 
 }

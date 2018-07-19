@@ -9,11 +9,11 @@
 
 <script>
 // import API from '@/backend/rest.js'
-import { login } from '@/backend/rest.js'
+import { virLogin } from '@/backend/rest.js'
 import Store from '@/store'
 
 export default {
-  name: 'loopbackLogin',
+  name: 'virLogin',
   props: {
     msg: String
   },
@@ -31,8 +31,9 @@ export default {
 
   methods: {
     login () {
-      // login(this.username, this.password)
-      login()
+      // virLogin(this.username, this.password)
+      virLogin()
+      // login()
     }
   }
 }
