@@ -15,7 +15,7 @@ import VirLogin from '@/components/VirLogin.vue'
 import VirLogout from '@/components/VirLogout.vue'
 
 export default {
-  name: 'login',
+  name: 'setup',
   data () {
     return {
       store: Store
@@ -42,7 +42,7 @@ export default {
   },
 
   created () {
-    console.log('Login created')
+    console.log('Setup created')
   }
 
 }
