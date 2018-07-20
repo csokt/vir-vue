@@ -7,6 +7,7 @@
 </template>
 
 <script>
+import { EventBus } from '@/util.js'
 import Store from '@/store'
 
 export default {
@@ -29,6 +30,7 @@ export default {
     enter () {
       localStorage.szefo_pin = this.pin
       this.store.pin = this.pin
+      EventBus.$emit('inform', {type: 'alert', variation: 'success', message: 'PIN beállítva'})
     }
   }
 }

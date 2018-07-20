@@ -1,7 +1,8 @@
 <template>
   <div id="app">
     <div id="nav">
-      <router-link to="/">Home</router-link> |
+      <Inform/>
+      <router-link to="/"     >Home </router-link> |
       <router-link to="/setup">Setup</router-link>
     </div>
     név: {{store.user && store.user.name}} <br>
@@ -10,7 +11,8 @@
 </template>
 
 <script>
-import { getUser, getVirUser } from '@/backend/rest.js'
+import Inform from '@/components/Inform.vue'
+import { getUser, getVirUser } from '@/util.js'
 import Store from '@/store'
 
 export default {
@@ -19,6 +21,10 @@ export default {
     return {
       store: Store
     }
+  },
+
+  components: {
+    Inform
   },
 
   computed: {
@@ -50,8 +56,8 @@ export default {
     }
 
     console.log('token', localStorage.szefo_loopback_token)
-    getUser(this.$router)
-    getVirUser()
+    getUser(this, '/setup')
+    getVirUser(this)
   }
 
 }

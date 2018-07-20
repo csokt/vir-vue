@@ -7,6 +7,7 @@
 </template>
 
 <script>
+import { EventBus } from '@/util.js'
 import Store from '@/store'
 
 export default {
@@ -28,8 +29,13 @@ export default {
 
   methods: {
     enter () {
-      if (this.counter < 3) this.store.pin = this.pin
-      else this.store.user = null
+      if (this.counter < 3) {
+        this.store.pin = this.pin
+        EventBus.$emit('inform', {type: 'alert', variation: 'info', message: 'PIN elküldve'})
+      } else {
+        this.store.user = null
+        EventBus.$emit('inform', {type: 'alert', variation: 'warning', message: 'PIN hiba'})
+      }
       this.counter += 1
     }
   }

@@ -8,8 +8,8 @@
 </template>
 
 <script>
-// import API from '@/backend/rest.js'
-import { login } from '@/backend/rest.js'
+import { API } from '@/backend/rest.js'
+import { EventBus, getUser, getVirUser } from '@/util.js'
 import Store from '@/store'
 
 export default {
@@ -30,9 +30,20 @@ export default {
   },
 
   methods: {
-    login () {
-      // login(this.username, this.password)
-      login()
+    async login () {
+      // const response = await API.post('Users/login', {username: this.username, password: this.password})
+      const response = await API.post('Users/login', {username: 'acsai', password: '1966'})
+      // const response = await API.post('Users/login', {username: 'acsaine', password: '1963'})
+      if (response.ok) {
+        const token = response.data.id
+        localStorage.szefo_loopback_token = token
+        API.setHeader('Authorization', token)
+        Store.pin = localStorage.szefo_pin
+        getUser(this)
+        getVirUser(this)
+      } else {
+        EventBus.$emit('inform', {type: 'alert', variation: 'warning', message: response.problem})
+      }
     }
   }
 }

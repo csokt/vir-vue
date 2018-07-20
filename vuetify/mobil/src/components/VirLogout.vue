@@ -7,7 +7,8 @@
 </template>
 
 <script>
-import { virLogout } from '@/backend/rest.js'
+import { API } from '@/backend/rest.js'
+import { EventBus, getVirUser } from '@/util.js'
 import Store from '@/store'
 
 export default {
@@ -26,8 +27,15 @@ export default {
   },
 
   methods: {
-    logout () {
-      virLogout()
+    async logout () {
+      const response = await API.post('vir/logout')
+      console.log(response)
+      if (response.ok) {
+        EventBus.$emit('inform', {type: 'alert', variation: 'notice', message: 'logged out'})
+        getVirUser(this)
+      } else {
+        EventBus.$emit('inform', {type: 'alert', variation: 'warning', message: response.problem})
+      }
     }
   }
 }

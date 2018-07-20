@@ -7,7 +7,8 @@
 </template>
 
 <script>
-import { logout } from '@/backend/rest.js'
+import { API } from '@/backend/rest.js'
+import { EventBus, getUser, getVirUser } from '@/util.js'
 import Store from '@/store'
 
 export default {
@@ -26,8 +27,17 @@ export default {
   },
 
   methods: {
-    logout () {
-      logout()
+    async logout () {
+      const response = await API.post('Users/logout')
+      if (response.ok) {
+        EventBus.$emit('inform', {type: 'alert', variation: 'success', message: 'logged out'})
+        delete localStorage.szefo_loopback_token
+        API.setHeader('Authorization', undefined)
+        getUser(this)
+        getVirUser(this)
+      } else {
+        EventBus.$emit('inform', {type: 'alert', variation: 'warning', message: response.problem})
+      }
     }
   }
 }

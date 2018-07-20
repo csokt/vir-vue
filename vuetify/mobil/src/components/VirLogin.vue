@@ -8,8 +8,8 @@
 </template>
 
 <script>
-// import API from '@/backend/rest.js'
-import { virLogin } from '@/backend/rest.js'
+import { API } from '@/backend/rest.js'
+import { EventBus, getVirUser } from '@/util.js'
 import Store from '@/store'
 
 export default {
@@ -30,10 +30,14 @@ export default {
   },
 
   methods: {
-    login () {
-      // virLogin(this.username, this.password)
-      virLogin()
-      // login()
+    async login () {
+      // const response = await API.post('vir/login', {username: this.username, password: this.password})
+      const response = await API.post('vir/login', {username: 'hegedus.istvan', password: 'Godhak04'})
+      if (response.ok) {
+        getVirUser(this)
+      } else {
+        EventBus.$emit('inform', {type: 'alert', variation: 'warning', message: response.problem})
+      }
     }
   }
 }
