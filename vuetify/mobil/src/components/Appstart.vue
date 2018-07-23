@@ -1,12 +1,25 @@
 <template>
-  <div>
-    <h3>{{ msg }}</h3>
-    <ol>
-      <li v-for="app in showApps" v-bind:key="app.title" @click="start(app.href)">
-        {{ app.title }}
-      </li>
-    </ol>
-  </div>
+  <v-container fluid fill-height grid-list-lg>
+  <v-layout  justify-center wrap>
+    <v-flex xs12 sm8 md5>
+      <v-card class="elevation-12">
+        <v-list>
+          <template v-for="(item, index) in showApps">
+          <v-list-tile :key="item.title" avatar @click="start(item.href)">
+            <v-list-tile-avatar tile>
+              <img :src="item.avatar">
+            </v-list-tile-avatar>
+            <v-list-tile-content>
+              <v-list-tile-title v-html="item.title"></v-list-tile-title>
+            </v-list-tile-content>
+          </v-list-tile>
+          <v-divider v-if="index + 1 < showApps.length" inset :key="index"></v-divider>
+          </template>
+        </v-list>
+      </v-card>
+    </v-flex>
+  </v-layout>
+  </v-container>
 </template>
 
 <script>
@@ -39,11 +52,11 @@ export default {
 
     apps () {
       return [
-        { show: this.showTV, title: 'TV távvezérlés', avatar: '/static/dama.png', href: 'http://localhost:9000/#/' },
-        { show: this.showTir, title: 'Termelés Inf. Rendszer', avatar: '/static/dama.png', href: 'https://tir.szefo.local' },
-        { show: this.showVir, title: 'Legrand készlet', avatar: '/static/legrand.png', href: 'https://lir-keszlet.szefo.local' },
-        { show: this.showVir, title: 'Chance készlet', avatar: '/static/chance.png', href: 'https://chance-keszlet.szefo.local' },
-        { show: this.showVir, title: 'Tárgyi eszköz', avatar: '/static/eszkoz.png', href: 'https://eszkozinfo.szefo.local' }
+        { show: this.showTV, title: 'TV távvezérlés', avatar: '/mobil.png', href: 'http://localhost:9000/#/' },
+        { show: this.showTir, title: 'Termelés Inf. Rendszer', avatar: '/dama.png', href: 'https://tir.szefo.local' },
+        { show: this.showVir, title: 'Legrand készlet', avatar: '/legrand.png', href: 'https://lir-keszlet.szefo.local' },
+        { show: this.showVir, title: 'Chance készlet', avatar: '/chance.png', href: 'https://chance-keszlet.szefo.local' },
+        { show: this.showVir, title: 'Tárgyi eszköz', avatar: '/eszkoz.png', href: 'https://eszkozinfo.szefo.local' }
       ]
     },
 
@@ -53,6 +66,10 @@ export default {
   },
 
   methods: {
+    teszt () {
+      console.log('Teszt')
+    },
+
     async start (href) {
       const token = {loopback_token: localStorage.szefo_loopback_token}
       const response = await API.post('accounts/pushtoken', token)

@@ -51,7 +51,7 @@ export default {
   },
 
   created () {
-    console.log('Setup created')
+    this.store.pageTitle = 'Beállítások'
   }
 
 }

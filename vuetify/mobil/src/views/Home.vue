@@ -32,7 +32,7 @@ export default {
   },
 
   created () {
-    console.log('Home created')
+    this.store.pageTitle = 'Mobil alkalmazások'
   }
 
 }

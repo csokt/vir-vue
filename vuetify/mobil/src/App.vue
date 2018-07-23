@@ -1,13 +1,24 @@
 <template>
-  <div id="app">
-    <div id="nav">
+  <v-app>
+    <v-toolbar color="indigo" dark app>
+      <v-icon v-if="$route.path !== '/'" @click.stop="$router.go(-1)">arrow_back</v-icon>
+      <v-toolbar-title v-text="store.pageTitle"></v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-btn v-if="$route.path === '/'" icon @click="$router.push('help')" > <v-icon>help</v-icon> </v-btn>
+      <v-btn v-if="$route.path === '/'" icon @click="$router.push('setup')" > <v-icon>settings</v-icon> </v-btn>
+    </v-toolbar>
+    <v-content>
+      <h6 v-if="store.teszt">##### TESZT #####<hr></h6>
       <Inform/>
-      <router-link to="/"     >Home </router-link> |
-      <router-link to="/setup">Setup</router-link>
-    </div>
-    név: {{store.user && store.user.name}} <br>
-    <router-view/>
-  </div>
+      <router-view/>
+    </v-content>
+    <v-footer app>
+    <h6>
+      {{store.user && store.user.name}}
+      {{store.version}}
+    </h6>
+    </v-footer>
+  </v-app>
 </template>
 
 <script>
@@ -19,7 +30,8 @@ export default {
   name: 'app',
   data () {
     return {
-      store: Store
+      store: Store,
+      title: 'Vuetify.js'
     }
   },
 
@@ -28,21 +40,6 @@ export default {
   },
 
   computed: {
-    menuItems () {
-      let menuItems = [
-        {icon: 'help', title: 'Segítség', link: '/help'}
-      ]
-      if (this.userIsAuthenticated) {
-        menuItems = [
-          {icon: 'person', title: 'Profile', link: '/profile'},
-          {icon: 'help', title: 'Segítség', link: '/help'}
-        ]
-      }
-      return menuItems
-    },
-    userIsAuthenticated () {
-      return this.store.user !== null && this.store.user !== undefined
-    }
   },
 
   methods: {

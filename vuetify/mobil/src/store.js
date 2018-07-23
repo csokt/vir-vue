@@ -3,7 +3,7 @@ const Store = {
   pageTitle: 'Home',
   path: '/',
   rootPage: true,
-  teszt: null,
+  teszt: true,
   privateIP: '',
   publicIP: '',
   device: null,
