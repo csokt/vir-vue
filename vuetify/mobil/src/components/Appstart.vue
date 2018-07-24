@@ -1,6 +1,4 @@
 <template>
-  <v-container fluid fill-height grid-list-lg>
-  <v-layout  justify-center wrap>
     <v-flex xs12 sm8 md5>
       <v-card class="elevation-12">
         <v-list>
@@ -18,8 +16,6 @@
         </v-list>
       </v-card>
     </v-flex>
-  </v-layout>
-  </v-container>
 </template>
 
 <script>

@@ -1,10 +1,31 @@
 <template>
-  <div>
-    <h3>{{ msg }}</h3>
-    login name: <input v-model="username"><br>
-    password: <input v-model="password"><br>
-    <button v-on:click="login">Login button</button><br>
-  </div>
+  <v-flex xs12 sm8 md5>
+    <v-card class="elevation-12">
+      <v-card-title> <div class="title grey--text">Mobil alkalmazások</div> </v-card-title>
+      <v-card-text>
+        <v-form v-model="valid" lazy-validation>
+          <v-text-field
+            v-model="username"
+            :rules="usernameRules"
+            prepend-icon="person"
+            label="Név"
+            required
+          ></v-text-field>
+          <v-text-field
+            v-model="password"
+            :rules="passwordRules"
+            label="Jelszó"
+            type="password"
+            prepend-icon="lock"
+            required
+          ></v-text-field>
+        </v-form>
+      </v-card-text>
+      <v-card-actions>
+        <v-btn color="primary" :disabled="!valid" @click="login">Bejelentkezés</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-flex>
 </template>
 
 <script>
@@ -14,20 +35,18 @@ import Store from '@/store'
 
 export default {
   name: 'loopbackLogin',
-  props: {
-    msg: String
-  },
-
-  components: {
-  },
-
-  data () {
-    return {
-      store: Store,
-      username: '',
-      password: ''
-    }
-  },
+  data: () => ({
+    store: Store,
+    valid: false,
+    username: '',
+    usernameRules: [
+      v => !!v || 'Név megadása kötelező'
+    ],
+    password: '',
+    passwordRules: [
+      v => !!v || 'Jelszó megadása kötelező'
+    ]
+  }),
 
   methods: {
     async login () {

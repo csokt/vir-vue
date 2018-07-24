@@ -2,15 +2,17 @@ import Vue from 'vue'
 import {
   Vuetify,
   VApp,
-  VNavigationDrawer,
-  VFooter,
-  VList,
   VBtn,
-  VIcon,
-  VGrid,
-  VToolbar,
   VCard,
   VDivider,
+  VFooter,
+  VForm,
+  VGrid,
+  VIcon,
+  VList,
+  VNavigationDrawer,
+  VTextField,
+  VToolbar,
   transitions
 } from 'vuetify'
 import 'vuetify/src/stylus/app.styl'
@@ -18,15 +20,17 @@ import 'vuetify/src/stylus/app.styl'
 Vue.use(Vuetify, {
   components: {
     VApp,
-    VNavigationDrawer,
-    VFooter,
-    VList,
     VBtn,
-    VIcon,
-    VGrid,
-    VToolbar,
     VCard,
     VDivider,
+    VFooter,
+    VForm,
+    VGrid,
+    VIcon,
+    VList,
+    VNavigationDrawer,
+    VTextField,
+    VToolbar,
     transitions
   }
 })

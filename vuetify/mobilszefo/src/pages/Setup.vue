@@ -5,7 +5,7 @@
 
         <v-flex xs12 sm8 md5>
           <v-card class="elevation-12">
-            <v-card-title> <div class="title grey--text">Hitelesítés</div> </v-card-title>
+            <v-card-title> <div class="title grey--text">Mobil alkalmazások</div> </v-card-title>
             <v-card-text>
               <v-form ref="logoutForm">
                 <v-text-field
@@ -96,7 +96,7 @@
       <template v-if="!store.fireUser">
         <v-flex xs12 sm8 md5>
           <v-card class="elevation-12">
-            <v-card-title> <div class="title grey--text">Hitelesítés</div> </v-card-title>
+            <v-card-title> <div class="title grey--text">Mobil alkalmazások</div> </v-card-title>
             <v-card-text>
               <v-form ref="loginForm" v-model="loginFormValid" lazy-validation>
                 <v-text-field

@@ -1,9 +1,24 @@
 <template>
-  <div>
-    <h3>{{ msg }}</h3>
-    PIN kód: <input v-model="pin"><br>
-    <button v-on:click="enter">Enter button</button><br>
-  </div>
+  <v-flex xs12 sm8 md5>
+    <v-card class="elevation-12">
+      <v-card-title> <div class="title grey--text">Képernyőzár PIN kód</div> </v-card-title>
+      <v-card-text>
+        <v-form ref="pinLoginForm" v-model="valid" @submit.prevent="enter" lazy-validation>
+          <v-text-field
+            v-model="pin"
+            type="number"
+            :rules="pinRules"
+            prepend-icon="security"
+            label="PIN kód"
+            required
+          ></v-text-field>
+        </v-form>
+      </v-card-text>
+      <v-card-actions>
+        <v-btn color="primary" @click="enter">Feloldás</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-flex>
 </template>
 
 <script>
@@ -12,23 +27,19 @@ import Store from '@/store'
 
 export default {
   name: 'pinLogin',
-  props: {
-    msg: String
-  },
-
-  components: {
-  },
-
-  data () {
-    return {
-      store: Store,
-      counter: 0,
-      pin: ''
-    }
-  },
+  data: () => ({
+    store: Store,
+    counter: 0,
+    valid: false,
+    pin: '',
+    pinRules: [
+      v => !!v || 'PIN megadása kötelező'
+    ]
+  }),
 
   methods: {
     enter () {
+      if (!this.$refs.pinLoginForm.validate()) return
       if (this.counter < 3) {
         this.store.pin = this.pin
         EventBus.$emit('inform', {type: 'alert', variation: 'info', message: 'PIN elküldve'})

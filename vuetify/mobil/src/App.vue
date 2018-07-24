@@ -12,11 +12,13 @@
       <Inform/>
       <router-view/>
     </v-content>
-    <v-footer app>
-    <h6>
-      {{store.user && store.user.name}}
-      {{store.version}}
-    </h6>
+    <v-footer app height=6 color="light-grey" >
+      <v-layout justify-center row wrap >
+        <h6>
+          {{store.user && store.user.name}}
+          {{store.version}}
+        </h6>
+      </v-layout>
     </v-footer>
   </v-app>
 </template>
@@ -39,13 +41,7 @@ export default {
     Inform
   },
 
-  computed: {
-  },
-
-  methods: {
-  },
-
-  created () {
+  mounted () {
     window.oncontextmenu = function (event) {
       event.preventDefault()
       event.stopPropagation()
