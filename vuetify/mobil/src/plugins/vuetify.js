@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import {
   Vuetify,
+  VAlert,
   VApp,
   VBtn,
   VCard,
@@ -11,6 +12,7 @@ import {
   VIcon,
   VList,
   VNavigationDrawer,
+  VTextarea,
   VTextField,
   VToolbar,
   transitions
@@ -19,6 +21,7 @@ import 'vuetify/src/stylus/app.styl'
 
 Vue.use(Vuetify, {
   components: {
+    VAlert,
     VApp,
     VBtn,
     VCard,
@@ -29,6 +32,7 @@ Vue.use(Vuetify, {
     VIcon,
     VList,
     VNavigationDrawer,
+    VTextarea,
     VTextField,
     VToolbar,
     transitions

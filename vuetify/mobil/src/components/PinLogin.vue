@@ -24,12 +24,14 @@
 <script>
 import { EventBus } from '@/util.js'
 import Store from '@/store'
+import { checkAuthentication } from '@/mixins.js'
 
 export default {
   name: 'pinLogin',
+  mixins: [checkAuthentication],
   data: () => ({
     store: Store,
-    counter: 0,
+    counter: 1,
     valid: false,
     pin: '',
     pinRules: [
@@ -40,12 +42,14 @@ export default {
   methods: {
     enter () {
       if (!this.$refs.pinLoginForm.validate()) return
-      if (this.counter < 3) {
-        this.store.pin = this.pin
-        EventBus.$emit('inform', {type: 'alert', variation: 'info', message: 'PIN elküldve'})
+      this.store.pin = this.pin
+      if (this.isPinAuthenticated) {
+        this.$router.go(-1)
       } else {
-        this.store.user = null
         EventBus.$emit('inform', {type: 'alert', variation: 'warning', message: 'PIN hiba'})
+        if (this.counter === 3) {
+          this.store.user = null
+        }
       }
       this.counter += 1
     }

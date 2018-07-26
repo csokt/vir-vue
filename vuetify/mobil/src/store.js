@@ -1,17 +1,7 @@
 const Store = {
-  version: '18.07.11',
+  version: '18.07.26',
   pageTitle: 'Home',
-  path: '/',
-  rootPage: true,
-  teszt: true,
-  privateIP: '',
-  publicIP: '',
-  device: null,
-  video: {
-    facingMode: null,
-    width: 320,
-    height: 240
-  },
+  teszt: false,
   pin: '',
   virUser: null,
   user: null

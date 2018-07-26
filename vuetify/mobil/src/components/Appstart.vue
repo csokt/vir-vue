@@ -48,7 +48,7 @@ export default {
 
     apps () {
       return [
-        { show: this.showTV, title: 'TV távvezérlés', avatar: '/mobil.png', href: 'http://localhost:9000/#/' },
+        { show: this.showTV, title: 'TV távvezérlés', avatar: '/mobil.png', href: 'http://tibor.szefo.local:90/#/' },
         { show: this.showTir, title: 'Termelés Inf. Rendszer', avatar: '/dama.png', href: 'https://tir.szefo.local' },
         { show: this.showVir, title: 'Legrand készlet', avatar: '/legrand.png', href: 'https://lir-keszlet.szefo.local' },
         { show: this.showVir, title: 'Chance készlet', avatar: '/chance.png', href: 'https://chance-keszlet.szefo.local' },

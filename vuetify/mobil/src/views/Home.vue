@@ -9,9 +9,11 @@
 <script>
 import Store from '@/store'
 import Appstart from '@/components/Appstart.vue'
+import { checkAuthentication } from '@/mixins.js'
 
 export default {
   name: 'home',
+  mixins: [checkAuthentication],
   data () {
     return {
       store: Store
@@ -20,17 +22,6 @@ export default {
 
   components: {
     Appstart
-  },
-
-  computed: {
-    isAuthenticated () {
-      return this.store.user !== null && this.store.user !== undefined
-      // return true
-    },
-    isPinAuthenticated () {
-      return !localStorage.szefo_pin || localStorage.szefo_pin === this.store.pin
-      // return true
-    }
   },
 
   created () {

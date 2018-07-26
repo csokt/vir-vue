@@ -35,13 +35,6 @@ import Store from '@/store'
 
 export default {
   name: 'virLogin',
-  props: {
-    msg: String
-  },
-
-  components: {
-  },
-
   data: () => ({
     store: Store,
     valid: false,
@@ -57,12 +50,11 @@ export default {
 
   methods: {
     async login () {
-      // const response = await API.post('vir/login', {username: this.username, password: this.password})
-      const response = await API.post('vir/login', {username: 'hegedus.istvan', password: 'Godhak04'})
+      const response = await API.post('vir/login', {username: this.username, password: this.password})
       if (response.ok) {
         getVirUser(this)
       } else {
-        EventBus.$emit('inform', {type: 'alert', variation: 'warning', message: response.problem})
+        EventBus.$emit('inform', {type: 'alert', variation: 'error', message: 'Bejelentkezési hiba!'})
       }
     }
   }

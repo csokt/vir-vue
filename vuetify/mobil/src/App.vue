@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-toolbar color="indigo" dark app>
+    <v-toolbar color="blue darken-1" dark app>
       <v-icon v-if="$route.path !== '/'" @click.stop="$router.go(-1)">arrow_back</v-icon>
       <v-toolbar-title v-text="store.pageTitle"></v-toolbar-title>
       <v-spacer></v-spacer>
@@ -9,11 +9,11 @@
     </v-toolbar>
     <v-content>
       <h6 v-if="store.teszt">##### TESZT #####<hr></h6>
-      <Inform/>
       <router-view/>
     </v-content>
-    <v-footer app height=6 color="light-grey" >
-      <v-layout justify-center row wrap >
+    <v-footer app height=7 color="grey lighten-3" >
+      <v-layout column>
+        <Inform/>
         <h6>
           {{store.user && store.user.name}}
           {{store.version}}

@@ -19,9 +19,11 @@ import VirLogin from '@/components/VirLogin.vue'
 import VirLogout from '@/components/VirLogout.vue'
 import PinSetup from '@/components/PinSetup.vue'
 import PinLogin from '@/components/PinLogin.vue'
+import { checkAuthentication } from '@/mixins.js'
 
 export default {
   name: 'setup',
+  mixins: [checkAuthentication],
   data () {
     return {
       store: Store
@@ -35,21 +37,6 @@ export default {
     VirLogout,
     PinSetup,
     PinLogin
-  },
-
-  computed: {
-    isAuthenticated () {
-      return this.store.user !== null && this.store.user !== undefined
-    },
-    isVirAuthenticated () {
-      return this.store.virUser !== null && this.store.virUser !== undefined
-    },
-    isPinAuthenticated () {
-      return !localStorage.szefo_pin || localStorage.szefo_pin === this.store.pin
-    }
-  },
-
-  methods: {
   },
 
   created () {

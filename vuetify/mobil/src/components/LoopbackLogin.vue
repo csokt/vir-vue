@@ -50,18 +50,18 @@ export default {
 
   methods: {
     async login () {
-      // const response = await API.post('Users/login', {username: this.username, password: this.password})
-      const response = await API.post('Users/login', {username: 'acsai', password: '1966'})
-      // const response = await API.post('Users/login', {username: 'acsaine', password: '1963'})
+      const response = await API.post('Users/login', {username: this.username, password: this.password})
       if (response.ok) {
         const token = response.data.id
         localStorage.szefo_loopback_token = token
         API.setHeader('Authorization', token)
-        Store.pin = localStorage.szefo_pin
+        // Store.pin = localStorage.szefo_pin
+        Store.pin = ''
+        localStorage.szefo_pin = ''
         getUser(this)
         getVirUser(this)
       } else {
-        EventBus.$emit('inform', {type: 'alert', variation: 'warning', message: response.problem})
+        EventBus.$emit('inform', {type: 'alert', variation: 'error', message: 'Bejelentkezési hiba!'})
       }
     }
   }
