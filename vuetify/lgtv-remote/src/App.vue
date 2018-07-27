@@ -1,24 +1,42 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
-  </div>
+  <v-app>
+    <v-toolbar color="blue darken-1" dark app>
+      <v-icon v-if="$route.path !== '/'" @click.stop="$router.go(-1)">arrow_back</v-icon>
+      <v-toolbar-title v-text="pageTitle"></v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-btn v-if="$route.path === '/'" icon @click="$router.push('help')" > <v-icon>help</v-icon> </v-btn>
+    </v-toolbar>
+    <v-content>
+      <router-view/>
+    </v-content>
+    <v-footer app height=36 color="grey lighten-3" >
+      <v-layout column>
+        <Inform/>
+      </v-layout>
+    </v-footer>
+  </v-app>
 </template>
 
 <script>
 import API from '@/rest.js'
+import Inform from '@/components/Inform.vue'
 
 export default {
   name: 'app',
+  computed: {
+    pageTitle () {
+      if (this.$route.path === '/help') return 'Segítség'
+      return 'TV vezérlés'
+    }
+  },
+
   data () {
     return {
     }
   },
 
-  methods: {
+  components: {
+    Inform
   },
 
   async created () {
@@ -39,9 +57,3 @@ export default {
   }
 }
 </script>
-
-<style lang="stylus">
-#app
-  text-align center
-  font-size 2em
-</style>

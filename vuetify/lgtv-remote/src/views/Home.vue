@@ -1,7 +1,9 @@
 <template>
-  <div class="home">
-    <TvList msg="TvList" v-on:select="select"/>
-  </div>
+  <v-container fluid fill-height grid-list-lg>
+    <v-layout  justify-center wrap>
+      <TvList v-on:select="select"/>
+    </v-layout>
+  </v-container>
 </template>
 
 <script>

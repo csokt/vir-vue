@@ -11,13 +11,15 @@
       <h6 v-if="store.teszt">##### TESZT #####<hr></h6>
       <router-view/>
     </v-content>
-    <v-footer app height=7 color="grey lighten-3" >
+    <v-footer app height=36 color="grey lighten-3" >
       <v-layout column>
         <Inform/>
-        <h6>
-          {{store.user && store.user.name}}
-          {{store.version}}
-        </h6>
+        <div style="text-align: center;">
+          <span>
+            {{store.user && store.user.name}}
+            {{store.version}}
+          </span>
+        </div>
       </v-layout>
     </v-footer>
   </v-app>
@@ -32,8 +34,7 @@ export default {
   name: 'app',
   data () {
     return {
-      store: Store,
-      title: 'Vuetify.js'
+      store: Store
     }
   },
 
@@ -55,9 +56,3 @@ export default {
 
 }
 </script>
-
-<style lang="stylus">
-#app
-  text-align center
-  font-size 2em
-</style>
