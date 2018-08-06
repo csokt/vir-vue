@@ -9,35 +9,86 @@
           readonly
           :background-color="tv.reachable ? 'teal' : 'grey'"
         ></v-text-field>
-        <button @click="$emit('select', 'power')">Power</button>
-        <br>
-        <button @click="$emit('select', 'fullscreen')">Fullscreen</button>
-        <br>
-        <button @click="$emit('select', 'mute', 'true')">Mute</button>
-        <br>
-        <button @click="$emit('select', 'volumeup')">Volume up</button>
-        <br>
-        <button @click="$emit('select', 'volumedown')">Volume down</button>
-        <br>
-        <button @click="$emit('select', 'pointerbutton', 'HOME')">Home</button>
-        <br>
-        <button @click="$emit('select', 'pointerbutton', 'BACK')">Back</button>
-        <br>
-        <button @click="$emit('select', 'pointerbutton', 'LEFT')">Left</button>
-        <br>
-        <button @click="$emit('select', 'pointerbutton', 'RIGHT')">Right</button>
-        <br>
-        <button @click="$emit('select', 'pointerbutton', 'UP')">Up</button>
-        <br>
-        <button @click="$emit('select', 'pointerbutton', 'DOWN')">Down</button>
-        <br>
-        <button @click="$emit('select', 'pointerbutton', 'ENTER')">OK</button>
-        <br>
-        <button @click="$emit('select', 'pointerbutton', 'EXIT')">Exit</button>
-        <br>
-        <button @click="$emit('select', 'startapp', 'miracast')">Miracast</button>
-        <br>
-        <button @click="$emit('select', 'startapp', 'photovideo')">Photovideo</button>
+
+        <v-container grid-list-md text-xs-center>
+          <v-layout row wrap>
+            <v-flex xs4>
+              <v-btn fab color="red" @click="$emit('select', 'power')">
+                <v-icon>power_settings_new</v-icon>
+              </v-btn>
+            </v-flex>
+            <v-flex xs4>
+              <v-btn fab @click="$emit('select', 'pointerbutton', 'BACK')">
+                <v-icon>settings_backup_restore</v-icon>
+              </v-btn>
+            </v-flex>
+            <v-flex xs4>
+              <v-btn fab @click="$emit('select', 'pointerbutton', 'EXIT')">
+                <v-icon>exit_to_app</v-icon>
+              </v-btn>
+            </v-flex>
+
+            <v-flex xs4>
+              <v-btn fab @click="$emit('select', 'volumeup')">
+                <v-icon>volume_up</v-icon>
+              </v-btn>
+            </v-flex>
+            <v-flex xs4>
+              <v-btn fab @click="$emit('select', 'pointerbutton', 'UP')">
+                <v-icon>keyboard_arrow_up</v-icon>
+              </v-btn>
+            </v-flex>
+            <v-flex xs4>
+              <v-btn fab @click="$emit('select', 'pointerbutton', 'HOME')">
+                <v-icon>home</v-icon>
+              </v-btn>
+            </v-flex>
+            <v-flex xs4>
+              <v-btn fab @click="$emit('select', 'pointerbutton', 'LEFT')">
+                <v-icon>keyboard_arrow_left</v-icon>
+              </v-btn>
+            </v-flex>
+            <v-flex xs4>
+              <v-btn fab @click="$emit('select', 'pointerbutton', 'ENTER')">
+                OK
+              </v-btn>
+            </v-flex>
+            <v-flex xs4>
+              <v-btn fab @click="$emit('select', 'pointerbutton', 'RIGHT')">
+                <v-icon>keyboard_arrow_right</v-icon>
+              </v-btn>
+            </v-flex>
+            <v-flex xs4>
+              <v-btn fab @click="$emit('select', 'volumedown')">
+                <v-icon>volume_down</v-icon>
+              </v-btn>
+            </v-flex>
+            <v-flex xs4>
+              <v-btn fab @click="$emit('select', 'pointerbutton', 'DOWN')">
+                <v-icon>keyboard_arrow_down</v-icon>
+              </v-btn>
+            </v-flex>
+            <v-flex xs4>
+              <v-btn fab @click="$emit('select', 'mute', 'true')">
+                <v-icon>volume_off</v-icon>
+              </v-btn>
+            </v-flex>
+
+          </v-layout>
+        </v-container>
+
+          <v-btn round @click="$emit('select', 'fullscreen')">
+            teljes képernyő
+          </v-btn>
+
+          <v-btn round @click="$emit('select', 'startapp', 'miracast')">
+            <v-icon></v-icon>
+            tablet tükrözés
+          </v-btn>
+          <v-btn round @click="$emit('select', 'startapp', 'photovideo')">
+            <v-icon></v-icon>
+            technológiai videók
+          </v-btn>
 
       </v-card-text>
     </v-card>
@@ -45,40 +96,10 @@
 </template>
 
 <script>
-import API from '@/rest.js'
-import { EventBus } from '@/util.js'
-
-const TV_LIST_INTERVAL = 1000
-let setIntervalId
-
 export default {
   name: 'remote',
-  data () {
-    return {
-      tv: {}
-    }
-  },
-
-  methods: {
-    async getTv () {
-      const response = await API.get('tv/' + this.$route.params.id)
-      if (response.ok) {
-        this.tv = response.data
-      } else {
-        this.tv = {}
-        EventBus.$emit('inform', {type: 'alert', variation: 'error', message: 'TV betöltési hiba!'})
-        console.log(response.problem)
-      }
-    }
-  },
-
-  created () {
-    this.getTv()
-    setIntervalId = setInterval(this.getTv, TV_LIST_INTERVAL)
-  },
-
-  destroyed () {
-    clearInterval(setIntervalId)
+  props: {
+    tv: Object
   }
 }
 </script>

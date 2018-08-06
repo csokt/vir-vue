@@ -1,9 +1,9 @@
 <template>
   <v-container fluid fill-height grid-list-lg>
     <v-layout  justify-center wrap>
-      <Remote v-on:select="call"/>
-      <ViewList v-on:select="call"/>
-      <PlayList v-on:select="call"/>
+      <Remote v-bind:tv="tv" v-on:select="call"/>
+      <ViewList v-if="tv.reachable" v-on:select="call"/>
+      <PlayList v-if="tv.reachable" v-on:select="call"/>
     </v-layout>
   </v-container>
 </template>
@@ -23,7 +23,29 @@ export default {
     PlayList
   },
 
+  data () {
+    return {
+      tv: {}
+    }
+  },
+
+  // https://github.com/kelin2025/vue-timers
+  timers: {
+    getTv: { time: 1000, autostart: true, repeat: true, immediate: true }
+  },
+
   methods: {
+    async getTv () {
+      const response = await API.get('tv/' + this.$route.params.id)
+      if (response.ok) {
+        this.tv = response.data
+      } else {
+        this.tv = {}
+        EventBus.$emit('inform', {type: 'alert', variation: 'error', message: 'TV betöltési hiba!'})
+        console.log(response.problem)
+      }
+    },
+
     async call (method, arg = '') {
       let url = method + '/' + this.$route.params.id
       if (arg) url = url + '/' + arg
