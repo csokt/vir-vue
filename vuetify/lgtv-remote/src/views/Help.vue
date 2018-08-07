@@ -11,8 +11,17 @@
 </template>
 
 <script>
+import Store from '@/store'
 
 export default {
-  name: 'help'
+  name: 'help',
+  data () {
+    return {
+      store: Store
+    }
+  },
+  created () {
+    this.store.pageTitle = 'Segítség'
+  }
 }
 </script>

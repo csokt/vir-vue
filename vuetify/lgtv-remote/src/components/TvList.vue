@@ -6,11 +6,11 @@
         <template v-for="(item, index) in showTVs">
         <v-list-tile :key="item.id" avatar>
           <v-list-tile-content>
-            <v-list-tile-title v-html="item.label" @click="$emit('select', item.id)"></v-list-tile-title>
+            <v-list-tile-title v-html="item.label" @click="$emit('select', item)"></v-list-tile-title>
           </v-list-tile-content>
           <v-list-tile-action>
             <v-btn icon ripple @click="power(item.id)">
-              <v-icon :color="item.reachable ? 'teal' : 'grey'">power</v-icon>
+              <v-icon :color="item.reachable && item.state == 'connect' ? 'teal lighten-1' : 'grey lighten-1'">power</v-icon>
             </v-btn>
           </v-list-tile-action>
         </v-list-tile>
@@ -24,6 +24,7 @@
 <script>
 import API from '@/rest.js'
 import { EventBus } from '@/util.js'
+import Store from '@/store'
 
 const TV_LIST_INTERVAL = 1000
 let setIntervalId
@@ -32,6 +33,7 @@ export default {
   name: 'TvList',
   data () {
     return {
+      store: Store,
       tvlist: []
     }
   },
@@ -45,7 +47,8 @@ export default {
 
   methods: {
     async getTvList () {
-      const response = await API.get('tv/tvlist')
+      // const response = await API.get('tv/tvlist')
+      const response = await API.get('tv/tvlist/' + this.store.user.tv_role)
       if (response.ok) {
         this.tvlist = response.data
       } else {

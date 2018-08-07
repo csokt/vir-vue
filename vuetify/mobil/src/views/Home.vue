@@ -1,7 +1,7 @@
 <template>
   <v-container fluid fill-height grid-list-lg>
     <v-layout  justify-center wrap>
-      <Appstart v-if="isAuthenticated && isPinAuthenticated" msg="Appstart component"/>
+      <Appstart v-if="isAuthenticated && isPinAuthenticated"/>
     </v-layout>
   </v-container>
 </template>

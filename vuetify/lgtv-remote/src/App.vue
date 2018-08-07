@@ -2,7 +2,7 @@
   <v-app>
     <v-toolbar color="blue darken-1" dark app>
       <v-icon v-if="$route.path !== '/'" @click.stop="$router.go(-1)">arrow_back</v-icon>
-      <v-toolbar-title v-text="pageTitle"></v-toolbar-title>
+      <v-toolbar-title v-text="store.pageTitle"></v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn v-if="$route.path === '/'" icon @click="$router.push('help')" > <v-icon>help</v-icon> </v-btn>
     </v-toolbar>
@@ -20,18 +20,13 @@
 <script>
 import API from '@/rest.js'
 import Inform from '@/components/Inform.vue'
+import Store from '@/store'
 
 export default {
   name: 'app',
-  computed: {
-    pageTitle () {
-      if (this.$route.path === '/help') return 'Segítség'
-      return 'TV vezérlés'
-    }
-  },
-
   data () {
     return {
+      store: Store
     }
   },
 
@@ -49,6 +44,7 @@ export default {
     if (this.$route.query.token_uid) {
       const response = await API.post('accounts/pulltoken/' + this.$route.query.token_uid)
       if (response.ok) {
+        this.store.user = response.data.user
         API.setHeader('Authorization', response.data.loopback_token)
       } else {
         console.log(response.problem)

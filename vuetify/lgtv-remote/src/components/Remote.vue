@@ -3,17 +3,10 @@
     <v-card class="elevation-12">
       <v-card-title> <div class="title grey--text">Távirányító</div> </v-card-title>
       <v-card-text>
-        <v-text-field
-          v-model="tv.label"
-          solo
-          readonly
-          :background-color="tv.reachable ? 'teal' : 'grey'"
-        ></v-text-field>
-
         <v-container grid-list-md text-xs-center>
           <v-layout row wrap>
             <v-flex xs4>
-              <v-btn fab color="red" @click="$emit('select', 'power')">
+              <v-btn fab :color="tv.reachable && tv.state == 'connect' ? 'teal lighten-1' : 'red lighten-1'" @click="$emit('select', 'power')">
                 <v-icon>power_settings_new</v-icon>
               </v-btn>
             </v-flex>

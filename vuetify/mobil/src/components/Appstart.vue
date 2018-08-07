@@ -25,17 +25,14 @@ import Store from '@/store'
 
 export default {
   name: 'appstart',
-  props: {
-    msg: String
-  },
-
   data: () => ({
     store: Store
   }),
 
   computed: {
     showTV () {
-      return ['admin', 'manager'].includes(this.store.user.main_role)
+      // return ['admin', 'manager'].includes(this.store.user.main_role)
+      return !!this.store.user.tv_role
     },
 
     showTir () {
@@ -67,7 +64,7 @@ export default {
     },
 
     async start (href) {
-      const token = {loopback_token: localStorage.szefo_loopback_token}
+      const token = {loopback_token: localStorage.szefo_loopback_token, user: this.store.user, vir_user: this.store.virUser}
       const response = await API.post('accounts/pushtoken', token)
       if (response.ok) {
         const path = href + '?token_uid=' + response.data

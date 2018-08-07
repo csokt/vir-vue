@@ -9,6 +9,7 @@
 <script>
 // @ is an alias to /src
 import TvList from '@/components/TvList.vue'
+import Store from '@/store'
 
 export default {
   name: 'home',
@@ -16,10 +17,21 @@ export default {
     TvList
   },
 
+  data () {
+    return {
+      store: Store
+    }
+  },
+
+  created () {
+    this.store.pageTitle = 'TV vezérlés'
+  },
+
   methods: {
-    select (tvId) {
-      console.log('select', tvId)
-      this.$router.push('tv/' + tvId)
+    select (tv) {
+      console.log('select', tv.id)
+      this.store.pageTitle = tv.label
+      this.$router.push('tv/' + tv.id)
     }
   }
 }
