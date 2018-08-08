@@ -19,18 +19,20 @@
 <script>
 import API from '@/rest.js'
 import { EventBus } from '@/util.js'
+import Store from '@/store'
 
 export default {
   name: 'viewlist',
   data () {
     return {
+      store: Store,
       viewlist: []
     }
   },
 
   methods: {
     async getViewList () {
-      const response = await API.get('tir/config/views/tv')
+      const response = await API.get('tir/config/views/tv/' + this.store.user.tir_role)
       if (response.ok) {
         this.viewlist = response.data
       } else {

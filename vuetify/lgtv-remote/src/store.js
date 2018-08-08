@@ -1,5 +1,5 @@
 const Store = {
-  version: '18.08.07',
+  version: '18.08.08',
   pageTitle: 'Home',
   user: {}
 }

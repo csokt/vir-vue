@@ -19,22 +19,20 @@
 <script>
 import API from '@/rest.js'
 import { EventBus } from '@/util.js'
+import Store from '@/store'
 
 export default {
   name: 'playlist',
-  props: {
-    msg: String
-  },
-
   data () {
     return {
+      store: Store,
       playlist: []
     }
   },
 
   methods: {
     async getPlayList () {
-      const response = await API.get('tir/config/playlists')
+      const response = await API.get('tir/config/playlists/' + this.store.user.tir_role)
       if (response.ok) {
         this.playlist = response.data
       } else {

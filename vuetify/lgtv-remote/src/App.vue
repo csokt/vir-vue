@@ -12,6 +12,12 @@
     <v-footer app height=36 color="grey lighten-3" >
       <v-layout column>
         <Inform/>
+        <div style="text-align: center;">
+          <span>
+            {{store.user && store.user.name}}
+            {{store.version}}
+          </span>
+        </div>
       </v-layout>
     </v-footer>
   </v-app>

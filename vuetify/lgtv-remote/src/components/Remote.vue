@@ -6,7 +6,7 @@
         <v-container grid-list-md text-xs-center>
           <v-layout row wrap>
             <v-flex xs4>
-              <v-btn fab :color="tv.reachable && tv.state == 'connect' ? 'teal lighten-1' : 'red lighten-1'" @click="$emit('select', 'power')">
+              <v-btn fab :color="tv.reachable ? 'teal lighten-1' : 'red lighten-1'" @click="$emit('select', 'power')">
                 <v-icon>power_settings_new</v-icon>
               </v-btn>
             </v-flex>
@@ -70,18 +70,18 @@
           </v-layout>
         </v-container>
 
-          <v-btn round @click="$emit('select', 'fullscreen')">
-            teljes képernyő
-          </v-btn>
+        <v-btn round @click="$emit('select', 'fullscreen')">
+          teljes képernyő
+        </v-btn>
 
-          <v-btn round @click="$emit('select', 'startapp', 'miracast')">
-            <v-icon></v-icon>
-            tablet tükrözés
-          </v-btn>
-          <v-btn round @click="$emit('select', 'startapp', 'photovideo')">
-            <v-icon></v-icon>
-            technológiai videók
-          </v-btn>
+        <v-btn round @click="$emit('select', 'startapp', 'miracast')">
+          <v-icon></v-icon>
+          tablet tükrözés
+        </v-btn>
+        <v-btn round @click="$emit('select', 'startapp', 'photovideo')">
+          <v-icon></v-icon>
+          technológiai videók
+        </v-btn>
 
       </v-card-text>
     </v-card>

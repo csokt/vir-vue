@@ -2,8 +2,8 @@
   <v-container fluid fill-height grid-list-lg>
     <v-layout  justify-center wrap>
       <Remote v-bind:tv="tv" v-on:select="call"/>
-      <ViewList v-if="tv.reachable" v-on:select="call"/>
-      <PlayList v-if="tv.reachable" v-on:select="call"/>
+      <ViewList v-if="tv.state == 'connect'" v-on:select="call"/>
+      <PlayList v-if="tv.state == 'connect'" v-on:select="call"/>
     </v-layout>
   </v-container>
 </template>

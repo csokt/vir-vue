@@ -3,18 +3,18 @@
     <v-card class="elevation-12">
       <v-card-title> <div class="title grey--text">TV lista</div> </v-card-title>
       <v-list>
-        <template v-for="(item, index) in showTVs">
+        <template v-for="(item, index) in tvlist">
         <v-list-tile :key="item.id" avatar>
           <v-list-tile-content>
             <v-list-tile-title v-html="item.label" @click="$emit('select', item)"></v-list-tile-title>
           </v-list-tile-content>
           <v-list-tile-action>
             <v-btn icon ripple @click="power(item.id)">
-              <v-icon :color="item.reachable && item.state == 'connect' ? 'teal lighten-1' : 'grey lighten-1'">power</v-icon>
+              <v-icon :color="item.reachable ? 'teal lighten-1' : 'grey lighten-1'">power</v-icon>
             </v-btn>
           </v-list-tile-action>
         </v-list-tile>
-        <v-divider v-if="index + 1 < showTVs.length" inset :key="index"></v-divider>
+        <v-divider v-if="index + 1 < tvlist.length" inset :key="index"></v-divider>
         </template>
       </v-list>
     </v-card>
@@ -35,13 +35,6 @@ export default {
     return {
       store: Store,
       tvlist: []
-    }
-  },
-
-  computed: {
-    showTVs () {
-      // return this.apps.filter(o => o.show)
-      return this.tvlist
     }
   },
 

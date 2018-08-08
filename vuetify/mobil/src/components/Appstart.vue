@@ -59,10 +59,6 @@ export default {
   },
 
   methods: {
-    teszt () {
-      console.log('Teszt')
-    },
-
     async start (href) {
       const token = {loopback_token: localStorage.szefo_loopback_token, user: this.store.user, vir_user: this.store.virUser}
       const response = await API.post('accounts/pushtoken', token)
@@ -73,9 +69,6 @@ export default {
         EventBus.$emit('inform', {type: 'alert', variation: 'error', message: response.problem})
       }
     }
-  },
-
-  created () {
   }
 }
 </script>
