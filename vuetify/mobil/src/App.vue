@@ -8,7 +8,7 @@
       <v-btn v-if="$route.path === '/'" icon @click="$router.push('setup')" > <v-icon>settings</v-icon> </v-btn>
     </v-toolbar>
     <v-content>
-      <h6 v-if="store.teszt">##### TESZT #####<hr></h6>
+      <h1 v-if="store.teszt" style="text-align: center">##### TESZT #####<hr></h1>
       <router-view/>
     </v-content>
     <v-footer app height=36 color="grey lighten-3" >
@@ -40,6 +40,11 @@ export default {
 
   components: {
     Inform
+  },
+
+  created () {
+    this.store.teszt = this.$route.query.teszt === null
+    console.log('queryparam teszt:', this.store.teszt)
   },
 
   mounted () {

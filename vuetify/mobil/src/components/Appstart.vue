@@ -31,7 +31,6 @@ export default {
 
   computed: {
     showTV () {
-      // return ['admin', 'manager'].includes(this.store.user.main_role)
       return !!this.store.user.tv_role
     },
 
@@ -45,7 +44,8 @@ export default {
 
     apps () {
       return [
-        { show: this.showTV, title: 'TV távvezérlés', avatar: '/tv-remote.png', href: 'http://tibor.szefo.local:90/#/' },
+        { show: this.store.teszt, title: 'Teszt program', avatar: '/favicon.ico', href: 'https://tibor.szefo.local:9443/#/' },
+        { show: this.showTV, title: 'TV távvezérlés', avatar: '/tv-remote.png', href: 'https://mobilszefo.hopto.org:19531/#/' },
         { show: this.showTir, title: 'Termelés Inf. Rendszer', avatar: '/dama.png', href: 'https://tir.szefo.local' },
         { show: this.showVir, title: 'Legrand készlet', avatar: '/legrand.png', href: 'https://lir-keszlet.szefo.local' },
         { show: this.showVir, title: 'Chance készlet', avatar: '/chance.png', href: 'https://chance-keszlet.szefo.local' },
