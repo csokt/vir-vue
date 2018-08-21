@@ -26,6 +26,8 @@
 </template>
 
 <script>
+import { API } from '@/backend/rest.js'
+// import { EventBus } from '@/util.js'
 import Inform from '@/components/Inform.vue'
 import { getUser, getVirUser } from '@/util.js'
 import Store from '@/store'
@@ -42,22 +44,15 @@ export default {
     Inform
   },
 
-  created () {
-    this.store.teszt = this.$route.query.teszt === null
-    console.log('queryparam teszt:', this.store.teszt)
-  },
-
-  mounted () {
+  async created () {
     window.oncontextmenu = function (event) {
       event.preventDefault()
       event.stopPropagation()
       return false
     }
-
-    console.log('token', localStorage.szefo_loopback_token)
+    this.store.teszt = await API.get('config/nodeEnv').data !== 'production'
     getUser(this, '/setup')
     getVirUser(this)
   }
-
 }
 </script>

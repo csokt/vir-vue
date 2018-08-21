@@ -14,6 +14,9 @@
         <v-divider v-if="index + 1 < showApps.length" inset :key="index"></v-divider>
         </template>
       </v-list>
+      <v-card-actions v-if="showAdmin">
+        <v-btn color="primary" @click="addUsers">Új felhasználók a VIR személyekből.</v-btn>
+      </v-card-actions>
     </v-card>
   </v-flex>
 </template>
@@ -30,6 +33,10 @@ export default {
   }),
 
   computed: {
+    showAdmin () {
+      return this.store.user.main_role === 'admin'
+    },
+
     showTV () {
       return !!this.store.user.tv_role
     },
@@ -65,6 +72,15 @@ export default {
       if (response.ok) {
         const path = href + '?token_uid=' + response.data
         window.location.href = path
+      } else {
+        EventBus.$emit('inform', {type: 'alert', variation: 'error', message: response.problem})
+      }
+    },
+
+    async addUsers () {
+      const response = await API.post('accounts/createusers')
+      if (response.ok) {
+        EventBus.$emit('inform', {type: 'alert', variation: 'info', message: 'Új felhasználók létrehozva'})
       } else {
         EventBus.$emit('inform', {type: 'alert', variation: 'error', message: response.problem})
       }
