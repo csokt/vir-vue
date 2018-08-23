@@ -50,7 +50,6 @@ export default {
       let url = method + '/' + this.$route.params.id
       if (arg) url = url + '/' + arg
       EventBus.$emit('inform', {type: 'alert', variation: 'info', message: url})
-      console.log(url)
       const response = await API.post('tv/' + url)
       console.log(response.data)
     }

@@ -20,7 +20,7 @@ export default {
 
   methods: {
     async getPlayLists () {
-      const response = await API.get('config/playlists')
+      const response = await API.get('tv/playlists')
       if (response.ok) {
         this.store.playlists = response.data
       }
@@ -31,7 +31,7 @@ export default {
     },
 
     async getViews () {
-      const response = await API.get('config/views/tv')
+      const response = await API.get('tv/views')
       if (response.ok) {
         this.store.views = response.data
       }

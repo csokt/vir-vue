@@ -29,7 +29,6 @@ export default {
 
   methods: {
     select (tv) {
-      console.log('select', tv.id)
       this.store.pageTitle = tv.label
       this.$router.push('tv/' + tv.id)
     }

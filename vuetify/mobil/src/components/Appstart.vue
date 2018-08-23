@@ -37,6 +37,10 @@ export default {
       return this.store.user.main_role === 'admin'
     },
 
+    showLoggedIn () {
+      return !!this.store.user
+    },
+
     showTV () {
       return !!this.store.user.tv_role
     },
@@ -51,12 +55,13 @@ export default {
 
     apps () {
       return [
-        { show: this.store.teszt, title: 'Teszt program', avatar: '/favicon.ico', href: 'https://tibor.szefo.local:9443/#/' },
-        { show: this.showTV, title: 'TV távvezérlés', avatar: '/tv-remote.png', href: 'https://mobilszefo.hopto.org:19531/#/' },
+        { show: this.store.teszt, title: 'Teszt program', avatar: '/favicon.ico', href: 'https://tibor.szefo.local:9443' },
+        { show: this.showTV, title: 'TV távvezérlés', avatar: '/tv-remote.png', href: 'https://mobilszefo.hopto.org:19531' },
         { show: this.showTir, title: 'Termelés Inf. Rendszer', avatar: '/dama.png', href: 'https://tir.szefo.local' },
         { show: this.showVir, title: 'Legrand készlet', avatar: '/legrand.png', href: 'https://lir-keszlet.szefo.local' },
         { show: this.showVir, title: 'Chance készlet', avatar: '/chance.png', href: 'https://chance-keszlet.szefo.local' },
-        { show: this.showVir, title: 'Tárgyi eszköz', avatar: '/eszkoz.png', href: 'https://eszkozinfo.szefo.local' }
+        { show: this.showLoggedIn, title: 'Tárgyi eszköz információk', avatar: '/eszkozinfo.png', href: 'https://mobilszefo.hopto.org:19538' },
+        { show: this.showVir, title: 'Tárgyi eszköz mozgatás', avatar: '/eszkozmozgatas.png', href: 'https://eszkozmozgatas.szefo.local' }
       ]
     },
 
