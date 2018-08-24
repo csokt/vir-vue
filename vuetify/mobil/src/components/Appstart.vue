@@ -16,6 +16,9 @@
       </v-list>
       <v-card-actions v-if="showAdmin">
         <v-btn color="primary" @click="addUsers">Új felhasználók a VIR személyekből.</v-btn>
+<!--
+        <v-btn color="primary" @click="restartBackend">Restart backend</v-btn>
+ -->
       </v-card-actions>
     </v-card>
   </v-flex>
@@ -71,6 +74,15 @@ export default {
   },
 
   methods: {
+    async restartBackend () {
+      const response = await API.post('config/restart')
+      if (response.ok) {
+        EventBus.$emit('inform', {type: 'alert', variation: 'info', message: 'Backend restarted'})
+      } else {
+        EventBus.$emit('inform', {type: 'alert', variation: 'error', message: response.problem})
+      }
+    },
+
     async start (href) {
       const token = {loopback_token: localStorage.szefo_loopback_token, user: this.store.user, vir_user: this.store.virUser}
       const response = await API.post('accounts/pushtoken', token)
