@@ -40,7 +40,7 @@ export default {
       return this.store.user.main_role === 'admin'
     },
 
-    showLoggedIn () {
+    isLoggedIn () {
       return !!this.store.user
     },
 
@@ -52,8 +52,16 @@ export default {
       return ['admin'].includes(this.store.user.main_role) || !!(this.store.user && this.store.user.tir_azonosito)
     },
 
-    showVir () {
-      return !!this.store.virUser
+    isLeltarUser () {
+      return this.store.virUser && this.store.virUser.groups_id.includes(19)
+    },
+
+    isChanceUser () {
+      return this.store.virUser && this.store.virUser.groups_id.includes(58)
+    },
+
+    isLegrandUser () {
+      return this.store.virUser && this.store.virUser.groups_id.includes(67)
     },
 
     apps () {
@@ -61,10 +69,10 @@ export default {
         { show: this.store.teszt, title: 'Teszt program', avatar: '/favicon.ico', href: 'https://tibor.szefo.local:9443' },
         { show: this.showTV, title: 'TV távvezérlés', avatar: '/tv-remote.png', href: 'https://mobilszefo.hopto.org:19531' },
         { show: this.showTir, title: 'Termelés Inf. Rendszer', avatar: '/dama.png', href: 'https://tir.szefo.local' },
-        { show: this.showVir, title: 'Legrand készlet', avatar: '/legrand.png', href: 'https://lir-keszlet.szefo.local' },
-        { show: this.showVir, title: 'Chance készlet', avatar: '/chance.png', href: 'https://chance-keszlet.szefo.local' },
-        { show: this.showLoggedIn, title: 'Tárgyi eszköz információk', avatar: '/eszkozinfo.png', href: 'https://mobilszefo.hopto.org:19538' },
-        { show: this.showVir, title: 'Tárgyi eszköz mozgatás', avatar: '/eszkozmozgatas.png', href: 'https://eszkozmozgatas.szefo.local' }
+        { show: this.isLegrandUser, title: 'Legrand készlet', avatar: '/legrand.png', href: 'https://lir-keszlet.szefo.local' },
+        { show: this.isChanceUser, title: 'Chance készlet', avatar: '/chance.png', href: 'https://chance-keszlet.szefo.local' },
+        { show: this.isLoggedIn, title: 'Tárgyi eszköz információk', avatar: '/eszkozinfo.png', href: 'https://mobilszefo.hopto.org:19538' },
+        { show: this.isLeltarUser, title: 'Tárgyi eszköz mozgatás', avatar: '/eszkozmozgatas.png', href: 'https://mobilszefo.hopto.org:19539' }
       ]
     },
 
