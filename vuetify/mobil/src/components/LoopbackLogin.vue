@@ -50,7 +50,7 @@ export default {
 
   methods: {
     async login () {
-      const response = await API.post('Users/login', {username: this.username, password: this.password, ttl: 365 * 24 * 60 * 60})
+      const response = await API.post('accounts/login', {username: this.username, password: this.password, ttl: 365 * 24 * 60 * 60})
       if (response.ok) {
         const token = response.data.id
         localStorage.szefo_loopback_token = token
