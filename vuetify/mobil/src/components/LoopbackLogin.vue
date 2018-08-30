@@ -50,6 +50,7 @@ export default {
 
   methods: {
     async login () {
+      EventBus.$emit('inform', {type: 'alert', variation: 'info', message: 'Kérés elküldve'})
       const response = await API.post('accounts/login', {username: this.username, password: this.password, ttl: 365 * 24 * 60 * 60})
       if (response.ok) {
         const token = response.data.id

@@ -50,7 +50,8 @@ export default {
       event.stopPropagation()
       return false
     }
-    this.store.teszt = await API.get('config/nodeEnv').data !== 'production'
+    const nodeEnv = await API.get('config/nodeEnv')
+    this.store.teszt = nodeEnv.data !== 'production'
     getUser(this, '/setup')
     getVirUser(this)
   }
