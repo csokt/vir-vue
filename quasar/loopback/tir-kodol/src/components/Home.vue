@@ -18,7 +18,7 @@
         </q-item>
         <q-item>
           <q-btn @click="$router.push('search')" push color="secondary">Dokumentációk</q-btn>
-          <q-btn v-if="store.user.role=='varró' || store.user.role=='szabó'" @click="$router.push('norma')" push color="primary">Mai %</q-btn>
+          <q-btn v-if="['varró','varró2'].includes(store.user.role) || store.user.role=='szabó'" @click="$router.push('norma')" push color="primary">Mai %</q-btn>
         </q-item>
         <q-item>
           <h5>Táblázatok </h5>

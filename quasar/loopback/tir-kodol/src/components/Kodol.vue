@@ -40,7 +40,7 @@
 
         <q-btn v-if="store.menthet && store.kodol.munkalap && store.kodol.kartoninfo && store.kodol.muveletkodok.length && store.kodol.mennyiseg" @click="pubKodolas" push color="positive">Adatok mentése</q-btn>
         <q-btn @click="$router.go(-1)" push color="warning">Vissza</q-btn>
-        <q-btn v-if="store.user.role=='varró'" @click="$router.push('norma')" push color="secondary">Mai %</q-btn>
+        <q-btn v-if="['varró','varró2'].includes(store.user.role)" @click="$router.push('norma')" push color="secondary">Mai %</q-btn>
         <q-btn v-if="store.menthet && store.kodol.munkalap" @click="ujMunkalap" push color="tertiary">Új munkalap</q-btn>
         <q-btn v-if="store.menthet && store.kodol.dolgozo && store.user.role==='kódoló'" @click="ujDolgozo" push color="tertiary">Új dolgozó</q-btn>
         <q-btn v-if="store.menthet && store.kodol.kartoninfo && !store.kodol.mennyiseg" @click="$router.push('search')" push color="secondary">Dokumentációk</q-btn>

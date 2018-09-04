@@ -49,6 +49,7 @@ views:
   - szabó
   - logisztikus
   - varró
+  - varró2
   - varrodavezető
   refresh:    60
   order:      '[Kódolás ideje] DESC'
@@ -97,6 +98,7 @@ views:
   - szabó
   - logisztikus
   - varró
+  - varró2
   - varrodavezető
   order:      '[Kódolás ideje] DESC'
   head_after: 15
@@ -137,6 +139,7 @@ views:
   - szabó
   - logisztikus
   - varró
+  - varró2
   - varrodavezető
   order:      '[Dolgozó kód]'
   head_after: 15
@@ -170,6 +173,7 @@ views:
   - szabó
   - logisztikus
   - varró
+  - varró2
   - kódoló
   - meo
   - varrodavezető

@@ -65,6 +65,7 @@ export default {
           'szabó': RegExp('^Lefordított|^Konfekci|^Fotó|^Teljes fotó|^Videó|^Egyéb|^Műszaki|^Szabási|^Kötés'),
           'logisztikus': RegExp('^Lefordított|^Konfekci|^Fotó|^Teljes fotó|^Videó|^Egyéb|^Műszaki|^Szabási|^Kötés'),
           'varró': RegExp('^Lefordított|^Konfekci|^Fotó|^Teljes fotó|^Videó|^Egyéb'),
+          'varró2': RegExp('^Lefordított|^Konfekci|^Fotó|^Teljes fotó|^Videó|^Egyéb'),
           'technológus': RegExp('^Lefordított|^Konfekci|^Fotó|^Teljes fotó|^Videó|^Egyéb'),
           'meo': RegExp('^Lefordított|^Konfekci|^Fotó|^Teljes fotó|^Videó|^Egyéb'),
           'kódoló': RegExp('^Fotó|^Egyéb')

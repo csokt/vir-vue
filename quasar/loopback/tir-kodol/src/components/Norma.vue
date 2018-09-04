@@ -32,8 +32,9 @@
 </template>
 
 <script>
+import API from '../rest.js'
 import Store from '../store'
-import { RpcRaw, Log } from '../rpc'
+import { Log } from '../rpc'
 import {
   QField,
   QInput,
@@ -69,14 +70,14 @@ export default {
     async sumNormaperc () {
       Log('norma')
       this.message = ''
-      try {
-        const response = await RpcRaw('SELECT sum([Összes Normaperc]) AS sum FROM monitor_napikodolas where [Dolgozó kód] = ' + this.store.kodol.dolgozokod)
-        this.osszesNormaperc = Math.round(response.result[0].sum)
+      const response = await API.get('tir/normaperc/' + this.store.kodol.dolgozokod)
+      if (response.ok) {
+        this.osszesNormaperc = Math.round(response.data.sum)
       }
-      catch (e) {
+      else {
         this.message = 'Adatbázis hiba!'
         Log('message', {message: this.message})
-        console.log(e)
+        console.log(response.problem)
       }
     }
   },

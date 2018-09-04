@@ -44,12 +44,17 @@ import VueFormGenerator from 'vue-form-generator/dist/vfg-core.js'
 Vue.use(VueFormGenerator)
 // import "vue-form-generator/dist/vfg-core.css"
 import Config from '../config'
+import API from '../rest.js'
 import Store from '../store'
-import { RpcView, Log } from '../rpc'
+import { Log } from '../rpc'
 import {
   QBtn,
   QSpinner
 } from 'quasar'
+
+function queryParams (params) {
+  return '?filter=' + JSON.stringify(params)
+}
 
 export default {
   name: 'tablazat',
@@ -77,10 +82,22 @@ export default {
   },
   methods: {
     async requestData () {
-      const response = await RpcView(this.view, this.filter)
-      this.result = response.result || {}
+      if (!this.view) { return }
+      console.log('requestData')
+      const response = await API.get('tir/tables/' + this.view.id + queryParams(this.filter))
+      if (response.ok) {
+        this.result = response.data
+        // if (this.view.refresh) {
+        //   setTimeout(() => { this.requestData() }, 1000 * this.view.refresh)
+        // }
+      }
+      else {
+        this.result = {}
+        console.log(response.problem)
+      }
       this.spinner = false
     },
+
     clickField (row, field) {
       if (field.search) {
         let data = {}
@@ -90,6 +107,7 @@ export default {
         this.$router.push('/search')
       }
     },
+
     color (field, value) {
       if (value > 0) { return field.positive }
       if (value === 0) { return field.zero }
@@ -113,6 +131,7 @@ export default {
     }
     this.filter = model
   },
+
   mounted () {
     if (this.view.refresh) {
       this.myInterval = setInterval(() => {
@@ -121,6 +140,7 @@ export default {
     }
     this.requestData()
   },
+
   beforeDestroy () {
     if (this.myInterval) {
       clearInterval(this.myInterval)
