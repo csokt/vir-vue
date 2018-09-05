@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import API from '../rest.js'
 import Store from '../store'
 import { Log } from '../rpc'
 import {
@@ -29,14 +29,7 @@ import {
   QSpinner
 } from 'quasar'
 
-const publicUrl = 'https://seahub.szefo.local/d/2e2d6b2c61fb4acdb9e2/'
-const token = 'f5dde53149a19f988d8292b10026b6eecace2596'
-const HTTP = axios.create({
-  baseURL: './',
-  headers: {
-    Authorization: 'Token ' + token
-  }
-})
+const publicUrl = 'https://mobilszefo.hopto.org:19540/d/2e2d6b2c61fb4acdb9e2/'
 
 export default {
   name: 'search',
@@ -46,6 +39,7 @@ export default {
     QItem,
     QSpinner
   },
+
   data () {
     return {
       store: Store,
@@ -55,35 +49,24 @@ export default {
       message: ''
     }
   },
+
   methods: {
     async doSearch () {
       Log('search', {string: this.search})
       this.spinner = true
       this.message = ''
-      try {
-        const filter = {
-          'szabó': RegExp('^Lefordított|^Konfekci|^Fotó|^Teljes fotó|^Videó|^Egyéb|^Műszaki|^Szabási|^Kötés'),
-          'logisztikus': RegExp('^Lefordított|^Konfekci|^Fotó|^Teljes fotó|^Videó|^Egyéb|^Műszaki|^Szabási|^Kötés'),
-          'varró': RegExp('^Lefordított|^Konfekci|^Fotó|^Teljes fotó|^Videó|^Egyéb'),
-          'varró2': RegExp('^Lefordított|^Konfekci|^Fotó|^Teljes fotó|^Videó|^Egyéb'),
-          'technológus': RegExp('^Lefordított|^Konfekci|^Fotó|^Teljes fotó|^Videó|^Egyéb'),
-          'meo': RegExp('^Lefordított|^Konfekci|^Fotó|^Teljes fotó|^Videó|^Egyéb'),
-          'kódoló': RegExp('^Fotó|^Egyéb')
-        }
-        const response = await HTTP.get('api2/search/?q=' + this.search)
-        const regexp1 = filter[this.store.user.role]
-        const regexp2 = RegExp(this.search + '\\.')
-        const results = response.data.results.filter(x => !x.is_dir && regexp1.test(x.name) && regexp2.test(x.name))
-        this.results = results.sort(function (a, b) { if (a.name < b.name) { return -1 } if (a.name > b.name) { return 1 } return 0 })
-        if (!results.length) {
+      const response = await API.get('tir/seafile/' + this.search + '/' + this.store.user.role)
+      if (response.ok) {
+        this.results = response.data
+        if (!response.data.length) {
           this.message = 'Nincs adat!'
           Log('message', {message: this.message})
         }
       }
-      catch (e) {
+      else {
         this.message = 'Keresési hiba!'
         Log('message', {message: this.message})
-        console.log(e)
+        console.log(response.problem)
       }
       this.spinner = false
     },
