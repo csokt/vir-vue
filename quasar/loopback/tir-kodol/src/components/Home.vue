@@ -23,7 +23,7 @@
         <q-item>
           <h5>Táblázatok </h5>
         </q-item>
-        <q-item separator v-for="view in userviews" :key="view.id" :to="'/table/'+view.id">
+        <q-item separator v-for="view in store.views" :key="view.id" :to="'/table/'+view.id">
           {{view.label}}
         </q-item>
       </template>
@@ -46,7 +46,6 @@
 </template>
 
 <script>
-import Config from '../config'
 import API from '../rest.js'
 import Store from '../store'
 import { Log } from '../rpc'
@@ -66,25 +65,16 @@ export default {
     QBtn,
     QItem
   },
+
   data () {
     return {
-      config: Config,
       store: Store,
       scanUser: true,
       qrcode: null,
       message: ''
     }
   },
-  computed: {
-    userviews: function () {
-      if (this.store.user) {
-        return this.config.views.filter(view => view.roles.includes(this.store.user.role))
-      }
-      else {
-        return []
-      }
-    }
-  },
+
   methods: {
     async gotUserQR (value) {
       const qr = parseInt(value)

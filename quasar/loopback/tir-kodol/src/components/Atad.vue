@@ -67,8 +67,9 @@
 </template>
 
 <script>
+import API from '../rest.js'
 import Store from '../store'
-import { RpcRaw, RpcKodol, Log } from '../rpc'
+import { Log } from '../rpc'
 import {
   QField,
   QInput,
@@ -105,9 +106,9 @@ export default {
         console.log(e)
         return
       }
-      const response = await RpcRaw('select kod, kodnev from vonalkodok where kod = ' + this.store.kodol.hely.toString())
-      if (response.result && response.result.length) {
-        const row = response.result[0]
+      const response = await API.get('tir/vonalkodok/' + this.store.kodol.hely)
+      if (response.ok) {
+        const row = response.data
         this.store.kodol.helynev = row.kodnev
         if (this.store.kodol.hely === 90026) {
           this.$refs.uzemkod.focus()
@@ -137,9 +138,9 @@ export default {
         return
       }
       const uzemkod = this.store.kodol.uzemkod - 54000
-      const response = await RpcRaw('select uzemkod, uzemnev from uzemek where uzemkod = ' + uzemkod.toString())
-      if (response.result && response.result.length) {
-        const row = response.result[0]
+      const response = await API.get('tir/uzemek/' + uzemkod)
+      if (response.ok) {
+        const row = response.data
         this.store.kodol.uzemnev = row.uzemnev
         this.$refs.munkalap.focus()
       }
@@ -165,9 +166,9 @@ export default {
       }
       const kellek = Math.floor(this.store.kodol.munkalap / 10000000) === 3
       const munkalap = kellek ? this.store.kodol.munkalap - 10000000 : this.store.kodol.munkalap
-      const response = await RpcRaw('select t1.cikkszam, t1.rendelesszam, t1.kartonszam, t1.db, t2.mennyiseg from rendelesmunkalap t1 join rendelesfej t2 on t1.rendelesszam = t2.rendelesszam where munkalapazonosito = ' + munkalap.toString())
-      if (response.result && response.result.length) {
-        const row = response.result[0]
+      const response = await API.get('tir/munkalapok/' + munkalap)
+      if (response.ok) {
+        const row = response.data
         if (kellek) {
           this.store.kodol.kartoninfo = row.cikkszam.trim() + '/' + parseInt(row.rendelesszam.trim().slice(-4).toString()) + ' ' + row.mennyiseg.toString() + ' db'
         }
@@ -192,26 +193,20 @@ export default {
       doc.funkcio = doc.hely
       doc.createdAt = new Date()
       this.store.atadasok.unshift(doc)
-      try {
-        const response = await RpcKodol(doc)
-        if (response.result) {
-          this.store.atadasok[0].eredmeny = response.result.message
-          this.store.atadasok[0].error = parseInt(response.result.error)
-        }
-        else {
-          this.store.atadasok[0].eredmeny = 'Nem jött eredmény!'
-          this.store.atadasok[0].error = 1
-        }
+      const response = await API.post('tir/atad', doc)
+      if (response.ok) {
+        this.store.atadasok[0].eredmeny = response.data.message
+        this.store.atadasok[0].error = parseInt(response.data.error)
         if (this.store.atadasok[0].error) {
           this.message = this.store.atadasok[0].eredmeny
         }
       }
-      catch (e) {
+      else {
         this.message = 'Kódoló szerver hiba, értesítse a rendszergazdát!'
         this.store.atadasok[0].eredmeny = 'Kódoló szerver hiba!'
         this.store.atadasok[0].error = 1
-        Log('message', {message: e.message})
-        console.log(e)
+        Log('message', {message: this.message})
+        console.log(response.problem)
       }
       if (!this.message) {
         this.store.kodol.munkalap = null

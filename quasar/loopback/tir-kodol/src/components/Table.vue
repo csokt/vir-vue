@@ -43,7 +43,6 @@ import Vue from 'vue'
 import VueFormGenerator from 'vue-form-generator/dist/vfg-core.js'
 Vue.use(VueFormGenerator)
 // import "vue-form-generator/dist/vfg-core.css"
-import Config from '../config'
 import API from '../rest.js'
 import Store from '../store'
 import { Log } from '../rpc'
@@ -77,7 +76,7 @@ export default {
   },
   computed: {
     view () {
-      return Config.views.find(o => o.id === this.$route.params.id)
+      return this.store.views.find(o => o.id === this.$route.params.id)
     }
   },
   methods: {
@@ -87,9 +86,6 @@ export default {
       const response = await API.get('tir/tables/' + this.view.id + queryParams(this.filter))
       if (response.ok) {
         this.result = response.data
-        // if (this.view.refresh) {
-        //   setTimeout(() => { this.requestData() }, 1000 * this.view.refresh)
-        // }
       }
       else {
         this.result = {}
@@ -118,7 +114,7 @@ export default {
   created () {
     if (!this.store.user) { this.$router.replace('/'); return }
     Log('navigate')
-    const view = Config.views.find(o => o.id === this.$route.params.id)
+    const view = this.store.views.find(o => o.id === this.$route.params.id)
     let model = {}
     for (let field of view.fields) {
       if (!field.filter) { continue }

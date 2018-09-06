@@ -1,28 +1,6 @@
 import router from './router'
-import mqtt from 'mqtt'
+import API from './rest.js'
 import Store from './store'
-
-const cid = Math.random().toString(36).replace('0.', '')
-const mssqlRequestBase = 'mssql/request/' + cid + '/'
-const mssqlResponseBase = 'mssql/response/' + cid + '/'
-const prefix = Store.teszt ? 'teszt/' : ''
-const damakodolRequestBase = prefix + 'tir/dama/kodol/request/' + cid + '/'
-const damakodolResponseBase = prefix + 'tir/dama/kodol/response/' + cid + '/'
-
-let resolver = {}
-
-const client = mqtt.connect('wss://mqtts.szefo.local:8880', {username: 'admin', password: 'Szefo1953'})
-client.subscribe(mssqlResponseBase + '#')
-client.subscribe(damakodolResponseBase + '#')
-
-client.on('message', function (topic, message) {
-  const id = topic.split('/').slice(-1)[0]
-  if (resolver[id]) {
-    const result = JSON.parse(message.toString())
-    resolver[id].resolve(result)
-    delete resolver[id]
-  }
-})
 
 let lastPayload = null
 
@@ -39,50 +17,12 @@ function Log (event, data = {}) {
     publicip: Store.publicIP,
     data: data
   }
+  const topic = 'log/ui/' + message.program + '/' + message.event
   const payload = JSON.stringify(message)
   if (lastPayload !== payload) {
-    client.publish(prefix + 'log/ui/' + message.program + '/' + message.event, payload)
+    API.post('tir/log', {topic: topic, payload: payload})
     lastPayload = payload
   }
 }
 
-function rpcPublish (method, params, requestBase, timeout = 5000) {
-  return new Promise((resolve, reject) => {
-    const id = Math.random().toString(36).replace('0.', '')
-    let request = {
-      jsonrpc: '2.0',
-      method: method,
-      params: params,
-      id: id
-    }
-    client.publish(requestBase + id, JSON.stringify(request))
-    resolver[id] = {resolve: resolve, reject: reject}
-    setTimeout(() => {
-      if (resolver[id]) {
-        reject(new Error('MQTT request timeout!'))
-      }
-    }, timeout)
-  })
-}
-
-function RpcRaw (query) {
-  const params = {
-    database: 'SzefoModulKeszlet',
-    query: query
-  }
-  return rpcPublish('raw', params, mssqlRequestBase)
-}
-
-function RpcView (view, filter) {
-  const params = {
-    view: view,
-    filter: filter
-  }
-  return rpcPublish('view', params, mssqlRequestBase, 14000)
-}
-
-function RpcKodol (params) {
-  return rpcPublish('kodol', params, damakodolRequestBase)
-}
-
-export { RpcRaw, RpcView, RpcKodol, Log }
+export { Log }

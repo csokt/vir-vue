@@ -8,7 +8,7 @@
 
 <script>
 import Vue from 'vue'
-import axios from 'axios'
+// import axios from 'axios'
 import VueQrcodeReader from 'vue-qrcode-reader'
 Vue.use(VueQrcodeReader)
 
@@ -68,13 +68,13 @@ export default {
     // axios.get('https://ipapi.co/json/') // Limitations: 1,000 requests per day
     // axios.get('https://jsonip.com/') // Limitations: none, adblock-kal nem megy
     // axios.get('https://freegeoip.net/json') // Limitations: none, adblock-kal nem megy
-    axios.get('https://httpbin.org/ip') // Limitations: none
-      .then(function (response) {
-        Store.publicIP = response.data.origin
-      })
-      .catch(function (error) {
-        console.log(error)
-      })
+    // axios.get('https://httpbin.org/ip') // Limitations: none
+    //   .then(function (response) {
+    //     Store.publicIP = response.data.origin
+    //   })
+    //   .catch(function (error) {
+    //     console.log(error)
+    //   })
 
     window.RTCPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection // compatibility for Firefox and chrome
     const pc = new RTCPeerConnection({iceServers: []}), noop = function () {}
@@ -85,6 +85,21 @@ export default {
         const myIP = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/.exec(ice.candidate.candidate)[1]
         Store.privateIP = myIP
         pc.onicecandidate = noop
+      }
+    }
+  },
+
+  watch: {
+    'store.user': async function (user) {
+      if (!user) { return }
+      let response = await API.get('config/ip')
+      this.store.publicIP = response.ok && response.data
+      response = await API.get('config/views/tablet/' + user.role)
+      if (response.ok) {
+        this.store.views = response.data
+      }
+      else {
+        this.store.views = []
       }
     }
   }

@@ -5,7 +5,7 @@ const device = Math.max(viewport.height, viewport.width) < 800 ? 'phone' : 'tabl
 const facingMode = device === 'phone' ? 'environment' : 'user'
 
 let Store = {
-  version: '18.08.31',
+  version: '18.08.06',
   teszt: false,
   privateIP: '',
   publicIP: '',
@@ -17,6 +17,7 @@ let Store = {
   },
   user: null,
   kodol: null,
+  views: [],
   kodolasok: [],
   atadasok: [],
   kezdIdo: new Date(new Date().toJSON().slice(0, 10) + 'T05:30:00'),
