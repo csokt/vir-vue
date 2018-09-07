@@ -63,19 +63,6 @@ export default {
       }
     }
 
-    // axios.get('https://api.ipify.org/?format=json') // Limitations: none, adblock-kal nem megy
-    // axios.get('https://api.ipdata.co/') // Limitations: 1,500 requests per day
-    // axios.get('https://ipapi.co/json/') // Limitations: 1,000 requests per day
-    // axios.get('https://jsonip.com/') // Limitations: none, adblock-kal nem megy
-    // axios.get('https://freegeoip.net/json') // Limitations: none, adblock-kal nem megy
-    // axios.get('https://httpbin.org/ip') // Limitations: none
-    //   .then(function (response) {
-    //     Store.publicIP = response.data.origin
-    //   })
-    //   .catch(function (error) {
-    //     console.log(error)
-    //   })
-
     window.RTCPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection // compatibility for Firefox and chrome
     const pc = new RTCPeerConnection({iceServers: []}), noop = function () {}
     pc.createDataChannel('') // create a bogus data channel

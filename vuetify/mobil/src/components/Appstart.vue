@@ -68,7 +68,7 @@ export default {
       return [
         { show: this.store.teszt, title: 'Teszt program', avatar: '/favicon.ico', href: 'https://tibor.szefo.local:9443' },
         { show: this.showTV, title: 'TV távvezérlés', avatar: '/tv-remote.png', href: 'https://mobilszefo.hopto.org:19531' },
-        { show: this.showTir, title: 'Termelés Inf. Rendszer', avatar: '/dama.png', href: 'https://tir.szefo.local' },
+        { show: this.showTir, title: 'Termelés Inf. Rendszer', avatar: '/dama.png', href: 'https://mobilszefo.hopto.org:19532' },
         { show: this.isLegrandUser, title: 'Legrand készlet', avatar: '/legrand.png', href: 'https://lir-keszlet.szefo.local' },
         { show: this.isChanceUser, title: 'Chance készlet', avatar: '/chance.png', href: 'https://chance-keszlet.szefo.local' },
         { show: this.isLoggedIn, title: 'Tárgyi eszköz információk', avatar: '/eszkozinfo.png', href: 'https://mobilszefo.hopto.org:19538' },
