@@ -9,7 +9,7 @@
           <span class="name">{{ store.user.name }}, {{ store.user.uzemnev }}</span>
         </q-item>
         <q-item>
-          <q-btn v-if="store.user.role!='meo'" @click="$router.push('kodol')" push color="primary">Kódolás</q-btn>
+          <q-btn v-if="store.user.role!='meo' && store.user.role!='kötő'" @click="$router.push('kodol')" push color="primary">Kódolás</q-btn>
           <q-btn v-if="store.user.role=='kódoló'" @click="$router.push('atad')" push color="primary">Átadás</q-btn>
           <q-btn @click="logout" push color="negative">Kilépés</q-btn>
         </q-item>
@@ -94,14 +94,14 @@ export default {
       }
       if (qr < 50000) {
         const dolgozokod = qr - 20000
-        const response = await RpcRaw("select dolgozokod, dolgozonev, dolgtr.uzemkod, uzemnev, telephelykod from dolgtr join uzemek on dolgtr.uzemkod = uzemek.uzemkod where aktiv = 'A' and kilepett = 0 and dolgozokod = " + dolgozokod.toString())
+        const response = await RpcRaw("select dolgozokod, dolgozonev, dolgtr.uzemkod, uzemnev, uzemek.telephelykod, telephely from dolgtr join uzemek on dolgtr.uzemkod = uzemek.uzemkod join telephelyek on uzemek.telephelykod = telephelyek.telephelykod where aktiv = 'A' and kilepett = 0 and dolgozokod = " + dolgozokod.toString())
         if (response.result && response.result.length) {
           const result = response.result[0]
-          const uzemkodRole = {1: 'varró', 2: 'varró', 3: 'varró', 4: 'félkész vasaló', 5: 'szabó', 6: 'technológus', 7: 'síkkötő', 8: 'körkötő', 9: 'logisztikus', 26: 'készáru vasaló', 45: 'varró2'}
+          const uzemkodRole = {1: 'varró', 2: 'varró', 3: 'varró', 4: 'félkész vasaló', 5: 'szabó', 6: 'technológus', 7: 'kötő', 8: 'kötő', 9: 'logisztikus', 26: 'készáru vasaló', 45: 'varró2'}
           this.store.user = {name: result.dolgozonev.trim(), role: uzemkodRole[result.uzemkod], uzemnev: result.uzemnev.trim(), belepokod: result.dolgozokod + 20000}
           this.store.kodol = {
             telephelykod: result.telephelykod,
-            telephely: 'Szeged, Tavasz u. 2.',
+            telephely: result.telephely.trim(),
             kodolokod: -1,
             kodolo: 'dolgozó',
             dolgozokod: this.store.user.belepokod,

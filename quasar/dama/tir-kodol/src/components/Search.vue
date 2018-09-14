@@ -62,6 +62,7 @@ export default {
       this.message = ''
       try {
         const filter = {
+          'kötő': RegExp('^Lefordított|^Fotó|^Teljes fotó|^Műszaki|^Kötés'),
           'szabó': RegExp('^Lefordított|^Konfekci|^Fotó|^Teljes fotó|^Videó|^Egyéb|^Műszaki|^Szabási|^Kötés'),
           'logisztikus': RegExp('^Lefordított|^Konfekci|^Fotó|^Teljes fotó|^Videó|^Egyéb|^Műszaki|^Szabási|^Kötés'),
           'varró': RegExp('^Lefordított|^Konfekci|^Fotó|^Teljes fotó|^Videó|^Egyéb'),
