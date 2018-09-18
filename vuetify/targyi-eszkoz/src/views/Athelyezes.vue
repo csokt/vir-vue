@@ -19,7 +19,7 @@ export default {
   },
 
   created () {
-    this.$store.commit('setPageTitle', 'Tárgyi eszköz áthelyezés')
+    this.$store.set('title', 'Tárgyi eszköz áthelyezés')
   }
 }
 </script>

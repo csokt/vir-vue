@@ -19,7 +19,7 @@ export default {
   },
 
   created () {
-    this.$store.commit('setPageTitle', 'Tárgyi eszköz érkeztetés')
+    this.$store.set('title', 'Tárgyi eszköz érkeztetés')
   }
 }
 </script>

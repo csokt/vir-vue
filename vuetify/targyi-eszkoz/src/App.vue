@@ -54,7 +54,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { get } from 'vuex-pathify'
 import Inform from '@/components/Inform.vue'
 
 export default {
@@ -73,7 +73,7 @@ export default {
     }
   },
 
-  computed: mapState(['title', 'user', 'version']),
+  computed: get(['title', 'user', 'version']),
 
   components: {
     Inform
