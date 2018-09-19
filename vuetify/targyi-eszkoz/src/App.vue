@@ -66,7 +66,7 @@ export default {
       fixed: true,
       items: [
         { icon: 'info', title: 'Tárgyi eszköz információk', path: '/info' },
-        { icon: 'arrow_right_alt', title: 'Tárgyi eszköz áthelyezés', path: '/athelyezes' },
+        { icon: 'exit_to_app', title: 'Tárgyi eszköz áthelyezés', path: '/athelyezes' },
         { icon: 'done', title: 'Tárgyi eszköz érkeztetés', path: '/erkeztetes' },
         { icon: 'assignment', title: 'Tárgyi eszköz leltár', path: '/leltar' }
       ]

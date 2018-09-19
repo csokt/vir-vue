@@ -2,14 +2,8 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import pathify from './pathify'
 import { make } from 'vuex-pathify'
-import apisauce from 'apisauce'
+import { API, EventBus } from './util'
 Vue.use(Vuex)
-
-const API = apisauce.create({
-  // baseURL: 'http://tibor.szefo.local:3000/api/',
-  baseURL: '/api/',
-  timeout: 15000
-})
 
 const state = {
   version: '18.09.15',
@@ -35,6 +29,9 @@ const store = new Vuex.Store({
         } else {
           console.log(response.problem)
         }
+      } else {
+        console.log('Érvénytelen felhasználó!')
+        EventBus.$emit('inform', { type: 'alert', variation: 'error', message: 'Érvénytelen felhasználó!' })
       }
     }
   }

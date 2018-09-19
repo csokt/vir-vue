@@ -1,12 +1,13 @@
 <template>
   <v-container fluid>
       <v-layout column align-center>
-        Üdvözlöm X Y!
+        Üdvözlöm {{user.name}}!
       </v-layout>
   </v-container>
 </template>
 
 <script>
+import { get } from 'vuex-pathify'
 
 export default {
   name: 'home',
@@ -14,6 +15,8 @@ export default {
     return {
     }
   },
+
+  computed: get(['user']),
 
   components: {
   },

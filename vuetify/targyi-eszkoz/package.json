@@ -28,6 +28,7 @@
     "babel-core": "7.0.0-bridge.0",
     "babel-jest": "^23.0.1",
     "babel-plugin-transform-imports": "^1.4.1",
+    "material-design-icons-iconfont": "^3.0.3",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.2",
     "vue-cli-plugin-vuetify": "^0.1.6",
