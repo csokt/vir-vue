@@ -3,12 +3,13 @@ import {
   Vuetify,
   VAlert,
   VApp,
-  VNavigationDrawer,
-  VFooter,
-  VList,
   VBtn,
-  VIcon,
+  VDialog,
+  VFooter,
   VGrid,
+  VIcon,
+  VList,
+  VNavigationDrawer,
   VToolbar,
   transitions
 } from 'vuetify'
@@ -18,12 +19,13 @@ Vue.use(Vuetify, {
   components: {
     VAlert,
     VApp,
-    VNavigationDrawer,
-    VFooter,
-    VList,
     VBtn,
-    VIcon,
+    VDialog,
+    VFooter,
     VGrid,
+    VIcon,
+    VList,
+    VNavigationDrawer,
     VToolbar,
     transitions
   }
