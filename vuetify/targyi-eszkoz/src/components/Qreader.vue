@@ -1,21 +1,27 @@
 <template>
-
-        <v-dialog v-model="dialog" persistent max-width="290" hide-overlay=true>
-          <v-btn slot="activator" color="primary" dark>Open Dialog</v-btn>
-          <v-card>
-            <v-card-title class="headline">Use Google's location service?</v-card-title>
-            <v-card-text>Let Google help apps determine location.</v-card-text>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="green darken-1" flat @click.native="dialog = false">Disagree</v-btn>
-              <v-btn color="green darken-1" flat @click.native="dialog = false">Agree</v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-<!--
-        <div v-if="content">{{ content }}</div>
+  <v-dialog v-model="params.dialog" persistent max-width="400">
+    <v-card>
+      <v-card-title>
+        {{params.title}}
+      </v-card-title>
+      <v-card-text>
+        <v-text-field
+          v-model="content"
+          :readonly="params.readonly"
+          :label="params.label"
+          single-line
+          append-outer-icon="send"
+          @click:append-outer="onDecode()"
+        ></v-text-field>
+      </v-card-text>
+      <v-img :contain="false">
         <QrcodeReader :paused="paused" @decode="onDecode" :track="false"></QrcodeReader>
- -->
+      </v-img>
+    </v-card>
+  </v-dialog>
+<!--
+  <div v-if="content">{{ content }}</div>
+-->
 </template>
 
 <script>
@@ -23,9 +29,17 @@ import { QrcodeReader } from 'vue-qrcode-reader'
 
 export default {
   name: 'qreader',
+
+  props: {
+    params: {
+      type: Object,
+      default: undefined
+    }
+  },
+
   data () {
     return {
-      dialog: false,
+      // dialog: false,
       paused: false,
       content: null
     }
@@ -37,7 +51,8 @@ export default {
 
   methods: {
     onDecode (content) {
-      this.content = content
+      if (content) { this.content = content }
+      if (!this.content) { return }
       this.paused = true
       this.$emit('decode', content)
     }

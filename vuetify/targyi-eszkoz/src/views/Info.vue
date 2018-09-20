@@ -2,7 +2,7 @@
   <v-container fluid>
       <v-layout column align-center>
         Info
-        <Qreader @decode="onDecode"/>
+        <Qreader @decode="onLeltariSzamDecode" :params="leltariSzamParams"/>
       </v-layout>
   </v-container>
 </template>
@@ -14,6 +14,13 @@ export default {
   name: 'info',
   data () {
     return {
+      leltariSzamParams: {
+        dialog: true,
+        readonly: false,
+        keyboard: false,
+        title: 'Leltári szám',
+        label: 'Leltári szám'
+      }
     }
   },
 
@@ -22,7 +29,7 @@ export default {
   },
 
   methods: {
-    onDecode (content) {
+    onLeltariSzamDecode (content) {
       console.log('QR', content)
     }
   },
