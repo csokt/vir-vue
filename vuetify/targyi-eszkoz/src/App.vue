@@ -55,7 +55,7 @@
 
 <script>
 import { get } from 'vuex-pathify'
-import Inform from '@/components/Inform.vue'
+import Inform from '@/components/base/Inform.vue'
 
 export default {
   name: 'App',

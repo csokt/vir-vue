@@ -1,36 +1,43 @@
 <template>
   <v-container fluid>
       <v-layout column align-center>
-        Info
-        <Qreader @decode="onLeltariSzamDecode" :params="leltariSzamParams"/>
+        <Qfield v-model="leltariSzam" label="Leltári szám" required readonly/>
+        <Qfield v-model="dummy" label="Dummy" />
       </v-layout>
   </v-container>
+<!--
+        <Qreader v-model="leltariSzam" :dialog="leltariSzamDialog" required readonly label="Leltári szám" @input="onLeltariSzamDecode" @back="onLeltariSzamBack"/>
+        <Qfield v-model="leltariSzam"/>
+-->
 </template>
 
 <script>
-import Qreader from '@/components/Qreader.vue'
+import Qreader from '@/components/base/Qreader.vue'
+import Qfield from '@/components/base/Qfield.vue'
 
 export default {
   name: 'info',
   data () {
     return {
-      leltariSzamParams: {
-        dialog: true,
-        readonly: false,
-        keyboard: false,
-        title: 'Leltári szám',
-        label: 'Leltári szám'
-      }
+      leltariSzam: '',
+      dummy: '',
+      leltariSzamDialog: true
     }
   },
 
   components: {
-    Qreader
+    Qreader,
+    Qfield
   },
 
   methods: {
     onLeltariSzamDecode (content) {
       console.log('QR', content)
+      this.leltariSzamDialog = false
+    },
+    onLeltariSzamBack () {
+      console.log('back')
+      this.leltariSzamDialog = false
     }
   },
 
