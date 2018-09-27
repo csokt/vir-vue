@@ -6,6 +6,11 @@ const API = apisauce.create({
   timeout: 15000
 })
 
+// #################################################################################################################################
+API.setHeader('Authorization', 'mJXHU9pmvrQf3XTyfvUULHcZQZ2FsP28v18mGNHbT3wPIBxJK1Tgv17VE5Y86aPV') //          KIVENNI!!          //
+// API.setHeader('Authorization', 'QYwK4HrkhXRdWGzYzpYvllgqWc6afknjANKZQnA3xBQLsdXU185JNMu9FbCPKYnI') //          KIVENNI!!          //
+// #################################################################################################################################
+
 const EventBus = new Vue()
 
 export { API, EventBus }

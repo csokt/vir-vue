@@ -37,6 +37,10 @@ import { QrcodeReader } from 'vue-qrcode-reader'
 export default {
   name: 'qreader',
 
+  components: {
+    QrcodeReader
+  },
+
   props: {
     value: {
       type: String
@@ -61,15 +65,17 @@ export default {
 
   data () {
     return {
-      content: null,
+      content: this.value,
       rules: {
         required: v => !this.required || !!v || 'Töltse ki ezt a mezőt.'
       }
     }
   },
 
-  components: {
-    QrcodeReader
+  watch: {
+    value: function (newValue) {
+      this.content = newValue
+    }
   },
 
   methods: {
@@ -85,10 +91,6 @@ export default {
       this.content = this.value
       this.$emit('back')
     }
-  },
-
-  created () {
-    this.content = this.value
   }
 }
 </script>

@@ -1,16 +1,16 @@
 <template>
   <div>
     <v-text-field
-      v-model="content"
+      v-model="value"
       :label="label"
       readonly
       @focus="onFocus"
       append-outer-icon="select_all"
-      @click:append-outer="onReadQR()"
+      @click:append-outer="readQR()"
     >
     </v-text-field>
     <Qreader
-      v-model="content"
+      :value="value"
       :label="label"
       :dialog="dialog"
       :required="required"
@@ -48,7 +48,6 @@ export default {
 
   data () {
     return {
-      content: '',
       dialog: false
     }
   },
@@ -59,28 +58,24 @@ export default {
 
   methods: {
     onFocus () {
-      if (!this.content) {
+      if (!this.value) {
         this.dialog = true
       }
     },
-    onReadQR () {
+    readQR () {
       this.dialog = true
     },
-    onInput () {
+    onInput (content) {
       this.dialog = false
-      this.$emit('input', this.content)
+      this.$emit('input', content)
     },
-    onChange () {
+    onChange (content) {
       this.dialog = false
-      this.$emit('change', this.content)
+      this.$emit('change', content)
     },
     onBack () {
       this.dialog = false
     }
-  },
-
-  created () {
-    this.content = this.value
   }
 }
 </script>
