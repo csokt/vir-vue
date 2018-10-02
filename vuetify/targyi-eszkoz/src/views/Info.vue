@@ -1,6 +1,6 @@
 <template>
-  <v-container fluid fill-height grid-list-lg>
-    <v-layout  justify-center wrap>
+  <v-container grid-list-lg>
+    <v-layout justify-space-around wrap>
       <Card>
         <v-card-text>
           <Qfield v-model="leltariSzam" label="Leltári szám" required @change="onChange" />

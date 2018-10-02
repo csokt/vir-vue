@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import pathify from './pathify'
 import { make } from 'vuex-pathify'
-import { API, EventBus } from '@/util'
+// import { API, EventBus } from '@/util'
 Vue.use(Vuex)
 
 const state = {
@@ -20,20 +20,6 @@ const store = new Vuex.Store({
   mutations,
 
   actions: {
-    async getUser ({ commit }, token) {
-      if (token) {
-        const response = await API.post('accounts/pulltoken/' + token)
-        if (response.ok) {
-          commit('user', response.data.user)
-          API.setHeader('Authorization', response.data.loopback_token)
-        } else {
-          console.log(response.problem)
-        }
-      } else {
-        console.log('Érvénytelen felhasználó!')
-        EventBus.$emit('inform', { type: 'alert', variation: 'error', message: 'Érvénytelen felhasználó!' })
-      }
-    }
   }
 })
 

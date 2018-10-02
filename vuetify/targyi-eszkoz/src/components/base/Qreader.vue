@@ -18,6 +18,7 @@
       </v-card-text>
       <v-img :contain="false">
         <QrcodeReader
+          :camera="camera"
           :paused="!dialog"
           :track="false"
           @decode="onDecode"
@@ -69,6 +70,15 @@ export default {
       rules: {
         required: v => !this.required || !!v || 'Töltse ki ezt a mezőt.'
       }
+    }
+  },
+
+  computed: {
+    camera () {
+      if (this.$vuetify.breakpoint.xs) {
+        return {}
+      }
+      return { facingMode: 'user' }
     }
   },
 

@@ -8,7 +8,7 @@
       fixed
       app
     >
-      <v-list>
+      <v-list v-if="user.id">
         <v-list-tile
           value="true"
           v-for="(item, i) in items"
@@ -56,13 +56,18 @@
 <script>
 import { get } from 'vuex-pathify'
 import Inform from '@/components/base/Inform.vue'
+import { API, EventBus } from '@/util'
 
 export default {
   name: 'App',
+  components: {
+    Inform
+  },
+
   data () {
     return {
       clipped: true,
-      drawer: true,
+      drawer: false,
       fixed: true,
       items: [
         { icon: 'info', title: 'Tárgyi eszköz információk', path: '/info' },
@@ -75,18 +80,34 @@ export default {
 
   computed: get(['title', 'user', 'version']),
 
-  components: {
-    Inform
+  methods: {
+    async getUser (token) {
+      if (token) {
+        const response = await API.post('accounts/pulltoken/' + token)
+        if (response.ok) {
+          this.$store.commit('user', response.data.user)
+          API.setHeader('Authorization', response.data.loopback_token)
+          this.drawer = true
+          return
+        } else {
+          console.log(response.problem)
+        }
+      }
+      EventBus.$emit('inform', { type: 'alert', variation: 'error', message: 'Érvénytelen felhasználó!' })
+      this.$router.replace('/')
+    }
   },
 
-  created () {
-    console.log('NODE_ENV', process.env.NODE_ENV)
+  // created () {
+  mounted () {
+    // console.log('NODE_ENV', process.env.NODE_ENV)
+    // console.log('breakpoint', this.$vuetify.breakpoint)
     window.oncontextmenu = function (event) {
       event.preventDefault()
       event.stopPropagation()
       return false
     }
-    this.$store.dispatch('getUser', this.$route.query.token_uid)
+    this.getUser(this.$route.query.token_uid)
   }
 }
 </script>
