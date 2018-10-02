@@ -1,6 +1,14 @@
 import Vue from 'vue'
+import apisauce from 'apisauce'
 import Store from '@/store'
-import { API } from '@/backend/rest.js'
+
+const API = apisauce.create({
+  baseURL: '/api/',
+  timeout: 15000,
+  headers: {
+    Authorization: localStorage.szefo_loopback_token
+  }
+})
 
 const EventBus = new Vue()
 
@@ -28,4 +36,4 @@ async function getVirUser (that) {
   }
 }
 
-export { EventBus, getUser, getVirUser }
+export { API, EventBus, getUser, getVirUser }

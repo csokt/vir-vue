@@ -87,16 +87,6 @@ export default {
       return false
     }
     this.$store.dispatch('getUser', this.$route.query.token_uid)
-
-    // if (this.$route.query.token_uid) {
-    //   const response = await API.post('accounts/pulltoken/' + this.$route.query.token_uid)
-    //   if (response.ok) {
-    //     this.store.user = response.data.user
-    //     API.setHeader('Authorization', response.data.loopback_token)
-    //   } else {
-    //     console.log(response.problem)
-    //   }
-    // }
   }
 }
 </script>

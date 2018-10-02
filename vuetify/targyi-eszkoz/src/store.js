@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import pathify from './pathify'
 import { make } from 'vuex-pathify'
-import { API, EventBus } from './util'
+import { API, EventBus } from '@/util'
 Vue.use(Vuex)
 
 const state = {

@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import { API } from '@/util'
+import { API, EventBus } from '@/util'
 import Qfield from '@/components/base/Qfield.vue'
 import Card from '@/components/base/Card.vue'
 
@@ -77,6 +77,7 @@ export default {
       } else {
         this.eszkoz = {}
         this.mozgas = []
+        EventBus.$emit('inform', { type: 'alert', variation: 'warning', message: 'Hibás leltári szám!' })
       }
     }
   },

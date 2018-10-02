@@ -1,36 +1,38 @@
 <template>
-  <v-flex xs12 sm8 md5>
-    <v-card class="elevation-12">
-      <v-list>
-        <template v-for="(item, index) in showApps">
-        <v-list-tile :key="item.title" avatar @click="start(item.href)">
-          <v-list-tile-avatar tile>
-            <img :src="item.avatar">
-          </v-list-tile-avatar>
-          <v-list-tile-content>
-            <v-list-tile-title v-html="item.title"></v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
-        <v-divider v-if="index + 1 < showApps.length" inset :key="index"></v-divider>
-        </template>
-      </v-list>
-      <v-card-actions v-if="showAdmin">
-        <v-btn color="primary" @click="addUsers">Új felhasználók a VIR személyekből.</v-btn>
+  <Card>
+    <v-list>
+      <template v-for="(item, index) in showApps">
+      <v-list-tile :key="item.title" avatar @click="start(item.href)">
+        <v-list-tile-avatar tile>
+          <img :src="item.avatar">
+        </v-list-tile-avatar>
+        <v-list-tile-content>
+          <v-list-tile-title v-html="item.title"></v-list-tile-title>
+        </v-list-tile-content>
+      </v-list-tile>
+      <v-divider v-if="index + 1 < showApps.length" inset :key="index"></v-divider>
+      </template>
+    </v-list>
+    <v-card-actions v-if="showAdmin">
+      <v-btn color="primary" @click="addUsers">Új felhasználók a VIR személyekből.</v-btn>
 <!--
-        <v-btn color="primary" @click="restartBackend">Restart backend</v-btn>
- -->
-      </v-card-actions>
-    </v-card>
-  </v-flex>
+      <v-btn color="primary" @click="restartBackend">Restart backend</v-btn>
+-->
+    </v-card-actions>
+  </Card>
 </template>
 
 <script>
-import { API } from '@/backend/rest.js'
-import { EventBus } from '@/util.js'
+import { API, EventBus } from '@/util.js'
+import Card from '@/components/base/Card.vue'
 import Store from '@/store'
 
 export default {
   name: 'appstart',
+  components: {
+    Card
+  },
+
   data: () => ({
     store: Store
   }),

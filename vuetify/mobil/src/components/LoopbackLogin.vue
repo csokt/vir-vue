@@ -1,40 +1,41 @@
 <template>
-  <v-flex xs12 sm8 md5>
-    <v-card class="elevation-12">
-      <v-card-title> <div class="title grey--text">Mobil alkalmazások</div> </v-card-title>
-      <v-card-text>
-        <v-form v-model="valid" lazy-validation>
-          <v-text-field
-            v-model="username"
-            :rules="usernameRules"
-            prepend-icon="person"
-            label="Név"
-            required
-          ></v-text-field>
-          <v-text-field
-            v-model="password"
-            :rules="passwordRules"
-            label="Jelszó"
-            type="password"
-            prepend-icon="lock"
-            required
-          ></v-text-field>
-        </v-form>
-      </v-card-text>
-      <v-card-actions>
-        <v-btn color="primary" :disabled="!valid" @click="login">Bejelentkezés</v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-flex>
+  <Card title="Mobil alkalmazások">
+    <v-card-text>
+      <v-form v-model="valid" lazy-validation>
+        <v-text-field
+          v-model="username"
+          :rules="usernameRules"
+          prepend-icon="person"
+          label="Név"
+          required
+        ></v-text-field>
+        <v-text-field
+          v-model="password"
+          :rules="passwordRules"
+          label="Jelszó"
+          type="password"
+          prepend-icon="lock"
+          required
+        ></v-text-field>
+      </v-form>
+    </v-card-text>
+    <v-card-actions>
+      <v-btn color="primary" :disabled="!valid" @click="login">Bejelentkezés</v-btn>
+    </v-card-actions>
+  </Card>
 </template>
 
 <script>
-import { API } from '@/backend/rest.js'
-import { EventBus, getUser, getVirUser } from '@/util.js'
+import { API, EventBus, getUser, getVirUser } from '@/util.js'
+import Card from '@/components/base/Card.vue'
 import Store from '@/store'
 
 export default {
   name: 'loopbackLogin',
+  components: {
+    Card
+  },
+
   data: () => ({
     store: Store,
     valid: false,

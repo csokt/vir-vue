@@ -31,7 +31,7 @@ export default {
         this.message = event.message
         this.type = event.variation
         this.alert = true
-        setTimeout(() => { this.alert = false }, 2000)
+        setTimeout(() => { this.alert = false }, event.variation === 'error' ? 10000 : 2000)
       }
     })
   }

@@ -26,10 +26,8 @@
 </template>
 
 <script>
-import { API } from '@/backend/rest.js'
-// import { EventBus } from '@/util.js'
-import Inform from '@/components/Inform.vue'
-import { getUser, getVirUser } from '@/util.js'
+import Inform from '@/components/base/Inform.vue'
+import { API, getUser, getVirUser } from '@/util.js'
 import Store from '@/store'
 
 export default {
