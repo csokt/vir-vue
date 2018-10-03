@@ -51,7 +51,7 @@ export default {
     },
 
     async power (tvId) {
-      EventBus.$emit('inform', {type: 'alert', variation: 'info', message: 'power/' + tvId})
+      EventBus.$emit('inform', { type: 'alert', variation: 'info', message: 'power/' + tvId })
       const response = await API.post('tv/power/' + tvId)
       console.log(response.data)
     }

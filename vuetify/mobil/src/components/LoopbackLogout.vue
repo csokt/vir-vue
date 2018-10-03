@@ -36,13 +36,13 @@ export default {
     async logout () {
       const response = await API.post('Users/logout')
       if (response.ok) {
-        EventBus.$emit('inform', {type: 'alert', variation: 'success', message: 'Kijelentkezett'})
+        EventBus.$emit('inform', { type: 'alert', variation: 'success', message: 'Kijelentkezett' })
         delete localStorage.szefo_loopback_token
         API.setHeader('Authorization', undefined)
         getUser(this)
         getVirUser(this)
       } else {
-        EventBus.$emit('inform', {type: 'alert', variation: 'error', message: 'Kijelentkezési hiba!'})
+        EventBus.$emit('inform', { type: 'alert', variation: 'error', message: 'Kijelentkezési hiba!' })
       }
     }
   }

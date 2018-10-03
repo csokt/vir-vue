@@ -27,7 +27,7 @@
         item-value="API"
         label="Public APIs"
         placeholder="Start typing to Search"
-        prepend-icon="search"
+        prepend-icon="mdi-database-search"
         return-object
       ></v-autocomplete>
     </v-card-text>
@@ -53,68 +53,68 @@
         @click="model = null"
       >
         Clear
-        <v-icon right>close</v-icon>
+        <v-icon right>mdi-close-circle</v-icon>
       </v-btn>
     </v-card-actions>
   </v-card>
 </template>
 
 <script>
-import axios from 'axios'
+  import axios from 'axios'
 
-export default {
-  data: () => ({
-    descriptionLimit: 60,
-    entries: [],
-    isLoading: false,
-    model: null,
-    search: null
-  }),
+  export default {
+    data: () => ({
+      descriptionLimit: 60,
+      entries: [],
+      isLoading: false,
+      model: null,
+      search: null
+    }),
 
-  computed: {
-    fields () {
-      if (!this.model) return []
+    computed: {
+      fields () {
+        if (!this.model) return []
 
-      return Object.keys(this.model).map(key => {
-        return {
-          key: key,
-          value: this.model[key] || 'n/a'
-        }
-      })
+        return Object.keys(this.model).map(key => {
+          return {
+            key: key,
+            value: this.model[key] || 'n/a'
+          }
+        })
+      },
+      items () {
+        return this.entries.map(entry => {
+          const Description = entry.Description.length > this.descriptionLimit
+            ? entry.Description.slice(0, this.descriptionLimit) + '...'
+            : entry.Description
+
+          return Object.assign({}, entry, { Description })
+        })
+      }
     },
-    items () {
-      return this.entries.map(entry => {
-        const Description = entry.Description.length > this.descriptionLimit
-          ? entry.Description.slice(0, this.descriptionLimit) + '...'
-          : entry.Description
 
-        return Object.assign({}, entry, { Description })
-      })
-    }
-  },
+    watch: {
+      search (val) {
+        // Items have already been loaded
+        if (this.items.length > 0) return
 
-  watch: {
-    search (val) {
-      // Items have already been loaded
-      if (this.items.length > 0) return
+        // Items have already been requested
+        if (this.isLoading) return
 
-      // Items have already been requested
-      if (this.isLoading) return
+        this.isLoading = true
 
-      this.isLoading = true
-
-      // Lazily load input items
-      axios.get('https://api.publicapis.org/entries')
-        .then(res => {
-          const { count, entries } = res.data
-          this.count = count
-          this.entries = entries
-        })
-        .catch(err => {
-          console.log(err)
-        })
-        .finally(() => (this.isLoading = false))
+        // Lazily load input items
+        axios.get('https://api.publicapis.org/entries')
+          .then(res => {
+            const { count, entries } = res.data
+            this.count = count
+            this.entries = entries
+          })
+          .catch(err => {
+            console.log(err)
+          })
+          .finally(() => (this.isLoading = false))
+      }
     }
   }
-}
 </script>

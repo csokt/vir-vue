@@ -87,29 +87,29 @@ export default {
     async restartBackend () {
       const response = await API.post('config/restart')
       if (response.ok) {
-        EventBus.$emit('inform', {type: 'alert', variation: 'info', message: 'Backend restarted'})
+        EventBus.$emit('inform', { type: 'alert', variation: 'info', message: 'Backend restarted' })
       } else {
-        EventBus.$emit('inform', {type: 'alert', variation: 'error', message: response.problem})
+        EventBus.$emit('inform', { type: 'alert', variation: 'error', message: response.problem })
       }
     },
 
     async start (href) {
-      const token = {loopback_token: localStorage.szefo_loopback_token, user: this.store.user, vir_user: this.store.virUser}
+      const token = { loopback_token: localStorage.szefo_loopback_token, user: this.store.user, vir_user: this.store.virUser }
       const response = await API.post('accounts/pushtoken', token)
       if (response.ok) {
         const path = href + '?token_uid=' + response.data
         window.location.href = path
       } else {
-        EventBus.$emit('inform', {type: 'alert', variation: 'error', message: response.problem})
+        EventBus.$emit('inform', { type: 'alert', variation: 'error', message: response.problem })
       }
     },
 
     async addUsers () {
       const response = await API.post('accounts/createusers')
       if (response.ok) {
-        EventBus.$emit('inform', {type: 'alert', variation: 'info', message: 'Új felhasználók létrehozva'})
+        EventBus.$emit('inform', { type: 'alert', variation: 'info', message: 'Új felhasználók létrehozva' })
       } else {
-        EventBus.$emit('inform', {type: 'alert', variation: 'error', message: response.problem})
+        EventBus.$emit('inform', { type: 'alert', variation: 'error', message: response.problem })
       }
     }
   }

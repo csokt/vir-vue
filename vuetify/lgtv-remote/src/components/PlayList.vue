@@ -37,7 +37,7 @@ export default {
         this.playlist = response.data
       } else {
         this.playlist = []
-        EventBus.$emit('inform', {type: 'alert', variation: 'error', message: 'Lejátszási lista betöltési hiba!'})
+        EventBus.$emit('inform', { type: 'alert', variation: 'error', message: 'Lejátszási lista betöltési hiba!' })
         console.log(response.problem)
       }
     }

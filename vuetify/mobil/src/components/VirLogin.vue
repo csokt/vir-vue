@@ -51,11 +51,11 @@ export default {
 
   methods: {
     async login () {
-      const response = await API.post('vir/login', {username: this.username, password: this.password})
+      const response = await API.post('vir/login', { username: this.username, password: this.password })
       if (response.ok) {
         getVirUser(this)
       } else {
-        EventBus.$emit('inform', {type: 'alert', variation: 'error', message: 'Bejelentkezési hiba!'})
+        EventBus.$emit('inform', { type: 'alert', variation: 'error', message: 'Bejelentkezési hiba!' })
       }
     }
   }

@@ -49,7 +49,7 @@ export default {
       if (this.isPinAuthenticated) {
         this.$router.go(-1)
       } else {
-        EventBus.$emit('inform', {type: 'alert', variation: 'warning', message: 'PIN hiba'})
+        EventBus.$emit('inform', { type: 'alert', variation: 'warning', message: 'PIN hiba' })
         if (this.counter === 3) {
           this.store.user = null
         }

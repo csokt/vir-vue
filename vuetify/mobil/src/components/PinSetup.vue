@@ -39,7 +39,7 @@ export default {
       localStorage.szefo_pin = this.pin
       this.store.pin = this.pin
       this.pin = ''
-      EventBus.$emit('inform', {type: 'alert', variation: 'success', message: 'PIN beállítva'})
+      EventBus.$emit('inform', { type: 'alert', variation: 'success', message: 'PIN beállítva' })
     }
   }
 }

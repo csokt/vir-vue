@@ -37,10 +37,10 @@ export default {
       const response = await API.post('vir/logout')
       console.log(response)
       if (response.ok) {
-        EventBus.$emit('inform', {type: 'alert', variation: 'success', message: 'Kijelentkezett'})
+        EventBus.$emit('inform', { type: 'alert', variation: 'success', message: 'Kijelentkezett' })
         getVirUser(this)
       } else {
-        EventBus.$emit('inform', {type: 'alert', variation: 'error', message: 'Kijelentkezési hiba!'})
+        EventBus.$emit('inform', { type: 'alert', variation: 'error', message: 'Kijelentkezési hiba!' })
       }
     }
   }

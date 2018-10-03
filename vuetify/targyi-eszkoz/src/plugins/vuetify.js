@@ -3,6 +3,7 @@ import {
   Vuetify,
   VAlert,
   VApp,
+  VAutocomplete,
   VBtn,
   VCard,
   VDivider,
@@ -25,6 +26,7 @@ Vue.use(Vuetify, {
   components: {
     VAlert,
     VApp,
+    VAutocomplete,
     VBtn,
     VCard,
     VDivider,

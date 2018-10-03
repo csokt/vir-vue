@@ -41,7 +41,7 @@ export default {
         this.tv = response.data
       } else {
         this.tv = {}
-        EventBus.$emit('inform', {type: 'alert', variation: 'error', message: 'TV betöltési hiba!'})
+        EventBus.$emit('inform', { type: 'alert', variation: 'error', message: 'TV betöltési hiba!' })
         console.log(response.problem)
       }
     },
@@ -49,7 +49,7 @@ export default {
     async call (method, arg = '') {
       let url = method + '/' + this.$route.params.id
       if (arg) url = url + '/' + arg
-      EventBus.$emit('inform', {type: 'alert', variation: 'info', message: url})
+      EventBus.$emit('inform', { type: 'alert', variation: 'info', message: url })
       const response = await API.post('tv/' + url)
       console.log(response.data)
     }

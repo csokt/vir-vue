@@ -37,7 +37,7 @@ export default {
         this.viewlist = response.data
       } else {
         this.viewlist = []
-        EventBus.$emit('inform', {type: 'alert', variation: 'error', message: 'Táblázatok betöltési hiba!'})
+        EventBus.$emit('inform', { type: 'alert', variation: 'error', message: 'Táblázatok betöltési hiba!' })
         console.log(response.problem)
       }
     }
