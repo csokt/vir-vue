@@ -3,12 +3,12 @@
     <v-layout justify-space-around wrap>
       <Card>
         <v-card-text>
+          <Leltarkorzet v-model="ujLeltarkorzet" label="Új leltárkörzet" apiUrl="vir/searchRead/leltar.korzet?params={}"/>
           <Eszkoz v-model="eszkoz" @mozgas="onMozgas"/>
           <v-text-field v-model="eszkoz.megnevezes" label="Eszköz" readonly />
           <v-text-field v-if="eszkoz.selejt_ok" v-model="eszkoz.selejt_ok" label="Selejtezni" readonly />
           <v-text-field v-if="aktHasznalo" v-model="aktHasznalo" label="Aktuális használó" readonly />
           <v-text-field v-model="aktLeltarkorzet" label="Aktuális leltárkörzet" readonly />
-          <v-text-field v-model="ujLeltarkorzet" label="Új leltárkörzet" />
         </v-card-text>
       </Card>
       <Card title="Eszköz mozgásai">
@@ -24,18 +24,20 @@
 
 <script>
 import Eszkoz from '@/components/Eszkoz.vue'
+import Leltarkorzet from '@/components/Leltarkorzet.vue'
 import Card from '@/components/base/Card.vue'
 
 export default {
   name: 'athelyezes',
   components: {
     Eszkoz,
+    Leltarkorzet,
     Card
   },
 
   data () {
     return {
-      ujLeltarkorzet: '',
+      ujLeltarkorzet: {},
       eszkoz: {},
       mozgas: []
     }
