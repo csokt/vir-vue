@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-text-field
-      v-model="value"
+      :value="value"
       :label="label"
       readonly
       @focus="onFocus"

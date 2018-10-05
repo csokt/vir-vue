@@ -1,24 +1,24 @@
 <template>
-  <Qfield
-    v-model="leltariSzam"
+  <Qlookup
+    v-model="value"
     label="Leltári szám"
-    required
-    @change="onChange"
+    propValue="leltari_szam"
+    :apiUrl="apiUrl"
   />
+<!--
+    :value="value"
+    @change="onChange"
+-->
 </template>
 
 <script>
 import { API, EventBus } from '@/util'
-import Qfield from '@/components/base/Qfield.vue'
-
-function queryParams (params) {
-  return '?params=' + JSON.stringify(params)
-}
+import Qlookup from '@/components/base/Qlookup.vue'
 
 export default {
   name: 'eszkoz',
   components: {
-    Qfield
+    Qlookup
   },
 
   props: {
@@ -29,29 +29,30 @@ export default {
 
   data () {
     return {
-      leltariSzam: ''
+    }
+  },
+
+  watch: {
+    value (val) {
+      console.log('value', val)
+      this.onChange(val)
     }
   },
 
   methods: {
-    async onChange () {
-      let eszkoz
-      let mozgas
-      let params = { domain: [['leltari_szam', '=', this.leltariSzam]], frontend: true }
-      let response = await API.get('vir/searchRead/leltar.eszkoz' + queryParams(params))
-      if (response.ok && response.data.length) {
-        eszkoz = response.data[0]
-        this.$emit('input', eszkoz)
+    apiUrl (content) {
+      const params = { domain: [['leltari_szam', '=', content]], frontend: true }
+      return 'vir/searchRead/leltar.eszkoz?params=' + JSON.stringify(params)
+    },
 
-        params = { domain: [['eszkoz_id', '=', eszkoz.id]], frontend: true }
-        response = await API.get('vir/searchRead/leltar.eszkozmozgas' + queryParams(params))
-        mozgas = response.data
-        this.$emit('mozgas', mozgas)
+    async onChange (eszkoz) {
+      this.$emit('input', eszkoz)
+      if (eszkoz.id) {
+        const params = { domain: [['eszkoz_id', '=', eszkoz.id]], frontend: true }
+        const response = await API.get('vir/searchRead/leltar.eszkozmozgas?params=' + JSON.stringify(params))
+        this.$emit('mozgas', response.data)
       } else {
-        eszkoz = {}
-        mozgas = []
-        this.$emit('input', eszkoz)
-        this.$emit('mozgas', mozgas)
+        this.$emit('mozgas', [])
         EventBus.$emit('inform', { type: 'alert', variation: 'warning', message: 'Hibás leltári szám!' })
       }
     }

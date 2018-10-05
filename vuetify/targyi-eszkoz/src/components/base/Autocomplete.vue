@@ -1,6 +1,6 @@
 <template>
   <v-autocomplete
-    v-model="model"
+    :value="value"
     :items="items"
     :loading="isLoading"
     clearable
@@ -24,11 +24,11 @@ export default {
       type: Object
     },
 
-    apiUrl: {
+    label: {
       type: String
     },
 
-    label: {
+    apiUrl: {
       type: String
     },
 
@@ -45,13 +45,12 @@ export default {
 
   data: () => ({
     isLoading: true,
-    items: [],
-    model: null
+    items: []
   }),
 
   methods: {
-    onChange () {
-      this.$emit('input', this.model)
+    onChange (content) {
+      this.$emit('input', content)
     }
   },
 
