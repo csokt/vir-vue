@@ -20,6 +20,10 @@ import { API } from '@/util'
 
 export default {
   props: {
+    value: {
+      type: Object
+    },
+
     apiUrl: {
       type: String
     },

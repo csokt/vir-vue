@@ -3,7 +3,7 @@
     <v-layout justify-space-around wrap>
       <Card>
         <v-card-text>
-          <Leltarkorzet v-model="ujLeltarkorzet" label="Új leltárkörzet" apiUrl="vir/searchRead/leltar.korzet?params={}"/>
+          <Autocomplete v-model="ujLeltarkorzet" label="Új leltárkörzet" apiUrl="vir/searchRead/leltar.korzet?params={}"/>
           <Eszkoz v-model="eszkoz" @mozgas="onMozgas"/>
           <v-text-field v-model="eszkoz.megnevezes" label="Eszköz" readonly />
           <v-text-field v-if="eszkoz.selejt_ok" v-model="eszkoz.selejt_ok" label="Selejtezni" readonly />
@@ -24,14 +24,14 @@
 
 <script>
 import Eszkoz from '@/components/Eszkoz.vue'
-import Leltarkorzet from '@/components/Leltarkorzet.vue'
+import Autocomplete from '@/components/base/Autocomplete.vue'
 import Card from '@/components/base/Card.vue'
 
 export default {
   name: 'athelyezes',
   components: {
     Eszkoz,
-    Leltarkorzet,
+    Autocomplete,
     Card
   },
 
