@@ -28,6 +28,12 @@
           :apiUrl="apiUrl"
           @change="onChange"
         />
+        <Autocomplete
+          v-model="leltarkorzetid"
+          label="Leltárkörzet"
+          apiUrl="vir/searchRead/leltar.korzet?params={}"
+          @change="onChange"
+        />
       </v-layout>
   </v-container>
 </template>
@@ -36,13 +42,15 @@
 import Qreader from '@/components/base/Qreader.vue'
 import Qfield from '@/components/base/Qfield.vue'
 import Qlookup from '@/components/base/Qlookup.vue'
+import Autocomplete from '@/components/base/Autocomplete.vue'
 
 export default {
   name: 'leltar',
   components: {
     Qreader,
     Qfield,
-    Qlookup
+    Qlookup,
+    Autocomplete
   },
 
   data () {
@@ -51,7 +59,9 @@ export default {
       qreader: '',
       dialog: false,
       qfield: '',
-      qlookup: ''
+      qlookup: '',
+      leltarkorzetid: null,
+      leltarkorzet: {}
     }
   },
 

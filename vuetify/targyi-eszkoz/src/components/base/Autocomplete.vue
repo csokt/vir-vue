@@ -1,6 +1,7 @@
 <template>
   <v-autocomplete
     :value="value"
+    @input="$emit('input', $event)"
     :items="items"
     :loading="isLoading"
     clearable
@@ -10,9 +11,11 @@
     :item-text="itemText"
     :item-value="itemValue"
     :label="label"
-    return-object
     @change="onChange"
   />
+<!--
+    return-object
+-->
 </template>
 
 <script>
@@ -20,23 +23,13 @@ import { API } from '@/util'
 
 export default {
   props: {
-    value: {
-      type: Object
-    },
-
-    label: {
-      type: String
-    },
-
-    apiUrl: {
-      type: String
-    },
-
+    value: [String, Number],
+    label: String,
+    apiUrl: String,
     itemText: {
       type: String,
       default: 'name'
     },
-
     itemValue: {
       type: String,
       default: 'id'
@@ -50,7 +43,8 @@ export default {
 
   methods: {
     onChange (content) {
-      this.$emit('input', content)
+      const obj = this.items.find(o => o[this.itemValue] === content) || {}
+      this.$emit('change', obj)
     }
   },
 
