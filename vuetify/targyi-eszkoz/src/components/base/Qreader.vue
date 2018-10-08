@@ -3,16 +3,17 @@
     <v-card>
       <v-card-text>
         <v-text-field
-          v-model="content"
+          :value="value"
+          @input="lazyValue = $event"
           :rules="[rules.required]"
           :readonly="readonly"
           :single-line="readonly"
           :label="label"
-          @keyup.enter="onDecode()"
+          @keyup.enter="onDecode(lazyValue)"
           :prepend-icon="required ? '' : 'arrow_back'"
           @click:prepend="onBack"
           :append-outer-icon="readonly ? '' : 'send'"
-          @click:append-outer="onDecode()"
+          @click:append-outer="onDecode(lazyValue)"
         >
         </v-text-field>
       </v-card-text>
@@ -28,7 +29,6 @@
     </v-card>
   </v-dialog>
 <!--
-  <div v-if="content">{{ content }}</div>
 -->
 </template>
 
@@ -43,13 +43,8 @@ export default {
   },
 
   props: {
-    value: {
-      type: String
-    },
-    label: {
-      type: String,
-      default: ''
-    },
+    value: String,
+    label: String,
     dialog: {
       type: Boolean,
       default: false
@@ -66,7 +61,7 @@ export default {
 
   data () {
     return {
-      content: this.value,
+      lazyValue: '',
       rules: {
         required: v => !this.required || !!v || 'Töltse ki ezt a mezőt.'
       }
@@ -84,21 +79,18 @@ export default {
 
   watch: {
     value: function (newValue) {
-      this.content = newValue
+      this.$emit('change', newValue)
     }
   },
 
   methods: {
     onDecode (content) {
-      if (content) { this.content = content }
-      if (!this.content) { return }
-      this.$emit('input', this.content)
-      if (this.value !== this.content) {
-        this.$emit('change', this.content)
-      }
+      // console.log('onDecode', content)
+      if (this.required && !content) { return }
+      this.$emit('input', content)
     },
     onBack () {
-      this.content = this.value
+      // console.log('onBack')
       this.$emit('back')
     }
   }

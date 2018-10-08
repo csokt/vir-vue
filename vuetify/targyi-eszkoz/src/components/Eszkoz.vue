@@ -1,18 +1,17 @@
 <template>
   <Qlookup
-    v-model="value"
+    :value="value"
+    @input="$emit('input', $event)"
     label="Leltári szám"
-    propValue="leltari_szam"
     :apiUrl="apiUrl"
+    @change="onChange"
   />
 <!--
-    :value="value"
-    @change="onChange"
 -->
 </template>
 
 <script>
-import { API, EventBus } from '@/util'
+import { API } from '@/util'
 import Qlookup from '@/components/base/Qlookup.vue'
 
 export default {
@@ -22,20 +21,11 @@ export default {
   },
 
   props: {
-    value: {
-      type: Object
-    }
+    value: String
   },
 
   data () {
     return {
-    }
-  },
-
-  watch: {
-    value (val) {
-      console.log('value', val)
-      this.onChange(val)
     }
   },
 
@@ -46,14 +36,13 @@ export default {
     },
 
     async onChange (eszkoz) {
-      this.$emit('input', eszkoz)
+      this.$emit('change', eszkoz)
       if (eszkoz.id) {
         const params = { domain: [['eszkoz_id', '=', eszkoz.id]], frontend: true }
         const response = await API.get('vir/searchRead/leltar.eszkozmozgas?params=' + JSON.stringify(params))
         this.$emit('mozgas', response.data)
       } else {
         this.$emit('mozgas', [])
-        EventBus.$emit('inform', { type: 'alert', variation: 'warning', message: 'Hibás leltári szám!' })
       }
     }
   }

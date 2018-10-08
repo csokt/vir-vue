@@ -3,7 +3,7 @@
     <v-layout justify-space-around wrap>
       <Card>
         <v-card-text>
-          <Eszkoz v-model="eszkoz" @mozgas="onMozgas"/>
+          <Eszkoz v-model="leltariSzam"  @change="eszkoz = $event" @mozgas="mozgas = $event"/>
           <v-text-field v-model="eszkoz.megnevezes" label="Eszköz" readonly />
           <v-text-field v-if="eszkoz.selejt_ok" v-model="eszkoz.selejt_ok" label="Selejtezni" readonly />
           <v-text-field v-if="aktHasznalo" v-model="aktHasznalo" label="Aktuális használó" readonly />
@@ -34,6 +34,7 @@ export default {
 
   data () {
     return {
+      leltariSzam: '',
       eszkoz: {},
       mozgas: []
     }
@@ -54,10 +55,6 @@ export default {
   methods: {
     utc2local (utc) {
       return new Date(utc.replace(/ /, 'T') + 'Z').toLocaleString()
-    },
-
-    onMozgas (mozgas) {
-      this.mozgas = mozgas
     }
   },
 

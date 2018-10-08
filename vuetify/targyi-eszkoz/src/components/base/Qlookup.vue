@@ -1,8 +1,10 @@
 <template>
   <Qfield
-    v-model="qfieldValue"
+    :value="value"
+    @input="$emit('input', $event)"
     :label="label"
     required
+    @change="onChange"
   />
 <!--
     @change="onChange"
@@ -10,7 +12,7 @@
 </template>
 
 <script>
-import { API } from '@/util'
+import { API, EventBus } from '@/util'
 import Qfield from '@/components/base/Qfield.vue'
 
 export default {
@@ -20,27 +22,17 @@ export default {
   },
 
   props: {
-    value: Object,
+    value: String,
     label: String,
     apiUrl: Function,
-    propValue: String
+    notFoundMessage: {
+      type: String,
+      default: 'A keresett adat nem található!'
+    }
   },
 
   data () {
     return {
-      qfieldValue: ''
-    }
-  },
-
-  watch: {
-    qfieldValue (val) {
-      // console.log('qfieldValue', val)
-      this.onChange(val)
-    },
-
-    value (val) {
-      console.log('value', val)
-      this.qfieldValue = this.value[this.propValue]
     }
   },
 
@@ -48,12 +40,12 @@ export default {
     async onChange (content) {
       const response = await API.get(this.apiUrl(content))
       if (response.ok && response.data.length) {
-        const value = response.data[0]
-        this.$emit('input', value)
-        this.$emit('change', value)
+        this.$emit('change', response.data[0])
       } else {
-        this.$emit('input', {})
         this.$emit('change', {})
+        if (this.value) {
+          EventBus.$emit('inform', { type: 'alert', variation: 'warning', message: this.notFoundMessage })
+        }
       }
     }
   }

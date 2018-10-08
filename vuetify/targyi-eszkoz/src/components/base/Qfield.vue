@@ -4,9 +4,9 @@
       :value="value"
       :label="label"
       readonly
-      @focus="onFocus"
+      @focus="dialog = !value"
       append-outer-icon="select_all"
-      @click:append-outer="readQR()"
+      @click:append-outer="dialog = true"
     >
     </v-text-field>
     <Qreader
@@ -15,9 +15,9 @@
       :dialog="dialog"
       :required="required"
       :readonly="readonly"
-      @input="onInput"
-      @change="onChange"
-      @back="onBack"
+      @input="dialog = false; $emit('input', $event)"
+      @change="$emit('change', $event)"
+      @back="dialog = false"
     />
   </div>
 </template>
@@ -27,15 +27,13 @@ import Qreader from './Qreader.vue'
 
 export default {
   name: 'qfield',
+  components: {
+    Qreader
+  },
 
   props: {
-    value: {
-      type: String
-    },
-    label: {
-      type: String,
-      default: ''
-    },
+    value: String,
+    label: String,
     required: {
       type: Boolean,
       default: false
@@ -49,32 +47,6 @@ export default {
   data () {
     return {
       dialog: false
-    }
-  },
-
-  components: {
-    Qreader
-  },
-
-  methods: {
-    onFocus () {
-      if (!this.value) {
-        this.dialog = true
-      }
-    },
-    readQR () {
-      this.dialog = true
-    },
-    onInput (content) {
-      this.dialog = false
-      this.$emit('input', content)
-    },
-    onChange (content) {
-      this.dialog = false
-      this.$emit('change', content)
-    },
-    onBack () {
-      this.dialog = false
     }
   }
 }
