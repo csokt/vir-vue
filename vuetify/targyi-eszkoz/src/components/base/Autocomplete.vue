@@ -14,7 +14,6 @@
     @change="onChange"
   />
 <!--
-    return-object
 -->
 </template>
 
