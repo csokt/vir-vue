@@ -3,7 +3,7 @@
     <v-layout justify-space-around wrap>
       <Card>
         <v-card-text>
-          <Autocomplete v-model="ujLeltarkorzetId" label="Új leltárkörzet" apiUrl="vir/searchRead/leltar.korzet?params={}" @change="ujLeltarkorzet = $event"/>
+          <Autocomplete v-model="ujLeltarkorzetId" label="Új leltárkörzet" itemClass="body-2" apiUrl="vir/searchRead/leltar.korzet?params={}" @change="ujLeltarkorzet = $event"/>
           <Eszkoz v-model="leltariSzam"  @change="eszkoz = $event"/>
           <EszkozInfo :eszkoz="eszkoz"/>
         </v-card-text>
@@ -24,9 +24,9 @@
 import { API, EventBus } from '@/util'
 import Card from '@/components/base/Card.vue'
 import Autocomplete from '@/components/base/Autocomplete.vue'
-import Eszkoz from '@/components/Eszkoz.vue'
-import EszkozInfo from '@/components/EszkozInfo.vue'
-import EszkozMozgas from '@/components/EszkozMozgas.vue'
+import Eszkoz from '@/components/targyi-eszkoz/Eszkoz.vue'
+import EszkozInfo from '@/components/targyi-eszkoz/EszkozInfo.vue'
+import EszkozMozgas from '@/components/targyi-eszkoz/EszkozMozgas.vue'
 
 export default {
   name: 'athelyezes',

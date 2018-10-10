@@ -18,9 +18,9 @@
 
 <script>
 import Card from '@/components/base/Card.vue'
-import Eszkoz from '@/components/Eszkoz.vue'
-import EszkozInfo from '@/components/EszkozInfo.vue'
-import EszkozMozgas from '@/components/EszkozMozgas.vue'
+import Eszkoz from '@/components/targyi-eszkoz/Eszkoz.vue'
+import EszkozInfo from '@/components/targyi-eszkoz/EszkozInfo.vue'
+import EszkozMozgas from '@/components/targyi-eszkoz/EszkozMozgas.vue'
 
 export default {
   name: 'info',
@@ -34,8 +34,7 @@ export default {
   data () {
     return {
       leltariSzam: '',
-      eszkoz: {},
-      mozgas: []
+      eszkoz: {}
     }
   },
 

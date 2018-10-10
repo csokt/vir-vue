@@ -4,6 +4,7 @@
     @input="$emit('input', $event)"
     :items="items"
     :loading="isLoading"
+    :disabled="isLoading"
     clearable
     open-on-clear
     hide-no-data
@@ -12,7 +13,21 @@
     :item-value="itemValue"
     :label="label"
     @change="onChange"
-  />
+  >
+    <template
+      slot="selection"
+      slot-scope="{ item }"
+    >
+      <span class="mt-2"> {{ item[itemText] }} </span>
+    </template>
+    <template
+      slot="item"
+      slot-scope="{ item }"
+    >
+      <span :class="itemClass"> {{ item[itemText] }} </span>
+    </template>
+  </v-autocomplete>
+
 <!--
 -->
 </template>
@@ -32,6 +47,14 @@ export default {
     itemValue: {
       type: String,
       default: 'id'
+    },
+    itemClass: {
+      type: String,
+      // default: 'title'
+      default: 'subheading'
+      // default: 'body-2'
+      // default: 'body-1'
+      // default: 'caption'
     }
   },
 
