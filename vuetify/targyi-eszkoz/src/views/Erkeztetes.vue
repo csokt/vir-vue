@@ -1,52 +1,97 @@
 <template>
-    <v-autocomplete
-      v-model="model"
-      :items="items"
-      :loading="isLoading"
-      :search-input.sync="search"
-      clearable
-      hide-details
-      hide-selected
-      item-text="name"
-      item-value="symbol"
-      label="Search for a coin..."
-    >
-      <template
-        slot="item"
-        slot-scope="{ item }"
-      >
-        {{ item }}
-      </template>
-    </v-autocomplete>
+  <v-container grid-list-lg>
+    <v-layout justify-space-around wrap>
+      <Card>
+        <v-card-text>
+          <MozgasInfo :mozgas="mozgas"/>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn v-if="!sztorno" color="primary" :disabled="mozgas.megerkezett" @click="erkeztet">Érkeztetés</v-btn>
+          <v-btn v-if="sztorno" color="primary" :disabled="mozgas.megerkezett" @click="sztornoz">Sztornózás</v-btn>
+        </v-card-actions>
+      </Card>
+      <Card title="Eszközök mozgásai">
+        <v-card-text>
+          <EszkozMozgas filter="erkeztetes" :reloadTrigger="reloadTrigger" @select="mozgas = $event; scrollToTop()"/>
+        </v-card-text>
+      </Card>
+    </v-layout>
+  </v-container>
 </template>
 
 <script>
-import axios from 'axios'
+import { API, EventBus } from '@/util'
+import Card from '@/components/base/Card.vue'
+import EszkozMozgas from '@/components/targyi-eszkoz/EszkozMozgas.vue'
+import MozgasInfo from '@/components/targyi-eszkoz/MozgasInfo.vue'
+
 export default {
-  data: () => ({
-    isLoading: false,
-    items: [],
-    model: null,
-    search: null
-  }),
+  name: 'erkeztetes',
+  components: {
+    Card,
+    MozgasInfo,
+    EszkozMozgas
+  },
+
+  props: {
+    title: String,
+    sztorno: Boolean
+  },
+
+  data () {
+    return {
+      reloadTrigger: false,
+      mozgas: {}
+    }
+  },
 
   watch: {
-    search (val) {
-      // Items have already been loaded
-      if (this.items.length > 0) return
-
-      this.isLoading = true
-
-      // Lazily load input items
-      axios.get('https://api.coinmarketcap.com/v2/listings/')
-        .then(res => {
-          this.items = res.data.data
-        })
-        .catch(err => {
-          console.log(err)
-        })
-        .finally(() => (this.isLoading = false))
+    title: function () {
+      this.setTitle()
     }
+  },
+
+  methods: {
+    async erkeztet () {
+      const row = { megerkezett: true }
+      const response = await API.post('vir/update/leltar.eszkozmozgas/' + this.mozgas.id.toString(), row)
+      if (response.ok) {
+        this.mozgas.megerkezett = true
+        this.reloadTrigger = !this.reloadTrigger
+        // EventBus.$emit('inform', { type: 'alert', variation: 'success', message: 'Megérkezett!' })
+      } else {
+        EventBus.$emit('inform', { type: 'alert', variation: 'error', message: response.data.error.data.message })
+      }
+    },
+
+    async sztornoz () {
+      const params = { id: this.mozgas.id }
+      const response = await API.post('vir/callMethod/leltar.eszkozmozgas/sztorno', params)
+      if (response.ok) {
+        this.mozgas.megerkezett = true
+        this.reloadTrigger = !this.reloadTrigger
+        // EventBus.$emit('inform', { type: 'alert', variation: 'success', message: 'Megérkezett!' })
+      } else {
+        console.log('response', response)
+        EventBus.$emit('inform', { type: 'alert', variation: 'error', message: response.data.error.data.message })
+      }
+    },
+
+    setTitle () {
+      this.$store.set('title', 'Tárgyi eszköz ' + this.title)
+    },
+
+    scrollToTop () {
+      window.scrollTo(0, 0)
+    }
+  },
+
+  created () {
+    this.setTitle()
+  },
+
+  mounted () {
+    this.reloadTrigger = !this.reloadTrigger
   }
 }
 </script>

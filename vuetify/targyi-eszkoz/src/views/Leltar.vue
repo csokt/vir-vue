@@ -2,6 +2,9 @@
   <v-container fluid>
       <v-layout column align-center>
         Leltár
+      </v-layout>
+  </v-container>
+<!--
         <v-text-field
           v-model="textField"
           label="Text field"
@@ -34,8 +37,7 @@
           apiUrl="vir/searchRead/leltar.korzet?params={}"
           @change="onChange"
         />
-      </v-layout>
-  </v-container>
+-->
 </template>
 
 <script>

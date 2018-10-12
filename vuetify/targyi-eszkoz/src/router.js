@@ -27,6 +27,13 @@ export default new Router({
     {
       path: '/erkeztetes',
       name: 'erkeztetes',
+      props: { title: 'érkeztetés', sztorno: false },
+      component: () => import(/* webpackChunkName: "erkeztetes" */ './views/Erkeztetes.vue')
+    },
+    {
+      path: '/sztornozas',
+      name: 'sztornozas',
+      props: { title: 'sztornózás', sztorno: true },
       component: () => import(/* webpackChunkName: "erkeztetes" */ './views/Erkeztetes.vue')
     },
     {

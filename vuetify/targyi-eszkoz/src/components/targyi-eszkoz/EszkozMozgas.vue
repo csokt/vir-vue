@@ -7,6 +7,7 @@
       v-model="row.hova_leltarkorzet_id[1]"
       :label="utc2local(row.create_date)"
       readonly
+      @click.stop="$emit('select', row)"
     />
     <v-text-field
       v-if="filter === 'erkeztetes'"
@@ -15,6 +16,7 @@
       v-model="row.eszkoz_id[1]"
       :label="row.hova_leltarkorzet_id[1]"
       readonly
+      @click.stop="$emit('select', row)"
     />
   </div>
 <!--
