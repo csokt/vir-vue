@@ -10,7 +10,7 @@
           <v-btn v-if="sztorno" color="primary" :disabled="mozgas.megerkezett" @click="sztornoz">Sztornózás</v-btn>
         </v-card-actions>
       </Card>
-      <Card title="Eszközök mozgásai">
+      <Card title="Választható eszközök">
         <v-card-text>
           <EszkozMozgas filter="erkeztetes" :reloadTrigger="reloadTrigger" @select="mozgas = $event; scrollToTop()"/>
         </v-card-text>
