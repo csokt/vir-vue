@@ -13,13 +13,25 @@
           value="true"
           v-for="(item, i) in showItems"
           :key="i"
-          @click.stop="drawer = false; $router.push(item.path)"
+          @click.stop="selectItem(item)"
         >
           <v-list-tile-action>
             <v-icon v-html="item.icon"></v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
             <v-list-tile-title v-text="item.title"></v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+
+        <v-list-tile
+          value="true"
+          @click.stop="$router.go(-1)"
+        >
+          <v-list-tile-action>
+            <v-icon>arrow_back</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>Kilépés</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
       </v-list>
@@ -31,11 +43,11 @@
       dark
     >
       <v-toolbar-side-icon
-        v-if="$route.path == '/' && app !== 'none'"
+        v-if="menuLevel === 1"
         @click.stop="drawer = !drawer">
       </v-toolbar-side-icon>
       <v-icon
-        v-if="$route.path !== '/'"
+        v-if="menuLevel === 2"
         @click.stop="$router.go(-1)"
       >
         arrow_back
@@ -82,7 +94,13 @@ export default {
   },
 
   computed: {
-    ...get(['version', 'title', 'homeTitle', 'app', 'user']),
+    ...get(['version', 'menuLevel', 'homePageTitle', 'modulePageTitle', 'app', 'user']),
+
+    title () {
+      if (this.menuLevel === 0) return 'Vállalat Irányítási Rendszer'
+      if (this.menuLevel === 1) return this.homePageTitle
+      return this.modulePageTitle
+    },
 
     showItems () {
       const items = [
@@ -99,14 +117,22 @@ export default {
   },
 
   watch: {
-    title: function () {
-      if (this.app !== 'none' && this.title === this.homeTitle) {
-        this.drawer = true
-      }
+    menuLevel: function () {
+      if (this.menuLevel === 1) this.drawer = true
+    },
+    app: function () {
+      if (this.menuLevel === 1) this.drawer = true
     }
   },
 
   methods: {
+    selectItem (item) {
+      this.drawer = false
+      this.$store.set('modulePageTitle', item.title)
+      this.$store.set('menuLevel', 2)
+      this.$router.push(item.path)
+    },
+
     async getUser (token) {
       if (token) {
         const response = await API.post('accounts/pulltoken/' + token)

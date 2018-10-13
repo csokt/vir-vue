@@ -37,7 +37,7 @@ export default {
   },
 
   computed: {
-    ...get(['homeTitle', 'user']),
+    ...get(['menuLevel', 'user']),
 
     isLeltarUser () {
       return this.user && this.user.groups_id.includes(19)
@@ -66,14 +66,14 @@ export default {
 
   methods: {
     select (item) {
-      this.$store.set('title', item.title)
-      this.$store.set('homeTitle', item.title)
       this.$store.set('app', item.app)
+      this.$store.set('homePageTitle', item.title)
+      this.$store.set('menuLevel', 1)
     }
   },
 
   created () {
-    this.$store.set('title', this.homeTitle)
+    if (this.menuLevel > 1) this.$store.set('menuLevel', 1)
   }
 }
 </script>

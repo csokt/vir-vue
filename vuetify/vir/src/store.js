@@ -7,8 +7,9 @@ Vue.use(Vuex)
 
 const state = {
   version: '18.09.15',
-  title: 'VIR',
-  homeTitle: 'VIR',
+  menuLevel: 0, // 0: home page && no app;  1: home page && app selected;   2: app's module page
+  homePageTitle: '', // page title if menuLevel === 1
+  modulePageTitle: '', // page title if menuLevel === 2
   app: 'none',
   user: {}
 }
