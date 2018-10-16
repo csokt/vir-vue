@@ -37,14 +37,26 @@ export default {
   },
 
   computed: {
-    ...get(['menuLevel', 'user']),
+    ...get(['menuLevel', 'appSelectTrigger', 'user']),
+
+    isLeltarViewer () {
+      return this.user && this.user.groups_id.includes(18) && !this.user.groups_id.includes(19)
+    },
 
     isLeltarUser () {
       return this.user && this.user.groups_id.includes(19)
     },
 
+    isChanceViewer () {
+      return this.user && this.user.groups_id.includes(57) && !this.user.groups_id.includes(58)
+    },
+
     isChanceUser () {
       return this.user && this.user.groups_id.includes(58)
+    },
+
+    isLegrandViewer () {
+      return this.user && this.user.groups_id.includes(66) && !this.user.groups_id.includes(67)
     },
 
     isLegrandUser () {
@@ -53,9 +65,12 @@ export default {
 
     apps () {
       return [
-        { show: this.isLegrandUser, title: 'Legrand', avatar: '/legrand.png', app: 'legrand' },
-        { show: this.isChanceUser, title: 'Chance', avatar: '/chance.png', app: 'chance' },
-        { show: this.isLeltarUser, title: 'Tárgyi eszköz', avatar: '/eszkoz.png', app: 'leltar' }
+        { show: this.isLegrandViewer, title: 'Legrand', avatar: '/legrand.png', app: 'legrand', role: 'viewer' },
+        { show: this.isChanceViewer, title: 'Chance', avatar: '/chance.png', app: 'chance', role: 'viewer' },
+        { show: this.isLeltarViewer, title: 'Tárgyi eszköz', avatar: '/eszkoz.png', app: 'leltar', role: 'viewer' },
+        { show: this.isLegrandUser, title: 'Legrand', avatar: '/legrand.png', app: 'legrand', role: 'user' },
+        { show: this.isChanceUser, title: 'Chance', avatar: '/chance.png', app: 'chance', role: 'user' },
+        { show: this.isLeltarUser, title: 'Tárgyi eszköz', avatar: '/eszkoz.png', app: 'leltar', role: 'user' }
       ]
     },
 
@@ -67,8 +82,10 @@ export default {
   methods: {
     select (item) {
       this.$store.set('app', item.app)
+      this.$store.set('role', item.role)
       this.$store.set('homePageTitle', item.title)
       this.$store.set('menuLevel', 1)
+      this.$store.set('appSelectTrigger', !this.appSelectTrigger)
     }
   },
 

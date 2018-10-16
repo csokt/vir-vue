@@ -25,6 +25,18 @@
 
         <v-list-tile
           value="true"
+          @click.stop="drawer = false"
+        >
+          <v-list-tile-action>
+            <v-icon>first_page</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>Menü bezárása</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+
+        <v-list-tile
+          value="true"
           @click.stop="$router.go(-1)"
         >
           <v-list-tile-action>
@@ -94,7 +106,7 @@ export default {
   },
 
   computed: {
-    ...get(['version', 'menuLevel', 'homePageTitle', 'modulePageTitle', 'app', 'user']),
+    ...get(['version', 'menuLevel', 'homePageTitle', 'modulePageTitle', 'appSelectTrigger', 'app', 'role', 'user']),
 
     title () {
       if (this.menuLevel === 0) return 'Vállalat Irányítási Rendszer'
@@ -104,20 +116,27 @@ export default {
 
     showItems () {
       const items = [
-        { app: 'legrand', path: '/te-info', icon: 'info', title: 'Legrand információk' },
-        { app: 'chance', path: '/te-info', icon: 'info', title: 'Chance információk' },
-        { app: 'leltar', path: '/te-info', icon: 'info', title: 'Tárgyi eszköz információk' },
-        { app: 'leltar', path: '/te-athelyezes', icon: 'exit_to_app', title: 'Tárgyi eszköz áthelyezés' },
-        { app: 'leltar', path: '/te-erkeztetes', icon: 'done', title: 'Tárgyi eszköz érkeztetés' },
-        { app: 'leltar', path: '/te-sztornozas', icon: 'stop', title: 'Tárgyi eszköz sztornózás' },
-        { app: 'leltar', path: '/te-leltar', icon: 'assignment', title: 'Tárgyi eszköz leltár' }
+        { app: 'legrand', role: 'viewer', path: '/te-info', icon: 'info', title: 'Legrand információk' },
+        { app: 'chance', role: 'viewer', path: '/te-info', icon: 'info', title: 'Chance információk' },
+        { app: 'leltar', role: 'viewer', path: '/te-info', icon: 'info', title: 'Tárgyi eszköz információk' },
+        { app: 'legrand', role: 'user', path: '/te-info', icon: 'info', title: 'Legrand információk' },
+        { app: 'chance', role: 'user', path: '/te-info', icon: 'info', title: 'Chance információk' },
+        { app: 'leltar', role: 'user', path: '/te-info', icon: 'info', title: 'Tárgyi eszköz információk' },
+        { app: 'leltar', role: 'user', path: '/te-athelyezes', icon: 'exit_to_app', title: 'Tárgyi eszköz áthelyezés' },
+        { app: 'leltar', role: 'user', path: '/te-erkeztetes', icon: 'done', title: 'Tárgyi eszköz érkeztetés' },
+        { app: 'leltar', role: 'user', path: '/te-sztornozas', icon: 'stop', title: 'Tárgyi eszköz sztornózás' },
+        { app: 'leltar', role: 'user', path: '/te-szemelynek', icon: 'person', title: 'Személyes használatra' },
+        { app: 'leltar', role: 'user', path: '/te-leltar', icon: 'assignment', title: 'Tárgyi eszköz leltár' }
       ]
-      return items.filter(o => o.app === this.app)
+      return items.filter(o => o.app === this.app && o.role === this.role)
     }
   },
 
   watch: {
     menuLevel: function () {
+      if (this.menuLevel === 1) this.drawer = true
+    },
+    appSelectTrigger: function () {
       if (this.menuLevel === 1) this.drawer = true
     },
     app: function () {
@@ -136,6 +155,7 @@ export default {
     async getUser (token) {
       if (token) {
         const response = await API.post('accounts/pulltoken/' + token)
+        // console.log(response)
         if (response.ok) {
           this.$store.commit('user', response.data.vir_user)
           API.setHeader('Authorization', response.data.loopback_token)

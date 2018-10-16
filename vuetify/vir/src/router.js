@@ -23,13 +23,17 @@ export default new Router({
     },
     {
       path: '/te-erkeztetes',
-      props: { title: 'érkeztetés', sztorno: false },
+      props: { sztorno: false },
       component: () => import(/* webpackChunkName: "erkeztetes" */ './views/targyi-eszkoz/Erkeztetes.vue')
     },
     {
       path: '/te-sztornozas',
-      props: { title: 'sztornózás', sztorno: true },
+      props: { sztorno: true },
       component: () => import(/* webpackChunkName: "erkeztetes" */ './views/targyi-eszkoz/Erkeztetes.vue')
+    },
+    {
+      path: '/te-szemelynek',
+      component: () => import(/* webpackChunkName: "szemelynek" */ './views/targyi-eszkoz/Szemelynek.vue')
     },
     {
       path: '/te-leltar',

@@ -77,8 +77,7 @@ export default {
         { show: this.showTir, title: 'Termelés Információs Rendszer', avatar: '/tir.png', href: 'https://mobilszefo.hopto.org:19532' },
         { show: this.showVir, title: 'Vállalat Irányítási Rendszer', avatar: '/vir.png', href: 'https://mobilszefo.hopto.org:19533' },
         { show: this.isLegrandUser, title: 'Legrand készlet', avatar: '/legrand.png', href: 'https://lir-keszlet.szefo.local' },
-        { show: this.isChanceUser, title: 'Chance készlet', avatar: '/chance.png', href: 'https://chance-keszlet.szefo.local' },
-        { show: this.isLoggedIn, title: 'Tárgyi eszköz információk', avatar: '/eszkozinfo.png', href: 'https://mobilszefo.hopto.org:19538' }
+        { show: this.isChanceUser, title: 'Chance készlet', avatar: '/chance.png', href: 'https://chance-keszlet.szefo.local' }
       ]
     },
 

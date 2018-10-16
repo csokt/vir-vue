@@ -65,6 +65,8 @@ export default {
 
   watch: {
     async search (content) {
+      console.log('content2', content)
+      // if (!content) { this.items = []; return }
       if (!content) { return }
       this.isLoading = true
       const response = await API.get(this.apiUrl(content))

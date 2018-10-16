@@ -34,7 +34,6 @@ export default {
   },
 
   props: {
-    title: String,
     sztorno: Boolean
   },
 
@@ -42,12 +41,6 @@ export default {
     return {
       reloadTrigger: false,
       mozgas: {}
-    }
-  },
-
-  watch: {
-    title: function () {
-      this.setTitle()
     }
   },
 
@@ -77,17 +70,12 @@ export default {
       }
     },
 
-    setTitle () {
-      this.$store.set('title', 'Tárgyi eszköz ' + this.title)
-    },
-
     scrollToTop () {
       window.scrollTo(0, 0)
     }
   },
 
   created () {
-    this.setTitle()
   },
 
   mounted () {
