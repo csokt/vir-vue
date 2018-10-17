@@ -3,7 +3,7 @@
     <v-layout justify-space-around wrap>
       <Card>
         <v-card-text>
-          <Autocomplete v-model="ujHasznaloId" label="Új használó" itemClass="body-2" :apiUrl="apiUrl" @change="ujHasznalo = $event"/>
+          <Autocomplete v-model="ujHasznaloId" label="Új használó" itemClass="body-2" :apiUrl="apiUrl"/>
           <Eszkoz v-model="leltariSzam"  @change="eszkoz = $event"/>
           <EszkozInfo :eszkoz="eszkoz"/>
         </v-card-text>
@@ -11,9 +11,9 @@
           <v-btn color="primary" :disabled="!atadhato" @click="atad">Használatba adás</v-btn>
         </v-card-actions>
       </Card>
-      <Card title="Eszköz mozgásai">
+      <Card title="Jelenleg használatban">
         <v-card-text>
-          <EszkozMozgas filter="eszkoz" :eszkoz="eszkoz"/>
+          <Eszkozhasznalo :hasznaloId="ujHasznaloId" :reloadTrigger="reloadTrigger"/>
         </v-card-text>
       </Card>
     </v-layout>
@@ -28,7 +28,7 @@ import Card from '@/components/base/Card.vue'
 import Autocomplete from '@/components/base/Autocomplete.vue'
 import Eszkoz from '@/components/targyi-eszkoz/Eszkoz.vue'
 import EszkozInfo from '@/components/targyi-eszkoz/EszkozInfo.vue'
-import EszkozMozgas from '@/components/targyi-eszkoz/EszkozMozgas.vue'
+import Eszkozhasznalo from '@/components/targyi-eszkoz/Eszkozhasznalo.vue'
 
 export default {
   name: 'szemelynek',
@@ -37,21 +37,21 @@ export default {
     Autocomplete,
     Eszkoz,
     EszkozInfo,
-    EszkozMozgas
+    Eszkozhasznalo
   },
 
   data () {
     return {
       ujHasznaloId: 0,
-      ujHasznalo: {},
       leltariSzam: '',
+      reloadTrigger: false,
       eszkoz: {}
     }
   },
 
   computed: {
     atadhato () {
-      return this.ujHasznalo.id && this.eszkoz.id && this.ujHasznalo.id !== this.eszkoz.akt_hasznalo_id[0]
+      return this.ujHasznaloId && this.eszkoz.id && this.ujHasznaloId !== this.eszkoz.akt_hasznalo_id[0]
     }
   },
 
@@ -62,13 +62,13 @@ export default {
     },
 
     async atad () {
-      // const leltariSzam = this.leltariSzam
-      // this.leltariSzam = ''
+      const leltariSzam = this.leltariSzam
       const row = {
         eszkoz_id: this.eszkoz.id,
-        uj_hasznalo_id: this.ujHasznalo.id,
+        uj_hasznalo_id: this.ujHasznaloId,
         megjegyzes: ''
       }
+      this.leltariSzam = ''
       const response = await API.post('vir/create/leltar.eszkozatvetel', row)
       if (response.ok) {
         EventBus.$emit('inform', { type: 'alert', variation: 'success', message: 'Átadva!' })
@@ -76,7 +76,8 @@ export default {
         EventBus.$emit('inform', { type: 'alert', variation: 'error', message: response.data.error.data.message })
         console.log(response)
       }
-      // setTimeout(() => { this.leltariSzam = leltariSzam }, 50)
+      this.reloadTrigger = !this.reloadTrigger
+      setTimeout(() => { this.leltariSzam = leltariSzam }, 50)
     }
   },
 

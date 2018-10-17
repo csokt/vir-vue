@@ -13,7 +13,7 @@
       </Card>
       <Card title="Eszköz mozgásai">
         <v-card-text>
-          <EszkozMozgas filter="eszkoz" :eszkoz="eszkoz"/>
+          <EszkozMozgas filter="eszkoz" :eszkoz="eszkoz" :reloadTrigger="reloadTrigger"/>
         </v-card-text>
       </Card>
     </v-layout>
@@ -43,6 +43,7 @@ export default {
       ujLeltarkorzetId: 0,
       ujLeltarkorzet: {},
       leltariSzam: '',
+      reloadTrigger: false,
       eszkoz: {}
     }
   },
@@ -61,11 +62,11 @@ export default {
 
     async athelyez () {
       const leltariSzam = this.leltariSzam
-      this.leltariSzam = ''
       const row = {
         eszkoz_id: this.eszkoz.id,
         hova_leltarkorzet_id: this.ujLeltarkorzet.id
       }
+      this.leltariSzam = ''
       const response = await API.post('vir/create/leltar.eszkozmozgas', row)
       if (response.ok) {
         EventBus.$emit('inform', { type: 'alert', variation: 'success', message: 'Áthelyezve!' })
