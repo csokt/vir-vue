@@ -6,9 +6,6 @@
     required
     @change="onChange"
   />
-<!--
-    @change="onChange"
--->
 </template>
 
 <script>
@@ -25,14 +22,16 @@ export default {
     value: String,
     label: String,
     apiUrl: Function,
+    reloadTrigger: Boolean,
     notFoundMessage: {
       type: String,
       default: 'A keresett adat nem található!'
     }
   },
 
-  data () {
-    return {
+  watch: {
+    reloadTrigger: function () {
+      this.onChange(this.value)
     }
   },
 

@@ -30,7 +30,7 @@ export default {
   props: {
     filter: String,
     reloadTrigger: Boolean,
-    eszkoz: Object
+    eszkozId: Number
   },
 
   data () {
@@ -43,7 +43,7 @@ export default {
     reloadTrigger: function () {
       this.readMozgas()
     },
-    eszkoz: function () {
+    eszkozId: function () {
       this.readMozgas()
     }
   },
@@ -51,8 +51,8 @@ export default {
   methods: {
     async readMozgas () {
       let params
-      if (this.filter === 'eszkoz' && this.eszkoz) {
-        params = { domain: [['eszkoz_id', '=', this.eszkoz.id]], frontend: true }
+      if (this.filter === 'eszkoz' && this.eszkozId) {
+        params = { domain: [['eszkoz_id', '=', this.eszkozId]], frontend: true }
       } else if (this.filter === 'erkeztetes') {
         params = { domain: [['megerkezett', '=', false]], limit: 100, frontend: true }
       }

@@ -5,6 +5,7 @@
     label="Leltári szám"
     :apiUrl="apiUrl"
     @change="$emit('change', $event)"
+    :reloadTrigger="reloadTrigger"
   />
 <!--
 -->
@@ -20,7 +21,8 @@ export default {
   },
 
   props: {
-    value: String
+    value: String,
+    reloadTrigger: Boolean
   },
 
   methods: {

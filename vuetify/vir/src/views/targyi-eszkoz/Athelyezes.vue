@@ -4,7 +4,7 @@
       <Card>
         <v-card-text>
           <Autocomplete v-model="ujLeltarkorzetId" label="Új leltárkörzet" itemClass="body-2" :apiUrl="apiUrl" @change="ujLeltarkorzet = $event"/>
-          <Eszkoz v-model="leltariSzam"  @change="eszkoz = $event"/>
+          <Eszkoz v-model="leltariSzam" :reloadTrigger="reloadTrigger" @change="eszkoz = $event"/>
           <EszkozInfo :eszkoz="eszkoz"/>
         </v-card-text>
         <v-card-actions>
@@ -13,7 +13,7 @@
       </Card>
       <Card title="Eszköz mozgásai">
         <v-card-text>
-          <EszkozMozgas filter="eszkoz" :eszkoz="eszkoz" :reloadTrigger="reloadTrigger"/>
+          <EszkozMozgas filter="eszkoz" :eszkozId="eszkoz.id" :reloadTrigger="reloadTrigger"/>
         </v-card-text>
       </Card>
     </v-layout>
@@ -61,12 +61,10 @@ export default {
     },
 
     async athelyez () {
-      const leltariSzam = this.leltariSzam
       const row = {
         eszkoz_id: this.eszkoz.id,
         hova_leltarkorzet_id: this.ujLeltarkorzet.id
       }
-      this.leltariSzam = ''
       const response = await API.post('vir/create/leltar.eszkozmozgas', row)
       if (response.ok) {
         EventBus.$emit('inform', { type: 'alert', variation: 'success', message: 'Áthelyezve!' })
@@ -74,11 +72,8 @@ export default {
         EventBus.$emit('inform', { type: 'alert', variation: 'error', message: response.data.error.data.message })
         console.log(response)
       }
-      setTimeout(() => { this.leltariSzam = leltariSzam }, 50)
+      this.reloadTrigger = !this.reloadTrigger
     }
-  },
-
-  created () {
   }
 }
 </script>

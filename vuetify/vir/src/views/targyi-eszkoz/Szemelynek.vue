@@ -4,7 +4,7 @@
       <Card>
         <v-card-text>
           <Autocomplete v-model="ujHasznaloId" label="Új használó" itemClass="body-2" :apiUrl="apiUrl"/>
-          <Eszkoz v-model="leltariSzam"  @change="eszkoz = $event"/>
+          <Eszkoz v-model="leltariSzam" :reloadTrigger="reloadTrigger" @change="eszkoz = $event"/>
           <EszkozInfo :eszkoz="eszkoz"/>
         </v-card-text>
         <v-card-actions>
@@ -62,13 +62,11 @@ export default {
     },
 
     async atad () {
-      const leltariSzam = this.leltariSzam
       const row = {
         eszkoz_id: this.eszkoz.id,
         uj_hasznalo_id: this.ujHasznaloId,
         megjegyzes: ''
       }
-      this.leltariSzam = ''
       const response = await API.post('vir/create/leltar.eszkozatvetel', row)
       if (response.ok) {
         EventBus.$emit('inform', { type: 'alert', variation: 'success', message: 'Átadva!' })
@@ -77,11 +75,7 @@ export default {
         console.log(response)
       }
       this.reloadTrigger = !this.reloadTrigger
-      setTimeout(() => { this.leltariSzam = leltariSzam }, 50)
     }
-  },
-
-  created () {
   }
 }
 </script>
