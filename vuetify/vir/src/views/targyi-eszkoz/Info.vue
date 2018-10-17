@@ -9,7 +9,7 @@
       </Card>
       <Card title="Eszköz mozgásai">
         <v-card-text>
-          <EszkozMozgas filter="eszkoz" :eszkoz="eszkoz"/>
+          <EszkozMozgas filter="eszkoz" :eszkozId="eszkoz.id"/>
         </v-card-text>
       </Card>
     </v-layout>
@@ -36,10 +36,6 @@ export default {
       leltariSzam: '',
       eszkoz: {}
     }
-  },
-
-  created () {
-    this.$store.set('title', 'Tárgyi eszköz információk')
   }
 }
 </script>

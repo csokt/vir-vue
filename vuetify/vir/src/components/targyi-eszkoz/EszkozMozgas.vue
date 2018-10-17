@@ -67,9 +67,6 @@ export default {
     utc2local (utc) {
       return new Date(utc.replace(/ /, 'T') + 'Z').toLocaleString()
     }
-  },
-
-  created () {
   }
 }
 </script>

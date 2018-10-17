@@ -75,9 +75,6 @@ export default {
     }
   },
 
-  created () {
-  },
-
   mounted () {
     this.reloadTrigger = !this.reloadTrigger
   }
