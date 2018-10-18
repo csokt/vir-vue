@@ -1,10 +1,12 @@
 <template>
   <div>
-    <v-text-field
+    <v-textarea
       v-for="row in eszkozok"
       :key="row.id"
       v-model="row.name"
       :label="utc2local(row.write_date)"
+      rows="1"
+      auto-grow
       readonly
       @click.stop="$emit('select', row)"
     />

@@ -1,14 +1,15 @@
 <template>
   <div>
-    <v-text-field
+    <v-textarea
       :value="value"
       :label="label"
       readonly
+      rows="1"
+      auto-grow
       @focus="dialog = !value"
       append-outer-icon="select_all"
       @click:append-outer="dialog = true"
-    >
-    </v-text-field>
+    />
     <Qreader
       :value="value"
       :label="label"

@@ -14,8 +14,7 @@
           @click:prepend="onBack"
           :append-outer-icon="readonly ? '' : 'send'"
           @click:append-outer="onDecode(lazyValue)"
-        >
-        </v-text-field>
+        />
       </v-card-text>
       <v-img :contain="false">
         <QrcodeReader

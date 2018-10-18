@@ -1,11 +1,11 @@
 <template>
   <div>
-    <v-text-field v-model="eszkoznev" label="Eszköz" readonly />
-    <v-text-field v-model="honnan" label="Honnan" readonly />
-    <v-text-field v-model="hova" label="Hova" readonly />
-    <v-text-field v-model="felvetel" label="Felvétel ideje" readonly />
-    <v-text-field v-if="mozgas.megjegyzes" v-model="mozgas.megjegyzes" label="Megjegyzés" readonly />
-    <v-checkbox v-model="mozgas.megerkezett" label="Megérkezett?" readonly />
+    <v-textarea v-model="eszkoznev" label="Eszköz" rows="1" auto-grow readonly/>
+    <v-textarea v-model="honnan" label="Honnan" rows="1" auto-grow readonly/>
+    <v-textarea v-model="hova" label="Hova" rows="1" auto-grow readonly/>
+    <v-textarea v-model="felvetel" label="Felvétel ideje" rows="1" auto-grow readonly/>
+    <v-textarea v-if="mozgas.megjegyzes" v-model="mozgas.megjegyzes" label="Megjegyzés" rows="1" auto-grow readonly/>
+    <v-checkbox v-model="mozgas.megerkezett" label="Megérkezett?" rows="1" auto-grow readonly/>
   </div>
 </template>
 
