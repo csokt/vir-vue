@@ -69,7 +69,7 @@ export default {
 
   computed: {
     camera () {
-      if (this.$vuetify.breakpoint.xs) {
+      if (this.$vuetify.breakpoint.smAndDown) {
         return {}
       }
       return { facingMode: 'user' }

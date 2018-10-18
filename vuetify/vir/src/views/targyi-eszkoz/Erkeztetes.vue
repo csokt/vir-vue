@@ -1,6 +1,11 @@
 <template>
   <v-container grid-list-lg>
     <v-layout justify-space-around wrap>
+      <Card title="Választható eszközök">
+        <v-card-text>
+          <EszkozMozgas filter="erkeztetes" :reloadTrigger="reloadTrigger" @select="onSelect($event)"/>
+        </v-card-text>
+      </Card>
       <Card>
         <v-card-text>
           <MozgasInfo :mozgas="mozgas"/>
@@ -9,11 +14,6 @@
           <v-btn v-if="!sztorno" color="primary" :disabled="mozgas.megerkezett" @click="erkeztet">Érkeztetés</v-btn>
           <v-btn v-if="sztorno" color="primary" :disabled="mozgas.megerkezett" @click="sztornoz">Sztornózás</v-btn>
         </v-card-actions>
-      </Card>
-      <Card title="Választható eszközök">
-        <v-card-text>
-          <EszkozMozgas filter="erkeztetes" :reloadTrigger="reloadTrigger" @select="mozgas = $event; scrollToTop()"/>
-        </v-card-text>
       </Card>
     </v-layout>
   </v-container>
@@ -44,6 +44,13 @@ export default {
     }
   },
 
+  computed: {
+    toY () {
+      if (this.$vuetify.breakpoint.xs) return this.$vuetify.breakpoint.height
+      return 0
+    }
+  },
+
   methods: {
     async erkeztet () {
       const row = { megerkezett: true }
@@ -70,8 +77,11 @@ export default {
       }
     },
 
-    scrollToTop () {
-      window.scrollTo(0, 0)
+    async onSelect (mozgas) {
+      this.mozgas = mozgas
+      await this.$nextTick()
+      const toY = this.$vuetify.breakpoint.smAndDown ? this.$vuetify.breakpoint.height : 0
+      window.scrollTo(0, toY)
     }
   },
 
