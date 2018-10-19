@@ -6,13 +6,12 @@ import { make } from 'vuex-pathify'
 Vue.use(Vuex)
 
 const state = {
-  version: '18.10.17',
+  version: '18.10.19',
   menuLevel: 0, // 0: home page && no app;  1: home page && app selected;   2: app's module page
   homePageTitle: '', // page title if menuLevel === 1
   modulePageTitle: '', // page title if menuLevel === 2
   appSelectTrigger: false,
   app: 'none',
-  role: 'none',
   user: {}
 }
 

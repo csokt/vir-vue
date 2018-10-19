@@ -27,7 +27,7 @@ export default {
 
   methods: {
     apiUrl (content) {
-      const params = { domain: [['leltari_szam', '=', content]], frontend: true }
+      const params = { domain: [['leltari_szam', '=', content]] }
       return 'vir/searchRead/leltar.eszkoz?params=' + JSON.stringify(params)
     }
   }

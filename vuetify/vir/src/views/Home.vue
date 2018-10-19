@@ -27,7 +27,7 @@
 
 <script>
 import { get } from 'vuex-pathify'
-// import { API, EventBus } from '@/util.js'
+import { groupId } from '@/util.js'
 import Card from '@/components/base/Card.vue'
 
 export default {
@@ -39,50 +39,19 @@ export default {
   computed: {
     ...get(['menuLevel', 'appSelectTrigger', 'user']),
 
-    isLeltarViewer () {
-      return this.user && this.user.groups_id.includes(18) && !this.user.groups_id.includes(19)
-    },
-
-    isLeltarUser () {
-      return this.user && this.user.groups_id.includes(19)
-    },
-
-    isChanceViewer () {
-      return this.user && this.user.groups_id.includes(57) && !this.user.groups_id.includes(58)
-    },
-
-    isChanceUser () {
-      return this.user && this.user.groups_id.includes(58)
-    },
-
-    isLegrandViewer () {
-      return this.user && this.user.groups_id.includes(66) && !this.user.groups_id.includes(67)
-    },
-
-    isLegrandUser () {
-      return this.user && this.user.groups_id.includes(67)
-    },
-
-    apps () {
-      return [
-        { show: this.isLegrandViewer, title: 'Legrand', avatar: '/legrand.png', app: 'legrand', role: 'viewer' },
-        { show: this.isChanceViewer, title: 'Chance', avatar: '/chance.png', app: 'chance', role: 'viewer' },
-        { show: this.isLeltarViewer, title: 'Tárgyi eszköz', avatar: '/eszkoz.png', app: 'leltar', role: 'viewer' },
-        { show: this.isLegrandUser, title: 'Legrand', avatar: '/legrand.png', app: 'legrand', role: 'user' },
-        { show: this.isChanceUser, title: 'Chance', avatar: '/chance.png', app: 'chance', role: 'user' },
-        { show: this.isLeltarUser, title: 'Tárgyi eszköz', avatar: '/eszkoz.png', app: 'leltar', role: 'user' }
-      ]
-    },
-
     showApps () {
-      return this.apps.filter(o => o.show)
+      const apps = [
+        { groupId: groupId.LegrandViewer, title: 'Legrand', avatar: '/legrand.png', app: 'legrand' },
+        { groupId: groupId.ChanceViewer, title: 'Chance', avatar: '/chance.png', app: 'chance' },
+        { groupId: groupId.LeltarViewer, title: 'Tárgyi eszköz', avatar: '/eszkoz.png', app: 'leltar' }
+      ]
+      return apps.filter(app => this.user.groups_id.includes(app.groupId))
     }
   },
 
   methods: {
     select (item) {
       this.$store.set('app', item.app)
-      this.$store.set('role', item.role)
       this.$store.set('homePageTitle', item.title)
       this.$store.set('menuLevel', 1)
       this.$store.set('appSelectTrigger', !this.appSelectTrigger)

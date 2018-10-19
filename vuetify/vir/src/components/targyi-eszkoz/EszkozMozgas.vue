@@ -56,9 +56,9 @@ export default {
     async readMozgas () {
       let params
       if (this.filter === 'eszkoz' && this.eszkozId) {
-        params = { domain: [['eszkoz_id', '=', this.eszkozId]], frontend: true }
+        params = { domain: [['eszkoz_id', '=', this.eszkozId]] }
       } else if (this.filter === 'erkeztetes') {
-        params = { domain: [['megerkezett', '=', false]], limit: 100, frontend: true }
+        params = { domain: [['megerkezett', '=', false]], limit: 100 }
       }
       if (params) {
         const response = await API.get('vir/searchRead/leltar.eszkozmozgas?params=' + JSON.stringify(params))

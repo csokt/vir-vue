@@ -57,7 +57,7 @@ export default {
 
   methods: {
     apiUrl (content) {
-      const params = { domain: [['name', 'ilike', content]], limit: 8, frontend: true }
+      const params = { domain: [['name', 'ilike', content]], limit: 8 }
       return 'vir/searchRead/hr.employee?params=' + JSON.stringify(params)
     },
 

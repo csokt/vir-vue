@@ -89,7 +89,7 @@
 <script>
 import { get } from 'vuex-pathify'
 import Inform from '@/components/base/Inform.vue'
-import { API, EventBus } from '@/util'
+import { API, EventBus, groupId } from '@/util'
 
 export default {
   name: 'App',
@@ -106,7 +106,7 @@ export default {
   },
 
   computed: {
-    ...get(['version', 'menuLevel', 'homePageTitle', 'modulePageTitle', 'appSelectTrigger', 'app', 'role', 'user']),
+    ...get(['version', 'menuLevel', 'homePageTitle', 'modulePageTitle', 'appSelectTrigger', 'app', 'user']),
 
     title () {
       if (this.menuLevel === 0) return 'Vállalat Irányítási Rendszer'
@@ -116,19 +116,16 @@ export default {
 
     showItems () {
       const items = [
-        { app: 'legrand', role: 'viewer', path: '/te-info', icon: 'info', title: 'Legrand információk' },
-        { app: 'chance', role: 'viewer', path: '/te-info', icon: 'info', title: 'Chance információk' },
-        { app: 'leltar', role: 'viewer', path: '/te-info', icon: 'info', title: 'Tárgyi eszköz információk' },
-        { app: 'legrand', role: 'user', path: '/te-info', icon: 'info', title: 'Legrand információk' },
-        { app: 'chance', role: 'user', path: '/te-info', icon: 'info', title: 'Chance információk' },
-        { app: 'leltar', role: 'user', path: '/te-info', icon: 'info', title: 'Tárgyi eszköz információk' },
-        { app: 'leltar', role: 'user', path: '/te-athelyezes', icon: 'exit_to_app', title: 'Tárgyi eszköz áthelyezés' },
-        { app: 'leltar', role: 'user', path: '/te-erkeztetes', icon: 'done', title: 'Tárgyi eszköz érkeztetés' },
-        { app: 'leltar', role: 'user', path: '/te-sztornozas', icon: 'stop', title: 'Tárgyi eszköz sztornózás' },
-        { app: 'leltar', role: 'user', path: '/te-szemelynek', icon: 'person', title: 'Személyes használatra' },
-        { app: 'leltar', role: 'user', path: '/te-leltar', icon: 'assignment', title: 'Tárgyi eszköz leltár' }
+        { groupId: groupId.LegrandViewer, app: 'legrand', path: '/te-info', icon: 'info', title: 'Legrand információk' },
+        { groupId: groupId.ChanceViewer, app: 'chance', path: '/te-info', icon: 'info', title: 'Chance információk' },
+        { groupId: groupId.LeltarViewer, app: 'leltar', path: '/te-info', icon: 'info', title: 'Tárgyi eszköz információk' },
+        { groupId: groupId.LeltarUser, app: 'leltar', path: '/te-athelyezes', icon: 'exit_to_app', title: 'Tárgyi eszköz áthelyezés' },
+        { groupId: groupId.LeltarUser, app: 'leltar', path: '/te-erkeztetes', icon: 'done', title: 'Tárgyi eszköz érkeztetés' },
+        { groupId: groupId.LeltarUser, app: 'leltar', path: '/te-sztornozas', icon: 'stop', title: 'Tárgyi eszköz sztornózás' },
+        { groupId: groupId.LeltarUser, app: 'leltar', path: '/te-szemelynek', icon: 'person', title: 'Személyes használatra' },
+        { groupId: groupId.LeltarUser, app: 'leltar', path: '/te-leltar', icon: 'assignment', title: 'Tárgyi eszköz leltár' }
       ]
-      return items.filter(o => o.app === this.app && o.role === this.role)
+      return items.filter(item => item.app === this.app && this.user.groups_id.includes(item.groupId))
     }
   },
 

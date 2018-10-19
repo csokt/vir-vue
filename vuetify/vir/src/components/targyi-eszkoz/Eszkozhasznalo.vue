@@ -42,7 +42,7 @@ export default {
   methods: {
     async readEszkozok () {
       if (!this.hasznaloId) { this.eszkozok = []; return }
-      const params = { domain: [['akt_hasznalo_id', '=', this.hasznaloId]], frontend: true }
+      const params = { domain: [['akt_hasznalo_id', '=', this.hasznaloId]] }
       const response = await API.get('vir/searchRead/leltar.eszkoz?params=' + JSON.stringify(params))
       this.eszkozok = response.data
     },

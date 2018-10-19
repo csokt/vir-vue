@@ -12,4 +12,13 @@ const API = apisauce.create({
 
 const EventBus = new Vue()
 
-export { API, EventBus }
+const groupId = {
+  LeltarViewer: 18,
+  LeltarUser: 19,
+  ChanceViewer: 57,
+  ChanceUser: 58,
+  LegrandViewer: 66,
+  LegrandUser: 67
+}
+
+export { API, EventBus, groupId }
