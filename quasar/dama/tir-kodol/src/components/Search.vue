@@ -71,7 +71,7 @@ export default {
           'meo': RegExp('^Lefordított|^Konfekci|^Fotó|^Teljes fotó|^Videó|^Egyéb'),
           'kódoló': RegExp('^Fotó|^Egyéb')
         }
-        const response = await HTTP.get('api2/search/?q=' + this.search)
+        const response = await HTTP.get('api2/search/?per_page=200&q=' + this.search)
         const regexp1 = filter[this.store.user.role]
         const regexp2 = RegExp(this.search + '\\.')
         const results = response.data.results.filter(x => !x.is_dir && regexp1.test(x.name) && regexp2.test(x.name))

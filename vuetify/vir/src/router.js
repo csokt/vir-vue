@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home.vue'
+import VirMenu from './views/VirMenu.vue'
 // import Info from './views/Info.vue'
 
 Vue.use(Router)
@@ -14,29 +15,44 @@ export default new Router({
       component: Home
     },
     {
-      path: '/te-info',
+      path: '/legrand',
+      props: { app: 'legrand' },
+      component: VirMenu
+    },
+    {
+      path: '/chance',
+      props: { app: 'chance' },
+      component: VirMenu
+    },
+    {
+      path: '/targyi-eszkoz',
+      props: { app: 'targyi-eszkoz' },
+      component: VirMenu
+    },
+    {
+      path: '/targyi-eszkoz-info',
       component: () => import(/* webpackChunkName: "info" */ './views/targyi-eszkoz/Info.vue')
     },
     {
-      path: '/te-athelyezes',
+      path: '/targyi-eszkoz-athelyezes',
       component: () => import(/* webpackChunkName: "athelyezes" */ './views/targyi-eszkoz/Athelyezes.vue')
     },
     {
-      path: '/te-erkeztetes',
+      path: '/targyi-eszkoz-erkeztetes',
       props: { sztorno: false },
       component: () => import(/* webpackChunkName: "erkeztetes" */ './views/targyi-eszkoz/Erkeztetes.vue')
     },
     {
-      path: '/te-sztornozas',
+      path: '/targyi-eszkoz-sztornozas',
       props: { sztorno: true },
       component: () => import(/* webpackChunkName: "erkeztetes" */ './views/targyi-eszkoz/Erkeztetes.vue')
     },
     {
-      path: '/te-szemelynek',
+      path: '/targyi-eszkoz-szemelynek',
       component: () => import(/* webpackChunkName: "szemelynek" */ './views/targyi-eszkoz/Szemelynek.vue')
     },
     {
-      path: '/te-leltar',
+      path: '/targyi-eszkoz-leltar',
       component: () => import(/* webpackChunkName: "leltar" */ './views/targyi-eszkoz/Leltar.vue')
     }
   ]

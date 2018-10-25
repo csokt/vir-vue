@@ -2,7 +2,7 @@
   <v-container>
     <v-layout justify-space-around wrap>
       <Card v-if="user.id" elevation="elevation-1">
-        <Menu :items="showApps" @select="select($event)"/>
+        <Menu :items="showItems" @select="select($event)"/>
       </Card>
       <Card v-if="!user.id" title="Kérem jelentkezzen be!">
       </Card>
@@ -28,30 +28,27 @@ export default {
   },
 
   computed: {
-    ...get(['menuLevel', 'appSelectTrigger', 'user']),
+    ...get(['user']),
 
-    showApps () {
+    showItems () {
       if (!this.user.id) return []
-      const apps = [
-        { groupId: groupId.LegrandViewer, title: 'Legrand', avatar: '/legrand.png', app: 'legrand' },
-        { groupId: groupId.ChanceViewer, title: 'Chance', avatar: '/chance.png', app: 'chance' },
-        { groupId: groupId.LeltarViewer, title: 'Tárgyi eszköz', avatar: '/eszkoz.png', app: 'leltar' }
+      const items = [
+        { groupId: groupId.LegrandViewer, title: 'Legrand', avatar: '/legrand.png', path: '/legrand' },
+        { groupId: groupId.ChanceViewer, title: 'Chance', avatar: '/chance.png', path: '/chance' },
+        { groupId: groupId.LeltarViewer, title: 'Tárgyi eszköz', avatar: '/eszkoz.png', path: '/targyi-eszkoz' }
       ]
-      return apps.filter(app => this.user.groups_id.includes(app.groupId))
+      return items.filter(item => this.user.groups_id.includes(item.groupId))
     }
   },
 
   methods: {
     select (item) {
-      this.$store.set('app', item.app)
-      this.$store.set('homePageTitle', item.title)
-      this.$store.set('menuLevel', 1)
-      this.$store.set('appSelectTrigger', !this.appSelectTrigger)
+      this.$store.set('appPageTitle', item.title)
     }
   },
 
   created () {
-    if (this.menuLevel > 1) this.$store.set('menuLevel', 1)
+    this.$store.set('menuLevel', 0)
   }
 }
 </script>
