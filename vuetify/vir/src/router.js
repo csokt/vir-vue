@@ -30,6 +30,10 @@ export default new Router({
       component: VirMenu
     },
     {
+      path: '/chance-cikkinfo',
+      component: () => import(/* webpackChunkName: "info" */ './views/chance/Info.vue')
+    },
+    {
       path: '/targyi-eszkoz-info',
       component: () => import(/* webpackChunkName: "info" */ './views/targyi-eszkoz/Info.vue')
     },

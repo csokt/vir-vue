@@ -4,7 +4,7 @@
     @input="$emit('input', $event)"
     :items="items"
     :loading="isLoading"
-    :search-input.sync="search"
+    :search-input.sync="searchInput"
     clearable
     @click:clear="items = []"
     no-filter
@@ -39,6 +39,7 @@ export default {
     value: [String, Number],
     label: String,
     apiUrl: Function,
+    parentSearch: String,
     itemText: {
       type: String,
       default: 'name'
@@ -59,11 +60,21 @@ export default {
 
   data: () => ({
     isLoading: false,
-    search: null,
+    searchInput: null,
     items: []
   }),
 
   watch: {
+    searchInput (content) {
+      this.search(content)
+    },
+
+    parentSearch (content) {
+      this.search(content)
+    }
+  },
+
+  methods: {
     async search (content) {
       if (!content) { return }
       this.isLoading = true
@@ -72,10 +83,8 @@ export default {
       if (response.ok) {
         this.items = response.data
       }
-    }
-  },
+    },
 
-  methods: {
     onChange (content) {
       const obj = this.items.find(o => o[this.itemValue] === content) || {}
       this.$emit('change', obj)
