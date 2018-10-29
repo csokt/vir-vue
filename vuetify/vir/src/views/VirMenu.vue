@@ -34,6 +34,7 @@ export default {
       const items = [
         { groupId: groupId.LegrandViewer, app: 'legrand', path: '/targyi-eszkoz-info', icon: 'info', title: 'Készlet információk' },
         { groupId: groupId.ChanceViewer, app: 'chance', path: '/chance-cikkinfo', icon: 'info', title: 'Termék információk' },
+        { groupId: groupId.ChanceViewer, app: 'chance', path: '/chance-keszlet', icon: 'info', title: 'Készlet információk' },
         { groupId: groupId.LeltarViewer, app: 'targyi-eszkoz', path: '/targyi-eszkoz-info', icon: 'info', title: 'Tárgyi eszköz információk' },
         { groupId: groupId.LeltarUser, app: 'targyi-eszkoz', path: '/targyi-eszkoz-athelyezes', icon: 'exit_to_app', title: 'Tárgyi eszköz áthelyezés' },
         { groupId: groupId.LeltarUser, app: 'targyi-eszkoz', path: '/targyi-eszkoz-erkeztetes', icon: 'done', title: 'Tárgyi eszköz érkeztetés' },

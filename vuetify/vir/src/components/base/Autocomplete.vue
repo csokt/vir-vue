@@ -87,7 +87,7 @@ export default {
 
     onChange (content) {
       const obj = this.items.find(o => o[this.itemValue] === content) || {}
-      this.$emit('change', obj)
+      this.$emit('change', { ...obj })
     }
   }
 }

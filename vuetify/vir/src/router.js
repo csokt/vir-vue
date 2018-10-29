@@ -34,6 +34,10 @@ export default new Router({
       component: () => import(/* webpackChunkName: "info" */ './views/chance/Info.vue')
     },
     {
+      path: '/chance-keszlet',
+      component: () => import(/* webpackChunkName: "keszlet" */ './views/chance/Keszlet.vue')
+    },
+    {
       path: '/targyi-eszkoz-info',
       component: () => import(/* webpackChunkName: "info" */ './views/targyi-eszkoz/Info.vue')
     },

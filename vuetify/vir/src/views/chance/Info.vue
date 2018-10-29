@@ -15,10 +15,6 @@
       </Card>
     </v-layout>
   </v-container>
-<!--
-          <CikkByVonalkod v-model="vonalkod"  @change="cikk = $event"/>
-          <Autocomplete v-model="CikkId" label="Cikkazonosító" itemClass="body-2" :apiUrl="apiUrl" @change="cikk = $event"/>
--->
 </template>
 
 <script>
@@ -40,8 +36,6 @@ export default {
 
   data () {
     return {
-      CikkId: 0,
-      vonalkod: '',
       cikk: {}
     }
   },

@@ -13,9 +13,6 @@
 export default {
   props: {
     cikk: Object
-  },
-
-  computed: {
   }
 }
 </script>
