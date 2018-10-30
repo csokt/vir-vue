@@ -29,10 +29,6 @@ export default {
       return this.store.user.main_role === 'admin'
     },
 
-    isLoggedIn () {
-      return !!this.store.user
-    },
-
     showTV () {
       return !!this.store.user.tv_role
     },
@@ -45,17 +41,12 @@ export default {
       return this.store.virUser
     },
 
-    isLegrandViewer () {
-      return this.store.virUser && this.store.virUser.groups_id.includes(66)
-    },
-
     apps () {
       return [
         { show: this.store.teszt, title: 'Teszt program', avatar: '/favicon.ico', href: 'https://tibor.szefo.local:9443' },
         { show: this.showTV, title: 'TV távvezérlés', avatar: '/tv-remote.png', href: 'https://mobilszefo.hopto.org:19531' },
         { show: this.showTir, title: 'Termelés Információs Rendszer', avatar: '/tir.png', href: 'https://mobilszefo.hopto.org:19532' },
-        { show: this.showVir, title: 'Vállalat Irányítási Rendszer', avatar: '/vir.png', href: 'https://mobilszefo.hopto.org:19533' },
-        { show: this.isLegrandViewer, title: 'Legrand készlet', avatar: '/legrand.png', href: 'https://lir-keszlet.szefo.local' }
+        { show: this.showVir, title: 'Vállalat Irányítási Rendszer', avatar: '/vir.png', href: 'https://mobilszefo.hopto.org:19533' }
       ]
     },
 

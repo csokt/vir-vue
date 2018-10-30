@@ -30,38 +30,42 @@ export default new Router({
       component: VirMenu
     },
     {
+      path: '/legrand-cikkinfo',
+      component: () => import(/* webpackChunkName: "legrand-cikkinfo" */ './views/legrand/Info.vue')
+    },
+    {
       path: '/chance-cikkinfo',
-      component: () => import(/* webpackChunkName: "info" */ './views/chance/Info.vue')
+      component: () => import(/* webpackChunkName: "chance-cikkinfo" */ './views/chance/Info.vue')
     },
     {
       path: '/chance-keszlet',
-      component: () => import(/* webpackChunkName: "keszlet" */ './views/chance/Keszlet.vue')
+      component: () => import(/* webpackChunkName: "chance-keszlet" */ './views/chance/Keszlet.vue')
     },
     {
       path: '/targyi-eszkoz-info',
-      component: () => import(/* webpackChunkName: "info" */ './views/targyi-eszkoz/Info.vue')
+      component: () => import(/* webpackChunkName: "targyi-eszkoz-info" */ './views/targyi-eszkoz/Info.vue')
     },
     {
       path: '/targyi-eszkoz-athelyezes',
-      component: () => import(/* webpackChunkName: "athelyezes" */ './views/targyi-eszkoz/Athelyezes.vue')
+      component: () => import(/* webpackChunkName: "targyi-eszkoz-athelyezes" */ './views/targyi-eszkoz/Athelyezes.vue')
     },
     {
       path: '/targyi-eszkoz-erkeztetes',
       props: { sztorno: false },
-      component: () => import(/* webpackChunkName: "erkeztetes" */ './views/targyi-eszkoz/Erkeztetes.vue')
+      component: () => import(/* webpackChunkName: "targyi-eszkoz-erkeztetes" */ './views/targyi-eszkoz/Erkeztetes.vue')
     },
     {
       path: '/targyi-eszkoz-sztornozas',
       props: { sztorno: true },
-      component: () => import(/* webpackChunkName: "erkeztetes" */ './views/targyi-eszkoz/Erkeztetes.vue')
+      component: () => import(/* webpackChunkName: "targyi-eszkoz-sztornozas" */ './views/targyi-eszkoz/Erkeztetes.vue')
     },
     {
       path: '/targyi-eszkoz-szemelynek',
-      component: () => import(/* webpackChunkName: "szemelynek" */ './views/targyi-eszkoz/Szemelynek.vue')
+      component: () => import(/* webpackChunkName: "targyi-eszkoz-szemelynek" */ './views/targyi-eszkoz/Szemelynek.vue')
     },
     {
       path: '/targyi-eszkoz-leltar',
-      component: () => import(/* webpackChunkName: "leltar" */ './views/targyi-eszkoz/Leltar.vue')
+      component: () => import(/* webpackChunkName: "targyi-eszkoz-leltar" */ './views/targyi-eszkoz/Leltar.vue')
     }
   ]
 })

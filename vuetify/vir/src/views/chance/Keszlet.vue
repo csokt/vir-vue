@@ -12,19 +12,7 @@
 
       <Card title="Készlet">
         <v-card-text>
-        <v-data-table
-          :headers="headers"
-          :items="keszlet"
-          no-data-text="Nincs készleten"
-          hide-actions
-        >
-          <template slot="items" slot-scope="props">
-            <td>{{ props.item.meret }}</td>
-            <td>{{ props.item.szin }}</td>
-            <td class="text-xs-right">{{ props.item.vonalkod }}</td>
-            <td class="text-xs-right">{{ props.item.raktaron }}</td>
-          </template>
-        </v-data-table>
+          <KeszletTable :searchParams="keszletSearchParams"/>
         </v-card-text>
       </Card>
     </v-layout>
@@ -37,12 +25,14 @@
 import { API } from '@/util'
 import Card from '@/components/base/Card.vue'
 import Autocomplete from '@/components/base/Autocomplete.vue'
+import KeszletTable from '@/components/chance/KeszletTable.vue'
 
 export default {
   name: 'keszlet',
   components: {
     Card,
-    Autocomplete
+    Autocomplete,
+    KeszletTable
   },
 
   data () {
@@ -50,17 +40,8 @@ export default {
       helyId: 0,
       cikkszam: '',
       osztaly: '1',
-      helynev: '',
       hely: {},
-      cikk: {},
-      headers: [
-        { text: 'Méret', value: 'meret' },
-        { text: 'Szín', value: 'szin' },
-        { text: 'Vonalkód', value: 'vonalkod', align: 'right' },
-        { text: 'Raktáron', value: 'raktaron', align: 'right', width: '1%' }
-      ],
-      keszlet: [],
-      message: ''
+      cikk: {}
     }
   },
 
@@ -81,15 +62,6 @@ export default {
       if (response.ok && response.data.length) {
         this.cikk = response.data[0]
       }
-    },
-
-    keszletSearchParams: async function (params) {
-      this.keszlet = []
-      if (!params) { return }
-      const response = await API.get('vir/searchRead/chance.keszlet?params=' + params)
-      if (response.ok) {
-        this.keszlet = response.data
-      }
     }
   },
 
@@ -97,11 +69,6 @@ export default {
     apiUrl (content) {
       const params = { domain: [['name', 'ilike', content], ['szefo_e', '=', true]], order: 'name', limit: 10 }
       return 'vir/searchRead/chance.hely?params=' + JSON.stringify(params)
-    },
-
-    checkOsztaly (value) {
-      this.osztaly = this.osztaly.toUpperCase()
-      this.readKeszlet()
     }
   }
 }
