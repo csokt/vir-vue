@@ -1,5 +1,5 @@
 <template>
-  <v-autocomplete
+  <v-autocomplete ref="element"
     :value="value"
     @input="$emit('input', $event)"
     :items="items"
@@ -86,6 +86,7 @@ export default {
     },
 
     onChange (content) {
+      this.$refs.element.blur()
       const obj = this.items.find(o => o[this.itemValue] === content) || {}
       this.$emit('change', { ...obj })
     }

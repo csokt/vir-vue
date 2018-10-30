@@ -4,25 +4,28 @@
       <Card>
         <v-card-text>
           <Autocomplete ref="hely" v-model="helyId" label="Hely" itemClass="body-2" :apiUrl="apiUrl" @change="hely = $event; $refs.cikkszam.focus()"/>
-          <v-text-field ref="cikkszam" v-model="cikkszam" label="Cikkszám" clearable/>
-          <v-text-field ref="osztaly" v-model="osztaly" label="Osztály" clearable/>
-          <v-text-field v-model="cikk.megnevezes" label="Megnevezés" readonly/>
+          <v-text-field ref="cikkszam" v-model="cikkszam" label="Cikkszám" clearable @keyup.enter="$refs.megnevezes.focus()"/>
+          <v-text-field ref="osztaly" mask="N" v-model="osztaly" label="Osztály" clearable @keyup.enter="$refs.megnevezes.focus()"/>
+          <v-text-field ref="megnevezes" v-model="cikk.megnevezes" label="Megnevezés" readonly/>
         </v-card-text>
       </Card>
 
       <Card title="Készlet">
+        <v-card-text>
         <v-data-table
           :headers="headers"
           :items="keszlet"
+          no-data-text="Nincs készleten"
           hide-actions
         >
           <template slot="items" slot-scope="props">
             <td>{{ props.item.meret }}</td>
             <td>{{ props.item.szin }}</td>
-            <td class="text-xs-right">{{ props.item.raktaron }}</td>
             <td class="text-xs-right">{{ props.item.vonalkod }}</td>
+            <td class="text-xs-right">{{ props.item.raktaron }}</td>
           </template>
         </v-data-table>
+        </v-card-text>
       </Card>
     </v-layout>
   </v-container>
@@ -51,15 +54,10 @@ export default {
       hely: {},
       cikk: {},
       headers: [
-        {
-          text: 'Méret',
-          value: 'meret',
-          align: 'left'
-        },
+        { text: 'Méret', value: 'meret' },
         { text: 'Szín', value: 'szin' },
-        { text: 'Raktáron', value: 'raktaron' },
-        { text: 'Vonalkód', value: 'vonalkod', sortable: false },
-        { align: 'left', sortable: false, text: '', value: 'meret' }
+        { text: 'Vonalkód', value: 'vonalkod', align: 'right' },
+        { text: 'Raktáron', value: 'raktaron', align: 'right', width: '1%' }
       ],
       keszlet: [],
       message: ''
@@ -69,7 +67,7 @@ export default {
   computed: {
     keszletSearchParams () {
       if (!this.hely.id || !this.cikk.id || !this.osztaly) return ''
-      const params = { domain: [['hely_id', '=', this.hely.id], ['cikkszam', '=', this.cikkszam], ['osztaly', '=', this.osztaly], ['szefo_e', '=', true]] }
+      const params = { domain: [['hely_id', '=', this.hely.id], ['cikkszam', '=', this.cikkszam], ['osztaly', '=', this.osztaly], ['szefo_e', '=', true], ['raktaron', '!=', 0]], limit: 200 }
       return JSON.stringify(params)
     }
   },
@@ -88,7 +86,6 @@ export default {
     keszletSearchParams: async function (params) {
       this.keszlet = []
       if (!params) { return }
-      // const params = { domain: [['hely_id', '=', this.hely.id], ['cikkszam', '=', this.cikkszam], ['osztaly', '=', this.osztaly], ['szefo_e', '=', true]] }
       const response = await API.get('vir/searchRead/chance.keszlet?params=' + params)
       if (response.ok) {
         this.keszlet = response.data
@@ -109,9 +106,3 @@ export default {
   }
 }
 </script>
-
-<style >
-table.v-table tbody td:first-child, table.v-table tbody td:not(:first-child), table.v-table tbody th:first-child, table.v-table tbody th:not(:first-child), table.v-table thead td:first-child, table.v-table thead td:not(:first-child), table.v-table thead th:first-child, table.v-table thead th:not(:first-child) {
-  padding: 0 10px;
-}
-</style>

@@ -42,7 +42,7 @@ export default {
   methods: {
     async readKeszlet () {
       if (!this.cikkId) { this.keszlet = []; return }
-      const params = { domain: [['cikk_id', '=', this.cikkId], ['szefo_e', '=', true]] }
+      const params = { domain: [['cikk_id', '=', this.cikkId], ['szefo_e', '=', true], ['raktaron', '!=', 0]] }
       const response = await API.get('vir/searchRead/chance.keszlet?params=' + JSON.stringify(params))
       this.keszlet = response.data
     },

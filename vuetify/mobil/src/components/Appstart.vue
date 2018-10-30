@@ -45,10 +45,6 @@ export default {
       return this.store.virUser
     },
 
-    isChanceViewer () {
-      return this.store.virUser && this.store.virUser.groups_id.includes(57)
-    },
-
     isLegrandViewer () {
       return this.store.virUser && this.store.virUser.groups_id.includes(66)
     },
@@ -59,8 +55,7 @@ export default {
         { show: this.showTV, title: 'TV távvezérlés', avatar: '/tv-remote.png', href: 'https://mobilszefo.hopto.org:19531' },
         { show: this.showTir, title: 'Termelés Információs Rendszer', avatar: '/tir.png', href: 'https://mobilszefo.hopto.org:19532' },
         { show: this.showVir, title: 'Vállalat Irányítási Rendszer', avatar: '/vir.png', href: 'https://mobilszefo.hopto.org:19533' },
-        { show: this.isLegrandViewer, title: 'Legrand készlet', avatar: '/legrand.png', href: 'https://lir-keszlet.szefo.local' },
-        { show: this.isChanceViewer, title: 'Chance készlet', avatar: '/chance.png', href: 'https://chance-keszlet.szefo.local' }
+        { show: this.isLegrandViewer, title: 'Legrand készlet', avatar: '/legrand.png', href: 'https://lir-keszlet.szefo.local' }
       ]
     },
 

@@ -88,3 +88,16 @@ export default {
   }
 }
 </script>
+
+<style lang="stylus">
+table.v-table
+  thead, tbody
+    td, th
+      &:not(:nth-child(1)), &:first-child
+        padding: 0 1px
+
+  tfoot
+    tr
+      td
+        padding: 0 1px
+</style>
