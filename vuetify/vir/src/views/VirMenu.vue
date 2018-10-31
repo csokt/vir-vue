@@ -33,6 +33,7 @@ export default {
     showItems () {
       const items = [
         { groupId: groupId.LegrandViewer, app: 'legrand', path: '/legrand-cikkinfo', icon: 'info', title: 'Termék információk' },
+        { groupId: groupId.LegrandUser, app: 'legrand', path: '/legrand-muveletvegzes', icon: 'work', title: 'Műveletvégzés' },
         { groupId: groupId.ChanceViewer, app: 'chance', path: '/chance-cikkinfo', icon: 'info', title: 'Termék információk' },
         { groupId: groupId.ChanceViewer, app: 'chance', path: '/chance-keszlet', icon: 'info', title: 'Készlet információk' },
         { groupId: groupId.LeltarViewer, app: 'targyi-eszkoz', path: '/targyi-eszkoz-info', icon: 'info', title: 'Tárgyi eszköz információk' },

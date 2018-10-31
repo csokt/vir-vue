@@ -41,6 +41,8 @@ export default {
       const response = await API.get('vir/searchRead/chance.keszlet?params=' + params)
       if (response.ok) {
         this.keszlet = response.data
+      } else {
+        console.log(response)
       }
     }
   }

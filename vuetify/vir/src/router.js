@@ -34,6 +34,10 @@ export default new Router({
       component: () => import(/* webpackChunkName: "legrand-cikkinfo" */ './views/legrand/Info.vue')
     },
     {
+      path: '/legrand-muveletvegzes',
+      component: () => import(/* webpackChunkName: "legrand-muveletvegzes" */ './views/legrand/Muveletvegzes.vue')
+    },
+    {
       path: '/chance-cikkinfo',
       component: () => import(/* webpackChunkName: "chance-cikkinfo" */ './views/chance/Info.vue')
     },

@@ -71,12 +71,19 @@ export default {
 
     parentSearch (content) {
       this.search(content)
+    },
+
+    value (content) {
+      if (!content) { this.items = [] }
     }
   },
 
   methods: {
     async search (content) {
-      if (!content) { return }
+      console.log('Search:', content)
+      if (!content) {
+        return
+      }
       this.isLoading = true
       const response = await API.get(this.apiUrl(content))
       this.isLoading = false
