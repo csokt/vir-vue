@@ -86,7 +86,6 @@ export default {
       const response = await API.post('vir/create/legrand.muveletvegzes', row)
       if (response.ok) {
         this.szefoMuveletId = 0
-        this.szefoMuvelet = {}
         this.mennyiseg = null
         this.reloadTrigger = !this.reloadTrigger
         EventBus.$emit('inform', { type: 'alert', variation: 'success', message: 'Rögzítve!' })

@@ -74,7 +74,10 @@ export default {
     },
 
     value (content) {
-      if (!content) { this.items = [] }
+      if (!content) {
+        this.items = []
+        this.$emit('change', {})
+      }
     }
   },
 
