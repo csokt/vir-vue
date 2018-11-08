@@ -3,7 +3,11 @@
     <v-layout justify-space-around wrap>
       <Card>
         <v-card-text>
-          <Mtime v-model="kezdIdo" label="Munkaidő kezdete"/>
+          <Mtime :value="kezdIdo" @input="$store.commit('kezdIdo', $event)" label="Munkaidő kezdete" :allowed-minutes="allowedMinutes"/>
+          <v-text-field v-model="aktIdo" label="Aktuális idő" readonly/>
+          <v-text-field v-model="elteltPerc" label="Eltelt idő (perc)" readonly/>
+          <v-text-field v-model="osszesNormaperc" label="Összes normaperc" readonly/>
+          <v-text-field v-model="teljesitmeny" label="Teljesítmény %" readonly/>
         </v-card-text>
       </Card>
     </v-layout>
@@ -25,17 +29,16 @@ export default {
 
   data () {
     return {
-      kezdIdo: '05:30',
-      aktIdo: new Date(),
+      aktIdo: new Date().toLocaleTimeString().slice(0, 5),
       osszesNormaperc: 0
     }
   },
 
   computed: {
-    ...get(['user']),
+    ...get(['user', 'kezdIdo']),
 
     elteltPerc: function () {
-      return Math.round((this.aktIdo - this.kezdIdo) / 60000)
+      return this.minutes(this.aktIdo) - this.minutes(this.kezdIdo)
     },
     teljesitmeny: function () {
       return Math.round(100 * this.osszesNormaperc / this.elteltPerc)
@@ -43,25 +46,29 @@ export default {
   },
 
   methods: {
-    async doSearch () {
-      this.$refs.element.blur()
-      this.isLoading = true
-      const response = await API.get('tir/seafile/' + this.search + '/' + this.user.tir_role)
-      this.isLoading = false
+    minutes: (m) => {
+      const a = m.split(':')
+      return (+a[0]) * 60 + (+a[1])
+    },
+
+    allowedMinutes: (m) => m % 5 === 0,
+
+    async sumNormaperc () {
+      // Log('norma')
+      const response = await API.get('tir/normaperc/' + this.user.tir_azonosito)
       if (response.ok) {
-        this.items = response.data
-        if (!this.items.length) {
-          this.message = 'Nincs adat!'
-          EventBus.$emit('inform', { type: 'alert', variation: 'warning', message: this.message })
-          // Log('message', {message: this.message})
-        }
+        this.osszesNormaperc = Math.round(response.data.sum)
       } else {
-        this.message = 'Keresési hiba!'
-        EventBus.$emit('inform', { type: 'alert', variation: 'error', message: this.message })
+        EventBus.$emit('inform', { type: 'alert', variation: 'error', message: response.data.error.data.message })
         // Log('message', {message: this.message})
         console.log(response)
       }
     }
+  },
+
+  created () {
+    // Log('navigate')
+    this.sumNormaperc()
   }
 }
 </script>

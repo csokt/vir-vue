@@ -10,7 +10,8 @@ const state = {
   menuLevel: 0, // 0: home page;  1: app selected;   2: app's module page
   appPageTitle: '', // page title if menuLevel === 1
   modulePageTitle: '', // page title if menuLevel === 2
-  user: {}
+  user: {},
+  kezdIdo: '05:30'
 }
 
 const mutations = make.mutations(state)
