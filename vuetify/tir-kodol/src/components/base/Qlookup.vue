@@ -3,7 +3,6 @@
     :value="value"
     @input="$emit('input', $event)"
     :label="label"
-    required
     @change="onChange"
   />
 </template>

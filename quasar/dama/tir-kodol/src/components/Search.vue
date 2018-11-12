@@ -63,12 +63,12 @@ export default {
       try {
         const filter = {
           'kötő': RegExp('^Lefordított|^Fotó|^Teljes fotó|^Műszaki|^Kötés'),
-          'szabó': RegExp('^Lefordított|^Konfekci|^Fotó|^Teljes fotó|^Videó|^Egyéb|^Műszaki|^Szabási|^Kötés'),
-          'logisztikus': RegExp('^Lefordított|^Konfekci|^Fotó|^Teljes fotó|^Videó|^Egyéb|^Műszaki|^Szabási|^Kötés'),
-          'varró': RegExp('^Lefordított|^Konfekci|^Fotó|^Teljes fotó|^Videó|^Egyéb'),
-          'varró2': RegExp('^Lefordított|^Konfekci|^Fotó|^Teljes fotó|^Videó|^Egyéb'),
-          'technológus': RegExp('^Lefordított|^Konfekci|^Fotó|^Teljes fotó|^Videó|^Egyéb'),
-          'meo': RegExp('^Lefordított|^Konfekci|^Fotó|^Teljes fotó|^Videó|^Egyéb'),
+          'szabó': RegExp('^Lefordított|^KONF|^Konfekci|^Fotó|^Teljes fotó|^Videó|^Egyéb|^Műszaki|^Szabási|^Kötés'),
+          'logisztikus': RegExp('^Lefordított|^KONF|^Konfekci|^Fotó|^Teljes fotó|^Videó|^Egyéb|^Műszaki|^Szabási|^Kötés'),
+          'varró': RegExp('^Lefordított|^KONF|^Konfekci|^Fotó|^Teljes fotó|^Videó|^Egyéb'),
+          'varró2': RegExp('^Lefordított|^KONF|^Konfekci|^Fotó|^Teljes fotó|^Videó|^Egyéb'),
+          'technológus': RegExp('^Lefordított|^KONF|^Konfekci|^Fotó|^Teljes fotó|^Videó|^Egyéb'),
+          'meo': RegExp('^Lefordított|^KONF|^Konfekci|^Fotó|^Teljes fotó|^Videó|^Egyéb'),
           'kódoló': RegExp('^Fotó|^Egyéb')
         }
         const response = await HTTP.get('api2/search/?per_page=200&q=' + this.search)

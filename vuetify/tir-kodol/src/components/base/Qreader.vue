@@ -1,21 +1,12 @@
 <template>
   <v-dialog v-model="dialog" persistent max-width="400">
     <v-card>
-      <v-card-text>
-        <v-text-field
-          :value="value"
-          @input="lazyValue = $event"
-          :rules="[rules.required]"
-          :readonly="readonly"
-          :single-line="readonly"
-          :label="label"
-          @keyup.enter="onDecode(lazyValue)"
-          :prepend-icon="required ? '' : 'arrow_back'"
-          @click:prepend="onBack"
-          :append-outer-icon="readonly ? '' : 'send'"
-          @click:append-outer="onDecode(lazyValue)"
-        />
-      </v-card-text>
+      <v-card-title class="title grey--text" @click.stop="onBack">
+        <v-icon v-if="!required">
+          arrow_back
+        </v-icon>
+        {{label}}
+      </v-card-title>
       <v-img :contain="false">
         <QrcodeReader
           :camera="camera"
@@ -27,22 +18,17 @@
       </v-img>
     </v-card>
   </v-dialog>
-<!--
--->
 </template>
 
 <script>
 import { QrcodeReader } from 'vue-qrcode-reader'
 
 export default {
-  name: 'qreader',
-
   components: {
     QrcodeReader
   },
 
   props: {
-    value: String,
     label: String,
     dialog: {
       type: Boolean,
@@ -51,19 +37,6 @@ export default {
     required: {
       type: Boolean,
       default: false
-    },
-    readonly: {
-      type: Boolean,
-      default: false
-    }
-  },
-
-  data () {
-    return {
-      lazyValue: '',
-      rules: {
-        required: v => !this.required || !!v || 'Töltse ki ezt a mezőt.'
-      }
     }
   },
 
@@ -76,21 +49,13 @@ export default {
     }
   },
 
-  watch: {
-    value: function (newValue) {
-      this.$emit('change', newValue)
-    }
-  },
-
   methods: {
     onDecode (content) {
-      // console.log('onDecode', content)
-      if (this.required && !content) { return }
-      this.$emit('input', content)
+      if (content) this.$emit('input', content)
     },
+
     onBack () {
-      // console.log('onBack')
-      this.$emit('back')
+      if (!this.required) this.$emit('back')
     }
   }
 }

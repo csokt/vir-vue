@@ -26,6 +26,8 @@ export default {
 
   data () {
     return {
+      teszt: '',
+      qteszt: 'dummy',
       munkalapazonosito: '',
       munkalap: {}
     }

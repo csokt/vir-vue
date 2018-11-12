@@ -1,33 +1,31 @@
 <template>
   <div>
-    <v-textarea
+    <v-text-field
       :value="value"
       :label="label"
-      readonly
-      rows="1"
-      auto-grow
-      @focus="dialog = !value"
+      @input="$emit('input', $event)"
+      @change="$emit('change', $event)"
       append-outer-icon="select_all"
       @click:append-outer="dialog = true"
     />
     <Qreader
-      :value="value"
       :label="label"
       :dialog="dialog"
       :required="required"
-      :readonly="readonly"
-      @input="dialog = false; $emit('input', $event)"
-      @change="$emit('change', $event)"
+      @input="dialog = false; $emit('input', $event); $emit('change', $event)"
       @back="dialog = false"
     />
   </div>
+<!--
+      readonly
+      @focus="dialog = !value"
+-->
 </template>
 
 <script>
 import Qreader from './Qreader.vue'
 
 export default {
-  name: 'qfield',
   components: {
     Qreader
   },
