@@ -23,7 +23,7 @@ import CikkInfo from '@/components/legrand/CikkInfo.vue'
 import CikkKeszlet from '@/components/legrand/CikkKeszlet.vue'
 
 export default {
-  name: 'info',
+  name: 'legrand-info',
   components: {
     Card,
     Autocomplete,
@@ -43,6 +43,10 @@ export default {
       const params = { domain: [['cikkszam', 'ilike', content]], order: 'cikkszam', limit: 10 }
       return 'vir/searchRead/legrand.cikk?params=' + JSON.stringify(params)
     }
+  },
+
+  created () {
+    this.$store.set('pageTitle', 'Termék információk')
   }
 }
 </script>

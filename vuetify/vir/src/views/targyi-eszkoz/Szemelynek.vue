@@ -31,7 +31,7 @@ import EszkozInfo from '@/components/targyi-eszkoz/EszkozInfo.vue'
 import Eszkozhasznalo from '@/components/targyi-eszkoz/Eszkozhasznalo.vue'
 
 export default {
-  name: 'szemelynek',
+  name: 'targyi-eszkoz-szemelynek',
   components: {
     Card,
     Autocomplete,
@@ -76,6 +76,10 @@ export default {
       }
       this.reloadTrigger = !this.reloadTrigger
     }
+  },
+
+  created () {
+    this.$store.set('pageTitle', 'Személyes használatra')
   }
 }
 </script>

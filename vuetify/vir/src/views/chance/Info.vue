@@ -25,7 +25,7 @@ import CikkInfo from '@/components/chance/CikkInfo.vue'
 import CikkKeszlet from '@/components/chance/CikkKeszlet.vue'
 
 export default {
-  name: 'info',
+  name: 'chance-info',
   components: {
     Card,
     Autocomplete,
@@ -45,6 +45,10 @@ export default {
       const params = { domain: [['name', 'ilike', content]], order: 'name', limit: 20 }
       return 'vir/searchRead/chance.cikk?params=' + JSON.stringify(params)
     }
+  },
+
+  created () {
+    this.$store.set('pageTitle', 'Termék információk')
   }
 }
 </script>

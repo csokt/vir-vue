@@ -83,7 +83,7 @@ export default {
 
   methods: {
     async search (content) {
-      console.log('Search:', content)
+      // console.log('Search:', content)
       if (!content) {
         return
       }

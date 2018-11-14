@@ -5,7 +5,7 @@
         arrow_back
       </v-icon>
       <v-spacer></v-spacer>
-      <v-toolbar-title v-text="title"></v-toolbar-title>
+      <v-toolbar-title v-text="this.pageTitle"></v-toolbar-title>
       <v-spacer></v-spacer>
     </v-toolbar>
 
@@ -46,12 +46,13 @@ export default {
   },
 
   computed: {
-    ...get(['version', 'menuLevel', 'appPageTitle', 'modulePageTitle', 'user']),
+    ...get(['version', 'pageTitle', 'menuLevel', 'appPageTitle', 'modulePageTitle', 'user']),
 
     title () {
-      if (this.menuLevel === 0) return 'Vállalat Irányítási Rendszer'
-      if (this.menuLevel === 1) return this.appPageTitle
-      return this.modulePageTitle
+      return this.pageTitle
+      // if (this.menuLevel === 0) return 'Vállalat Irányítási Rendszer'
+      // if (this.menuLevel === 1) return this.appPageTitle
+      // return this.modulePageTitle
     }
   },
 

@@ -29,7 +29,7 @@ import EszkozInfo from '@/components/targyi-eszkoz/EszkozInfo.vue'
 import EszkozMozgas from '@/components/targyi-eszkoz/EszkozMozgas.vue'
 
 export default {
-  name: 'athelyezes',
+  name: 'targyi-eszkoz-athelyezes',
   components: {
     Card,
     Autocomplete,
@@ -74,6 +74,10 @@ export default {
       }
       this.reloadTrigger = !this.reloadTrigger
     }
+  },
+
+  created () {
+    this.$store.set('pageTitle', 'Tárgyi eszköz áthelyezés')
   }
 }
 </script>

@@ -28,7 +28,7 @@ import Autocomplete from '@/components/base/Autocomplete.vue'
 import KeszletTable from '@/components/chance/KeszletTable.vue'
 
 export default {
-  name: 'keszlet',
+  name: 'chance-keszlet',
   components: {
     Card,
     Autocomplete,
@@ -70,6 +70,10 @@ export default {
       const params = { domain: [['name', 'ilike', content], ['szefo_e', '=', true]], order: 'name', limit: 10 }
       return 'vir/searchRead/chance.hely?params=' + JSON.stringify(params)
     }
+  },
+
+  created () {
+    this.$store.set('pageTitle', 'Készlet információk')
   }
 }
 </script>

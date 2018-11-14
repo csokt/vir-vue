@@ -23,7 +23,7 @@ import EszkozInfo from '@/components/targyi-eszkoz/EszkozInfo.vue'
 import EszkozMozgas from '@/components/targyi-eszkoz/EszkozMozgas.vue'
 
 export default {
-  name: 'info',
+  name: 'targyi-eszkoz-info',
   components: {
     Card,
     Eszkoz,
@@ -36,6 +36,10 @@ export default {
       leltariSzam: '',
       eszkoz: {}
     }
+  },
+
+  created () {
+    this.$store.set('pageTitle', 'Tárgyi eszköz információk')
   }
 }
 </script>

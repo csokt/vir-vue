@@ -2,7 +2,7 @@
   <v-container>
     <v-layout justify-space-around wrap>
       <Card elevation="elevation-1">
-        <Menu :items="showItems" @select="select($event)"/>
+        <Menu :items="showItems"/>
       </Card>
     </v-layout>
   </v-container>
@@ -37,6 +37,7 @@ export default {
         { groupId: groupId.ChanceViewer, app: 'chance', path: '/chance-cikkinfo', icon: 'info', title: 'Termék információk' },
         { groupId: groupId.ChanceViewer, app: 'chance', path: '/chance-keszlet', icon: 'info', title: 'Készlet információk' },
         { groupId: groupId.LeltarViewer, app: 'targyi-eszkoz', path: '/targyi-eszkoz-info', icon: 'info', title: 'Tárgyi eszköz információk' },
+        { groupId: groupId.LeltarViewer, app: 'targyi-eszkoz', path: '/targyi-eszkoz-leltarkorzet', icon: 'info', title: 'Leltárkörzet információk' },
         { groupId: groupId.LeltarUser, app: 'targyi-eszkoz', path: '/targyi-eszkoz-athelyezes', icon: 'exit_to_app', title: 'Tárgyi eszköz áthelyezés' },
         { groupId: groupId.LeltarUser, app: 'targyi-eszkoz', path: '/targyi-eszkoz-erkeztetes', icon: 'done', title: 'Tárgyi eszköz érkeztetés' },
         { groupId: groupId.LeltarUser, app: 'targyi-eszkoz', path: '/targyi-eszkoz-sztornozas', icon: 'stop', title: 'Tárgyi eszköz sztornózás' },
@@ -47,15 +48,13 @@ export default {
     }
   },
 
-  methods: {
-    select (item) {
-      this.$store.set('modulePageTitle', item.title)
-      this.$store.set('menuLevel', 2)
-    }
-  },
-
   created () {
-    this.$store.set('menuLevel', 1)
+    const titles = {
+      legrand: 'Legrand',
+      chance: 'Chance',
+      'targyi-eszkoz': 'Tárgyi eszköz'
+    }
+    this.$store.set('pageTitle', titles[this.app])
   }
 }
 </script>

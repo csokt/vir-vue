@@ -68,6 +68,10 @@ export default new Router({
       component: () => import(/* webpackChunkName: "targyi-eszkoz-szemelynek" */ './views/targyi-eszkoz/Szemelynek.vue')
     },
     {
+      path: '/targyi-eszkoz-leltarkorzet',
+      component: () => import(/* webpackChunkName: "targyi-eszkoz-leltarkorzet" */ './views/targyi-eszkoz/Leltarkorzet.vue')
+    },
+    {
       path: '/targyi-eszkoz-leltar',
       component: () => import(/* webpackChunkName: "targyi-eszkoz-leltar" */ './views/targyi-eszkoz/Leltar.vue')
     }

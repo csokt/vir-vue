@@ -30,7 +30,7 @@ import Autocomplete from '@/components/base/Autocomplete.vue'
 import MuveletvegzesTable from '@/components/legrand/MuveletvegzesTable.vue'
 
 export default {
-  name: 'muveletvegzes',
+  name: 'legrand-muveletvegzes',
   components: {
     Card,
     Autocomplete,
@@ -94,6 +94,10 @@ export default {
         console.log(response)
       }
     }
+  },
+
+  created () {
+    this.$store.set('pageTitle', 'Műveletvégzés')
   }
 }
 </script>

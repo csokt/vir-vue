@@ -2,7 +2,7 @@
   <v-container>
     <v-layout justify-space-around wrap>
       <Card v-if="user.id" elevation="elevation-1">
-        <Menu :items="showItems" @select="select($event)"/>
+        <Menu :items="showItems"/>
       </Card>
       <Card v-if="!user.id" title="Kérem jelentkezzen be!">
       </Card>
@@ -41,14 +41,8 @@ export default {
     }
   },
 
-  methods: {
-    select (item) {
-      this.$store.set('appPageTitle', item.title)
-    }
-  },
-
   created () {
-    this.$store.set('menuLevel', 0)
+    this.$store.set('pageTitle', 'Vállalat Irányítási Rendszer')
   }
 }
 </script>

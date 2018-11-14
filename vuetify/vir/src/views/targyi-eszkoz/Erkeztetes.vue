@@ -26,7 +26,7 @@ import EszkozMozgas from '@/components/targyi-eszkoz/EszkozMozgas.vue'
 import MozgasInfo from '@/components/targyi-eszkoz/MozgasInfo.vue'
 
 export default {
-  name: 'erkeztetes',
+  name: 'targyi-eszkoz-erkeztetes',
   components: {
     Card,
     MozgasInfo,
@@ -82,6 +82,14 @@ export default {
       await this.$nextTick()
       const toY = this.$vuetify.breakpoint.smAndDown ? this.$vuetify.breakpoint.height : 0
       window.scrollTo(0, toY)
+    }
+  },
+
+  created () {
+    if (this.sztorno) {
+      this.$store.set('pageTitle', 'Tárgyi eszköz sztornózás')
+    } else {
+      this.$store.set('pageTitle', 'Tárgyi eszköz érkeztetés')
     }
   },
 
