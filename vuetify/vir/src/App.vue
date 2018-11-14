@@ -29,9 +29,9 @@
 
 <script>
 import { get } from 'vuex-pathify'
+import { API, EventBus } from '@/util'
 import Menu from '@/components/base/Menu.vue'
 import Inform from '@/components/base/Inform.vue'
-import { API, EventBus } from '@/util'
 
 export default {
   name: 'App',

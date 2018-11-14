@@ -100,6 +100,12 @@ export default {
       const obj = this.items.find(o => o[this.itemValue] === content) || {}
       this.$emit('change', { ...obj })
     }
+  },
+
+  created () {
+    if (this.parentSearch) {
+      this.search(this.parentSearch)
+    }
   }
 }
 </script>

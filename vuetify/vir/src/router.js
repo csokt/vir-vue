@@ -74,6 +74,10 @@ export default new Router({
     {
       path: '/targyi-eszkoz-leltar',
       component: () => import(/* webpackChunkName: "targyi-eszkoz-leltar" */ './views/targyi-eszkoz/Leltar.vue')
+    },
+    {
+      path: '/targyi-eszkoz-leltar-felvetel',
+      component: () => import(/* webpackChunkName: "targyi-eszkoz-leltar-felvetel" */ './views/targyi-eszkoz/LeltarFelvetel.vue')
     }
   ]
 })

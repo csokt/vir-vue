@@ -9,7 +9,7 @@ const state = {
   version: '18.11.16',
   pageTitle: '',
   user: {},
-  leltarkorzet: {}
+  leltariv: {}
 }
 
 const mutations = make.mutations(state)

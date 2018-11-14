@@ -83,7 +83,7 @@ export default {
 
   methods: {
     async search (content) {
-      console.log('Search:', content)
+      // console.log('Search:', content)
       if (!content) {
         return
       }
@@ -99,6 +99,12 @@ export default {
       this.$refs.element.blur()
       const obj = this.items.find(o => o[this.itemValue] === content) || {}
       this.$emit('change', { ...obj })
+    }
+  },
+
+  created () {
+    if (this.parentSearch) {
+      this.search(this.parentSearch)
     }
   }
 }
