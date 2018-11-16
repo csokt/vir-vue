@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import { API } from '@/util'
+import { API, utc2local } from '@/util'
 
 export default {
   props: {
@@ -47,9 +47,7 @@ export default {
       this.eszkozok = response.data
     },
 
-    utc2local (utc) {
-      return new Date(utc.replace(/ /, 'T') + 'Z').toLocaleString()
-    }
+    utc2local (utc) { return utc2local(utc) }
   }
 }
 </script>

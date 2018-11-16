@@ -20,6 +20,11 @@
           <EszkozInfo :eszkoz="eszkoz"/>
         </v-card-text>
       </Card>
+      <Card title="Hiányzó eszközök">
+        <v-card-text>
+          <LeltarivEszkozok filter="hiany" :leltarivId="leltariv.id" :reloadTrigger="reloadTrigger"/>
+        </v-card-text>
+      </Card>
     </v-layout>
   </v-container>
 </template>
@@ -30,7 +35,7 @@ import { API, EventBus, checkResponse } from '@/util'
 import Card from '@/components/base/Card.vue'
 import Eszkoz from '@/components/targyi-eszkoz/Eszkoz.vue'
 import EszkozInfo from '@/components/targyi-eszkoz/EszkozInfo.vue'
-import EszkozMozgas from '@/components/targyi-eszkoz/EszkozMozgas.vue'
+import LeltarivEszkozok from '@/components/targyi-eszkoz/LeltarivEszkozok.vue'
 
 export default {
   name: 'targyi-eszkoz-leltar-felvetel',
@@ -38,13 +43,14 @@ export default {
     Card,
     Eszkoz,
     EszkozInfo,
-    EszkozMozgas
+    LeltarivEszkozok
   },
 
   data () {
     return {
       leltariSzam: '',
       eszkoz: {},
+      reloadTrigger: false,
       felvettEszkozokId: 0,
       felvettEszkozok: []
     }
@@ -71,6 +77,7 @@ export default {
         if (!checkResponse(response)) return
         this.felvettEszkozok.unshift({ id: this.felvettEszkozokId, name: this.eszkoz.name, label: 'Fellelt eszköz' })
         EventBus.$emit('inform', { type: 'alert', variation: 'success', message: 'Felvéve!' })
+        this.reloadTrigger = !this.reloadTrigger
       } else { // új tárgyi eszköz
         params = { domain: [['leltariv_id', '=', this.leltariv.id], ['eszkoz_id', '=', this.eszkoz.id]], limit: 1 }
         response = await API.get('vir/searchRead/leltar.leltariv_ujeszkoz?params=' + JSON.stringify(params))
