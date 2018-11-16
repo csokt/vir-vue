@@ -4,6 +4,8 @@
       <Card>
         <v-card-text>
           <Eszkoz v-model="leltariSzam"  @change="onChange($event)"/>
+          <EszkozInfo :eszkoz="eszkoz"/>
+          <v-text-field solo flat readonly/>
           <v-textarea
             v-for="(row, index) in felvettEszkozok"
             :key="index"
@@ -13,11 +15,6 @@
             auto-grow
             readonly
           />
-        </v-card-text>
-      </Card>
-      <Card>
-        <v-card-text>
-          <EszkozInfo :eszkoz="eszkoz"/>
         </v-card-text>
       </Card>
       <Card title="Hiányzó eszközök">
@@ -83,6 +80,7 @@ export default {
         response = await API.get('vir/searchRead/leltar.leltariv_ujeszkoz?params=' + JSON.stringify(params))
         if (!checkResponse(response)) return
         if (response.data.length) { // új eszköz, de már felvéve
+          this.felvettEszkozok.unshift({ id: this.felvettEszkozokId, name: this.eszkoz.name, label: 'Új eszköz, de már felvéve' })
           EventBus.$emit('inform', { type: 'alert', variation: 'warning', message: 'Új eszköz, de már felvéve!' })
         } else { // új eszköz, még nincs felvéve
           row = {
