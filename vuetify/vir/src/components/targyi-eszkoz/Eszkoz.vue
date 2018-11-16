@@ -3,6 +3,7 @@
     :value="value"
     @input="$emit('input', $event)"
     label="Leltári szám"
+    :focus="focus"
     :apiUrl="apiUrl"
     @change="$emit('change', $event)"
     :reloadTrigger="reloadTrigger"
@@ -22,6 +23,7 @@ export default {
 
   props: {
     value: String,
+    focus: Boolean,
     reloadTrigger: Boolean
   },
 

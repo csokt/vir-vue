@@ -3,7 +3,8 @@
     <v-layout justify-space-around wrap>
       <Card>
         <v-card-text>
-          <Eszkoz v-model="leltariSzam"  @change="onChange($event)"/>
+          <v-textarea v-model="leltariv.name" label="Leltárkörzet" rows="1" auto-grow readonly/>
+          <Eszkoz v-model="leltariSzam" :focus="true" @change="onChange($event)"/>
           <EszkozInfo :eszkoz="eszkoz"/>
           <v-text-field solo flat readonly/>
           <v-textarea
