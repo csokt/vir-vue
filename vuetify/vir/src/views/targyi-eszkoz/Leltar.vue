@@ -41,7 +41,8 @@ export default {
     showItems () {
       if (!this.leltariv.id) return []
       const items = [
-        { icon: 'add', title: 'Tárgyi eszközök felvétele', path: '/targyi-eszkoz-leltar-felvetel' }
+        { icon: 'add', title: 'Automatikus felvétel', path: '/targyi-eszkoz-leltar-felvetel-auto' },
+        { icon: 'add', title: 'Kézi felvétel', path: '/targyi-eszkoz-leltar-felvetel-kezi' }
         // { icon: 'info', title: 'Tárgyi eszköz információk', path: '/targyi-eszkoz-info' },
         // { icon: 'info', title: 'Leltárkörzet információk', path: '/targyi-eszkoz-leltarkorzet' }
       ]
