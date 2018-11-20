@@ -76,25 +76,16 @@ export default {
       this.leltariSzam = ''
       if (!content.id) return
       this.eszkoz = content
-      let params, response
+      // let params, response
       this.felvettEszkozokId += 1
 
-      params = { domain: [['leltariv_id', '=', this.leltariv.id], ['eszkoz_id', '=', this.eszkoz.id]], limit: 1 }
-      response = await API.get('vir/searchRead/leltar.leltariv_eszkoz?params=' + JSON.stringify(params))
+      const params = { domain: [['leltariv_id', '=', this.leltariv.id], ['eszkoz_id', '=', this.eszkoz.id]], limit: 1 }
+      const response = await API.get('vir/searchRead/leltar.leltariv_osszes?params=' + JSON.stringify(params))
       if (!checkResponse(response)) return
       this.leltarivEszkoz = response.data.length ? response.data[0] : {}
       if (this.leltarivEszkoz.fellelheto) {
-        this.felvettEszkozok.unshift({ id: this.felvettEszkozokId, name: this.eszkoz.name, label: 'Fellelt eszköz, de már felvéve' })
-        EventBus.$emit('inform', { type: 'alert', variation: 'warning', message: 'Fellelt eszköz, de már felvéve!' })
-        return
-      }
-
-      response = await API.get('vir/searchRead/leltar.leltariv_ujeszkoz?params=' + JSON.stringify(params))
-      if (!checkResponse(response)) return
-      this.leltarivUjeszkoz = response.data.length ? response.data[0] : {}
-      if (this.leltarivUjeszkoz.id) {
-        this.felvettEszkozok.unshift({ id: this.felvettEszkozokId, name: this.eszkoz.name, label: 'Új eszköz, de már felvéve' })
-        EventBus.$emit('inform', { type: 'alert', variation: 'warning', message: 'Új eszköz, de már felvéve!' })
+        this.felvettEszkozok.unshift({ id: this.felvettEszkozokId, name: this.eszkoz.name, label: 'Az eszköz már felvéve' })
+        EventBus.$emit('inform', { type: 'alert', variation: 'warning', message: 'Az eszköz már felvéve!' })
         return
       }
 
@@ -106,9 +97,9 @@ export default {
     async felvesz () {
       this.felveheto = false
       let response, row
-      if (this.leltarivEszkoz.id) { // leltárkörzetbe tartozó eszköz
+      if (this.leltarivEszkoz.leltariv_eszkoz_id) { // leltárkörzetbe tartozó eszköz
         row = { fellelheto: true }
-        response = await API.post('vir/update/leltar.leltariv_eszkoz/' + this.leltarivEszkoz.id.toString(), row)
+        response = await API.post('vir/update/leltar.leltariv_eszkoz/' + this.leltarivEszkoz.leltariv_eszkoz_id.toString(), row)
         if (!checkResponse(response)) return
         this.felvettEszkozok.unshift({ id: this.felvettEszkozokId, name: this.eszkoz.name, label: 'Fellelt eszköz' })
         EventBus.$emit('inform', { type: 'alert', variation: 'success', message: 'Felvéve!' })

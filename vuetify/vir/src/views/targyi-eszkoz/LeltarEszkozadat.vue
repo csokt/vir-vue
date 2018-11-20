@@ -12,6 +12,11 @@
         </v-card-text>
         <v-btn color="primary" :disabled="!felveheto" @click="felvesz">Adatok rögzítése</v-btn>
       </Card>
+      <Card title="Fellelt eszközök">
+        <v-card-text>
+          <LeltarivEszkozok filter="fellelt" :leltarivId="leltariv.id"/>
+        </v-card-text>
+      </Card>
     </v-layout>
   </v-container>
 <!--
@@ -23,12 +28,14 @@ import { get } from 'vuex-pathify'
 import { API, EventBus, checkResponse } from '@/util'
 import Card from '@/components/base/Card.vue'
 import Eszkoz from '@/components/targyi-eszkoz/Eszkoz.vue'
+import LeltarivEszkozok from '@/components/targyi-eszkoz/LeltarivEszkozok.vue'
 
 export default {
   name: 'targyi-eszkoz-leltar-eszkozadat',
   components: {
     Card,
-    Eszkoz
+    Eszkoz,
+    LeltarivEszkozok
   },
 
   data () {

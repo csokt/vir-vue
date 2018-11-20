@@ -43,20 +43,17 @@ export default {
   methods: {
     async readEszkozok () {
       if (!this.leltarivId) { this.eszkozok = []; return }
-      let db, params
+      let params
       if (this.filter === 'uj') {
-        db = 'leltariv_ujeszkoz'
-        params = { domain: [['leltariv_id', '=', this.leltarivId]] }
+        params = { domain: [['leltariv_id', '=', this.leltarivId], ['leltariv_ujeszkoz_id', '>', 0]] }
       } else if (this.filter === 'fellelt') {
-        db = 'leltariv_eszkoz'
         params = { domain: [['leltariv_id', '=', this.leltarivId], ['fellelheto', '=', true]] }
       } else if (this.filter === 'hiany') {
-        db = 'leltariv_eszkoz'
         params = { domain: [['leltariv_id', '=', this.leltarivId], ['fellelheto', '=', false]] }
       } else {
         return
       }
-      const response = await API.get('vir/searchRead/leltar.' + db + '?params=' + JSON.stringify(params))
+      const response = await API.get('vir/searchRead/leltar.leltariv_osszes?params=' + JSON.stringify(params))
       if (!checkResponse(response)) return
       this.eszkozok = response.data
     },
