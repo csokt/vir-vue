@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import { API, EventBus } from '@/util'
+import { API, checkResponse } from '@/util'
 import Card from '@/components/base/Card.vue'
 import EszkozMozgas from '@/components/targyi-eszkoz/EszkozMozgas.vue'
 import MozgasInfo from '@/components/targyi-eszkoz/MozgasInfo.vue'
@@ -55,26 +55,19 @@ export default {
     async erkeztet () {
       const row = { megerkezett: true }
       const response = await API.post('vir/update/leltar.eszkozmozgas/' + this.mozgas.id.toString(), row)
-      if (response.ok) {
-        this.mozgas.megerkezett = true
-        this.reloadTrigger = !this.reloadTrigger
-        // EventBus.$emit('inform', { type: 'alert', variation: 'success', message: 'Megérkezett!' })
-      } else {
-        EventBus.$emit('inform', { type: 'alert', variation: 'error', message: response.data.error.data.message })
-      }
+      if (!checkResponse(response)) return
+      this.mozgas.megerkezett = true
+      this.reloadTrigger = !this.reloadTrigger
+      // EventBus.$emit('inform', { type: 'alert', variation: 'success', message: 'Megérkezett!' })
     },
 
     async sztornoz () {
       const params = { id: this.mozgas.id }
       const response = await API.post('vir/callMethod/leltar.eszkozmozgas/sztorno', params)
-      if (response.ok) {
-        this.mozgas.megerkezett = true
-        this.reloadTrigger = !this.reloadTrigger
-        // EventBus.$emit('inform', { type: 'alert', variation: 'success', message: 'Megérkezett!' })
-      } else {
-        console.log('response', response)
-        EventBus.$emit('inform', { type: 'alert', variation: 'error', message: response.data.error.data.message })
-      }
+      if (!checkResponse(response)) return
+      this.mozgas.megerkezett = true
+      this.reloadTrigger = !this.reloadTrigger
+      // EventBus.$emit('inform', { type: 'alert', variation: 'success', message: 'Megérkezett!' })
     },
 
     async onSelect (mozgas) {

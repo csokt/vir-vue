@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import { API, EventBus } from '@/util'
+import { API, EventBus, checkResponse } from '@/util'
 import Card from '@/components/base/Card.vue'
 import Autocomplete from '@/components/base/Autocomplete.vue'
 import MuveletvegzesTable from '@/components/legrand/MuveletvegzesTable.vue'
@@ -84,15 +84,11 @@ export default {
         mennyiseg: this.mennyiseg
       }
       const response = await API.post('vir/create/legrand.muveletvegzes', row)
-      if (response.ok) {
-        this.szefoMuveletId = 0
-        this.mennyiseg = null
-        this.reloadTrigger = !this.reloadTrigger
-        EventBus.$emit('inform', { type: 'alert', variation: 'success', message: 'Rögzítve!' })
-      } else {
-        EventBus.$emit('inform', { type: 'alert', variation: 'error', message: response.data.error.data.message })
-        console.log(response)
-      }
+      if (!checkResponse(response)) return
+      this.szefoMuveletId = 0
+      this.mennyiseg = null
+      this.reloadTrigger = !this.reloadTrigger
+      EventBus.$emit('inform', { type: 'alert', variation: 'success', message: 'Rögzítve!' })
     }
   },
 

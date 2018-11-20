@@ -29,7 +29,6 @@
     </v-layout>
   </v-container>
 <!--
-          <v-text-field solo flat readonly/>
 -->
 </template>
 

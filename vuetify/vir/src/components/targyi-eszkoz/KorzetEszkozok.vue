@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import { API } from '@/util'
+import { API, checkResponse } from '@/util'
 
 export default {
   props: {
@@ -44,6 +44,7 @@ export default {
       if (!this.leltarkorzetId) { this.eszkozok = []; return }
       const params = { domain: [['akt_leltarkorzet_id', '=', this.leltarkorzetId]] }
       const response = await API.get('vir/searchRead/leltar.eszkoz?params=' + JSON.stringify(params))
+      if (!checkResponse(response)) return
       this.eszkozok = response.data
     }
   }

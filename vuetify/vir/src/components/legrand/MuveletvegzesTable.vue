@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import { API } from '@/util'
+import { API, checkResponse } from '@/util'
 
 export default {
   props: {
@@ -41,11 +41,8 @@ export default {
   methods: {
     async loadData () {
       const response = await API.get('vir/searchRead/legrand.muveletvegzes?params=' + JSON.stringify({ limit: 10 }))
-      if (response.ok) {
-        this.muveletek = response.data
-      } else {
-        console.log(response)
-      }
+      if (!checkResponse(response)) return
+      this.muveletek = response.data
     }
   },
 

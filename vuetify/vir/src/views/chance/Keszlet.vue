@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import { API } from '@/util'
+import { API, checkResponse } from '@/util'
 import Card from '@/components/base/Card.vue'
 import Autocomplete from '@/components/base/Autocomplete.vue'
 import KeszletTable from '@/components/chance/KeszletTable.vue'
@@ -59,7 +59,8 @@ export default {
       if (this.cikkszam.length < 5) { return }
       const params = { domain: [['cikkszam', '=', this.cikkszam]], limit: 1 }
       const response = await API.get('vir/searchRead/chance.cikk?params=' + JSON.stringify(params))
-      if (response.ok && response.data.length) {
+      if (!checkResponse(response)) return
+      if (response.data.length) {
         this.cikk = response.data[0]
       }
     }

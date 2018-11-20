@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import { API } from '@/util'
+import { API, checkResponse } from '@/util'
 
 export default {
   props: {
@@ -62,6 +62,7 @@ export default {
       }
       if (params) {
         const response = await API.get('vir/searchRead/leltar.eszkozmozgas?params=' + JSON.stringify(params))
+        if (!checkResponse(response)) return
         this.mozgas = response.data
       } else {
         this.mozgas = []

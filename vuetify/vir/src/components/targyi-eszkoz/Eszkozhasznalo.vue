@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import { API, utc2local } from '@/util'
+import { API, utc2local, checkResponse } from '@/util'
 
 export default {
   props: {
@@ -44,6 +44,7 @@ export default {
       if (!this.hasznaloId) { this.eszkozok = []; return }
       const params = { domain: [['akt_hasznalo_id', '=', this.hasznaloId]] }
       const response = await API.get('vir/searchRead/leltar.eszkoz?params=' + JSON.stringify(params))
+      if (!checkResponse(response)) return
       this.eszkozok = response.data
     },
 

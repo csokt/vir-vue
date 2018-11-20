@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import { API } from '@/util'
+import { API, checkResponse } from '@/util'
 
 export default {
   props: {
@@ -39,11 +39,8 @@ export default {
       this.keszlet = []
       if (!params) { return }
       const response = await API.get('vir/searchRead/chance.keszlet?params=' + params)
-      if (response.ok) {
-        this.keszlet = response.data
-      } else {
-        console.log(response)
-      }
+      if (!checkResponse(response)) return
+      this.keszlet = response.data
     }
   }
 }

@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import { API, EventBus } from '@/util'
+import { API, EventBus, checkResponse } from '@/util'
 import Card from '@/components/base/Card.vue'
 import Autocomplete from '@/components/base/Autocomplete.vue'
 import Eszkoz from '@/components/targyi-eszkoz/Eszkoz.vue'
@@ -68,12 +68,8 @@ export default {
         megjegyzes: ''
       }
       const response = await API.post('vir/create/leltar.eszkozatvetel', row)
-      if (response.ok) {
-        EventBus.$emit('inform', { type: 'alert', variation: 'success', message: 'Átadva!' })
-      } else {
-        EventBus.$emit('inform', { type: 'alert', variation: 'error', message: response.data.error.data.message })
-        console.log(response)
-      }
+      if (!checkResponse(response)) return
+      EventBus.$emit('inform', { type: 'alert', variation: 'success', message: 'Átadva!' })
       this.reloadTrigger = !this.reloadTrigger
     }
   },

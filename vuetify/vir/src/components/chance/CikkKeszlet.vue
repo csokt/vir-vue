@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import { API } from '@/util'
+import { API, checkResponse } from '@/util'
 
 export default {
   props: {
@@ -44,6 +44,7 @@ export default {
       if (!this.cikkId) { this.keszlet = []; return }
       const params = { domain: [['cikk_id', '=', this.cikkId], ['szefo_e', '=', true], ['raktaron', '!=', 0]] }
       const response = await API.get('vir/searchRead/chance.keszlet?params=' + JSON.stringify(params))
+      if (!checkResponse(response)) return
       this.keszlet = response.data
     },
 
