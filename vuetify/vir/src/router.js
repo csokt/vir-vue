@@ -88,6 +88,16 @@ export default new Router({
     {
       path: '/targyi-eszkoz-leltar-eszkozadat',
       component: () => import(/* webpackChunkName: "targyi-eszkoz-leltar-eszkozadat" */ './views/targyi-eszkoz/LeltarEszkozadat.vue')
+    },
+    {
+      path: '/targyi-eszkoz-leltar-leltariv-eszkoz-fellelt',
+      props: { filter: 'fellelt' },
+      component: () => import(/* webpackChunkName: "targyi-eszkoz-leltar-leltariv-eszkoz" */ './views/targyi-eszkoz/LeltarLeltarivEszkoz.vue')
+    },
+    {
+      path: '/targyi-eszkoz-leltar-leltariv-eszkoz-hiany',
+      props: { filter: 'hiany' },
+      component: () => import(/* webpackChunkName: "targyi-eszkoz-leltar-leltariv-eszkoz" */ './views/targyi-eszkoz/LeltarLeltarivEszkoz.vue')
     }
   ]
 })

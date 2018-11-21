@@ -23,7 +23,7 @@
       </Card>
       <Card title="Hiányzó eszközök">
         <v-card-text>
-          <LeltarivEszkozok filter="hiany" :leltarivId="leltariv.id" :reloadTrigger="reloadTrigger"/>
+          <LeltarivEszkozok filter="hiany" :leltarivId="leltariv.id" :reloadTrigger="reloadTrigger" @select="onSelect($event)"/>
         </v-card-text>
       </Card>
     </v-layout>
@@ -58,7 +58,6 @@ export default {
       leltariSzam: '',
       eszkoz: {},
       leltarivEszkoz: {},
-      leltarivUjeszkoz: {},
       felveheto: false,
       reloadTrigger: false,
       felvettEszkozokId: 0,
@@ -114,6 +113,19 @@ export default {
         this.felvettEszkozok.unshift({ id: this.felvettEszkozokId, name: this.eszkoz.name, label: 'Új eszköz' })
         EventBus.$emit('inform', { type: 'alert', variation: 'success', message: 'Felvéve!' })
       }
+    },
+
+    async onSelect (content) {
+      if (!this.kezi) return
+      this.felveheto = false
+      this.leltarivEszkoz = content
+      const params = { domain: [['id', '=', this.leltarivEszkoz.eszkoz_id[0]]] }
+      const response = await API.get('vir/searchRead/leltar.eszkoz?params=' + JSON.stringify(params))
+      if (!checkResponse(response)) return
+      this.eszkoz = response.data.length ? response.data[0] : {}
+      this.felveheto = true
+      // await this.$nextTick()
+      window.scrollTo(0, 0)
     }
   },
 

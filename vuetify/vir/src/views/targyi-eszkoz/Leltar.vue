@@ -43,7 +43,9 @@ export default {
       const items = [
         { icon: 'add', title: 'Automatikus felvétel', path: '/targyi-eszkoz-leltar-felvetel-auto' },
         { icon: 'add', title: 'Kézi felvétel', path: '/targyi-eszkoz-leltar-felvetel-kezi' },
-        { icon: 'edit', title: 'Selejtezés, sérült címke', path: '/targyi-eszkoz-leltar-eszkozadat' }
+        { icon: 'edit', title: 'Selejtezés, sérült címke', path: '/targyi-eszkoz-leltar-eszkozadat' },
+        { icon: 'info', title: 'Fellelt tárgyi eszközök', path: '/targyi-eszkoz-leltar-leltariv-eszkoz-fellelt' },
+        { icon: 'info', title: 'Hiányzó tárgyi eszközök', path: '/targyi-eszkoz-leltar-leltariv-eszkoz-hiany' }
       ]
       return items
     }
