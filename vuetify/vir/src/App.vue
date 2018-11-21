@@ -62,7 +62,7 @@ export default {
           API.setHeader('Authorization', response.data.loopback_token)
           return
         } else {
-          console.log(response.problem)
+          // console.log(response.problem)
         }
       }
       EventBus.$emit('inform', { type: 'alert', variation: 'error', message: 'Érvénytelen felhasználó!' })

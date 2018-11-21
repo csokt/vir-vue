@@ -32,7 +32,7 @@ export default {
 
   methods: {
     async getViewList () {
-      const response = await API.get('config/views/tv/' + this.store.user.tir_role)
+      const response = await API.get('config/views/tv/' + this.store.user.tv_role)
       if (response.ok) {
         this.viewlist = response.data
       } else {

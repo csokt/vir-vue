@@ -32,7 +32,7 @@ export default {
 
   methods: {
     async getPlayList () {
-      const response = await API.get('config/playlists/' + this.store.user.tir_role)
+      const response = await API.get('config/playlists/' + this.store.user.tv_role)
       if (response.ok) {
         this.playlist = response.data
       } else {

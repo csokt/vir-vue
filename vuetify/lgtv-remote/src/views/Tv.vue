@@ -42,7 +42,7 @@ export default {
       } else {
         this.tv = {}
         EventBus.$emit('inform', { type: 'alert', variation: 'error', message: 'TV betöltési hiba!' })
-        console.log(response.problem)
+        // console.log(response.problem)
       }
     },
 
@@ -50,8 +50,9 @@ export default {
       let url = method + '/' + this.$route.params.id
       if (arg) url = url + '/' + arg
       EventBus.$emit('inform', { type: 'alert', variation: 'info', message: url })
-      const response = await API.post('tv/' + url)
-      console.log(response.data)
+      await API.post('tv/' + url)
+      // const response = await API.post('tv/' + url)
+      // console.log(response.data)
     }
   }
 }
