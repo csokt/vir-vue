@@ -50,9 +50,6 @@ export default {
 
     title () {
       return this.pageTitle
-      // if (this.menuLevel === 0) return 'Vállalat Irányítási Rendszer'
-      // if (this.menuLevel === 1) return this.appPageTitle
-      // return this.modulePageTitle
     }
   },
 
@@ -60,7 +57,6 @@ export default {
     async getUser (token) {
       if (token) {
         const response = await API.post('accounts/pulltoken/' + token)
-        // console.log(response)
         if (response.ok) {
           this.$store.commit('user', response.data.vir_user)
           API.setHeader('Authorization', response.data.loopback_token)

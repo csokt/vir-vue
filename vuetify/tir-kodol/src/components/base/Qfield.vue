@@ -1,6 +1,7 @@
 <template>
   <div>
     <v-text-field
+      ref="textfield"
       :value="value"
       :label="label"
       @input="$emit('input', $event)"
@@ -16,10 +17,6 @@
       @back="dialog = false"
     />
   </div>
-<!--
-      readonly
-      @focus="dialog = !value"
--->
 </template>
 
 <script>
@@ -33,6 +30,7 @@ export default {
   props: {
     value: String,
     label: String,
+    focus: Boolean,
     required: {
       type: Boolean,
       default: false
@@ -46,6 +44,12 @@ export default {
   data () {
     return {
       dialog: false
+    }
+  },
+
+  mounted () {
+    if (this.focus) {
+      this.$refs.textfield.focus()
     }
   }
 }

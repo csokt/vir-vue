@@ -4,6 +4,7 @@
     @input="$emit('input', $event)"
     :label="label"
     @change="onChange"
+    :focus="focus"
   />
 </template>
 
@@ -20,6 +21,7 @@ export default {
   props: {
     value: String,
     label: String,
+    focus: Boolean,
     apiUrl: Function,
     reloadTrigger: Boolean,
     notFoundMessage: {
