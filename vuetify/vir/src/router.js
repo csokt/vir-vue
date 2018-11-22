@@ -90,6 +90,10 @@ export default new Router({
       component: () => import(/* webpackChunkName: "targyi-eszkoz-leltar-eszkozadat" */ './views/targyi-eszkoz/LeltarEszkozadat.vue')
     },
     {
+      path: '/targyi-eszkoz-leltar-ismeretlen',
+      component: () => import(/* webpackChunkName: "targyi-eszkoz-leltar-ismeretlen" */ './views/targyi-eszkoz/LeltarIsmeretlen.vue')
+    },
+    {
       path: '/targyi-eszkoz-leltar-leltariv-eszkoz-fellelt',
       props: { filter: 'fellelt' },
       component: () => import(/* webpackChunkName: "targyi-eszkoz-leltar-leltariv-eszkoz" */ './views/targyi-eszkoz/LeltarLeltarivEszkoz.vue')
