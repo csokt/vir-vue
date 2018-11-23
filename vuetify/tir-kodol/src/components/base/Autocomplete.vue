@@ -66,11 +66,12 @@ export default {
 
   watch: {
     searchInput (content) {
+      // console.log('searchInput:', content)
       this.search(content)
     },
 
     parentSearch (content) {
-      this.search(content)
+      this.search(content, true)
     },
 
     value (content) {
@@ -82,9 +83,9 @@ export default {
   },
 
   methods: {
-    async search (content) {
-      // console.log('Search:', content)
-      if (!content) {
+    async search (content, parent = false) {
+      // console.log('search:', content)
+      if (content === null) {
         return
       }
       this.isLoading = true
@@ -92,6 +93,10 @@ export default {
       this.isLoading = false
       if (response.ok) {
         this.items = response.data
+        // console.log('this.items:', this.items)
+        if (parent && !this.items.length) {
+          this.$emit('change', {})
+        }
       }
     },
 
@@ -104,7 +109,7 @@ export default {
 
   created () {
     if (this.parentSearch) {
-      this.search(this.parentSearch)
+      this.search(this.parentSearch, true)
     }
   }
 }

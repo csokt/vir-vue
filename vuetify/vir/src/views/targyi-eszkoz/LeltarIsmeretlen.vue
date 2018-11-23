@@ -19,22 +19,18 @@
       </Card>
     </v-layout>
   </v-container>
-<!--
--->
 </template>
 
 <script>
 import { get } from 'vuex-pathify'
 import { API, EventBus, checkResponse } from '@/util'
 import Card from '@/components/base/Card.vue'
-import Eszkoz from '@/components/targyi-eszkoz/Eszkoz.vue'
 import LeltarivIsmeretlen from '@/components/targyi-eszkoz/LeltarivIsmeretlen.vue'
 
 export default {
   name: 'targyi-eszkoz-leltar-ismeretlen',
   components: {
     Card,
-    Eszkoz,
     LeltarivIsmeretlen
   },
 
