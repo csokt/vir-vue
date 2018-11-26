@@ -98,7 +98,7 @@ export default {
         if (response.result && response.result.length) {
           const result = response.result[0]
           const uzemkodRole = {1: 'varró', 2: 'varró', 3: 'varró', 4: 'félkész vasaló', 5: 'szabó', 6: 'technológus', 7: 'kötő', 8: 'kötő', 9: 'logisztikus', 26: 'készáru vasaló', 45: 'varró2'}
-          this.store.user = {name: result.dolgozonev.trim(), role: uzemkodRole[result.uzemkod], uzemnev: result.uzemnev.trim(), belepokod: result.dolgozokod + 20000}
+          this.store.user = {name: result.dolgozonev.trim(), role: uzemkodRole[result.uzemkod], uzemnev: result.uzemnev.trim(), dolgozokod: result.dolgozokod, belepokod: result.dolgozokod + 20000}
           this.store.kodol = {
             telephelykod: result.telephelykod,
             telephely: result.telephely.trim(),

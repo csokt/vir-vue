@@ -130,10 +130,10 @@ views:
   - name:     Kódolás ideje
 
 -
-  id:         becsultszazalek
+  id:         napiteljesitmeny
   database:   SzefoModulKeszlet
-  name:       monitor_becsultszazalek
-  label:      Teljesítmény %
+  name:       monitor_napiteljesitmeny
+  label:      Teljesítmény % (napi becsült)
   device:     tablet
   roles:
   - szabó
@@ -141,27 +141,41 @@ views:
   - varró
   - varró2
   - varrodavezető
-  order:      '[Dolgozó kód]'
+  order:      '[Dátum] desc'
   head_after: 15
-  limit:      100
+  limit:      300
   fields:
   - name:     Dolgozó kód
     type:     number
     filter:   egyenlő
     default:  belepokod
     readonly: true
-  - name:     Napi becs %
-    label:    Mai becsült %
-  - name:     1 napi becs %
-    label:    1 nappal ezelőtti becsült %
-  - name:     2 napi becs %
-    label:    2 nappal ezelőtti becsült %
-  - name:     3 napi becs %
-    label:    3 nappal ezelőtti becsült %
-  - name:     Havi becs %
-    label:    Aktuális havi becsült %
-  - name:     1 havi lezárt %
-    label:    Előző havi lezárt %
+  - name:     Dátum
+  - name:     Teljesítmény %
+
+-
+  id:         havilezartteljesitmeny
+  database:   SzefoModulKeszlet
+  name:       monitor_havilezartteljesitmeny
+  label:      Teljesítmény % (havi lezárt)
+  device:     tablet
+  roles:
+  - szabó
+  - logisztikus
+  - varró
+  - varró2
+  - varrodavezető
+  order:      '[Év] desc, [Hónap] desc'
+  head_after: 15
+  limit:      60
+  fields:
+  - name:     Dolgozó kód
+    type:     number
+    filter:   egyenlő
+    default:  belepokod
+    readonly: true
+  - name:     Dátum
+  - name:     Teljesítmény %
 
 -
   id:         cikknormai
