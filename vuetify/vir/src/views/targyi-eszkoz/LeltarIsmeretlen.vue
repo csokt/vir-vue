@@ -92,11 +92,16 @@ export default {
       if (!this.ismeretlen.megjegyzes) this.ismeretlen.megjegyzes = ''
       await this.$nextTick()
       window.scrollTo(0, 0)
+      this.$refs.kod.focus()
     }
   },
 
   created () {
     this.$store.set('pageTitle', 'Ismeretlen eszközök')
+  },
+
+  mounted () {
+    this.$refs.kod.focus()
   }
 }
 </script>

@@ -12,9 +12,9 @@
         </v-card-text>
         <v-btn color="primary" :disabled="!felveheto" @click="felvesz">Adatok rögzítése</v-btn>
       </Card>
-      <Card title="Fellelt eszközök">
+      <Card :title="titleEszkozok">
         <v-card-text>
-          <LeltarivEszkozok filter="fellelt" :leltarivId="leltariv.id" :reloadTrigger="reloadTrigger" @select="onSelect($event)"/>
+          <LeltarivEszkozok filter="fellelt" :leltarivId="leltariv.id" :reloadTrigger="reloadTrigger" @length="lengthEszkozok=$event" @select="onSelect($event)"/>
         </v-card-text>
       </Card>
     </v-layout>
@@ -44,12 +44,17 @@ export default {
       eszkoz: {},
       leltarivEszkoz: {},
       felveheto: false,
-      reloadTrigger: false
+      reloadTrigger: false,
+      lengthEszkozok: 0
     }
   },
 
   computed: {
-    ...get(['leltariv'])
+    ...get(['leltariv']),
+
+    titleEszkozok () {
+      return 'Fellelt eszközök (' + this.lengthEszkozok + ')'
+    }
   },
 
   methods: {

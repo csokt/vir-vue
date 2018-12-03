@@ -3,9 +3,12 @@
     <v-layout justify-space-around wrap>
       <Card>
         <v-card-text>
-          <v-textarea ref="leltariv" v-model="leltariv.name" label="Leltárkörzet" rows="1" auto-grow readonly/>
+          <v-textarea v-model="leltariv.name" label="Leltárkörzet" rows="1" auto-grow readonly/>
           <Eszkoz v-model="leltariSzam" :focus="true" @change="onChange($event)"/>
           <EszkozInfo :eszkoz="eszkoz"/>
+          <v-checkbox v-if="kezi" ref="serult_cimke" v-model="leltarivEszkoz.serult_cimke" label="Sérült / hiányzó címke?"/>
+          <v-checkbox v-if="kezi" v-model="leltarivEszkoz.selejtezni" label="Selejtezni?"/>
+          <v-textarea v-if="kezi" ref="megjegyzes" v-model="leltarivEszkoz.megjegyzes" label="Megjegyzés" rows="1" auto-grow/>
         </v-card-text>
         <v-btn v-if="kezi" color="primary" :disabled="!felveheto" @click="felvesz">Tárgyi eszköz felvétele</v-btn>
         <v-card-text>
@@ -21,9 +24,9 @@
           />
         </v-card-text>
       </Card>
-      <Card title="Hiányzó eszközök">
+      <Card :title="titleEszkozok">
         <v-card-text>
-          <LeltarivEszkozok filter="hiany" :leltarivId="leltariv.id" :reloadTrigger="reloadTrigger" @select="onSelect($event)"/>
+          <LeltarivEszkozok filter="hiany" :leltarivId="leltariv.id" :reloadTrigger="reloadTrigger" @length="lengthEszkozok=$event" @select="onSelect($event)"/>
         </v-card-text>
       </Card>
     </v-layout>
@@ -58,13 +61,18 @@ export default {
       leltarivEszkoz: {},
       felveheto: false,
       reloadTrigger: false,
+      lengthEszkozok: 0,
       felvettEszkozokId: 0,
       felvettEszkozok: []
     }
   },
 
   computed: {
-    ...get(['leltariv'])
+    ...get(['leltariv']),
+
+    titleEszkozok () {
+      return 'Hiányzó eszközök (' + this.lengthEszkozok + ')'
+    }
   },
 
   methods: {
@@ -80,32 +88,36 @@ export default {
       const response = await API.get('vir/searchRead/leltar.leltariv_osszes?params=' + JSON.stringify(params))
       if (!checkResponse(response)) return
       this.leltarivEszkoz = response.data.length ? response.data[0] : {}
+      if (!this.leltarivEszkoz.megjegyzes) this.leltarivEszkoz.megjegyzes = ''
       if (this.leltarivEszkoz.fellelheto) {
         this.felvettEszkozok.unshift({ id: this.felvettEszkozokId, name: this.eszkoz.name, label: 'Az eszköz már felvéve' })
         EventBus.$emit('inform', { type: 'alert', variation: 'warning', message: 'Az eszköz már felvéve!' })
         return
       }
 
-      if (this.kezi) this.$refs.leltariv.focus()
+      if (this.kezi) this.$refs.megjegyzes.focus()
       this.felveheto = true
       if (!this.kezi) this.felvesz()
     },
 
     async felvesz () {
       this.felveheto = false
-      let response, row
+      let response
+      let row = {
+        serult_cimke: this.leltarivEszkoz.serult_cimke,
+        selejtezni: this.leltarivEszkoz.selejtezni,
+        megjegyzes: this.leltarivEszkoz.megjegyzes
+      }
       if (this.leltarivEszkoz.leltariv_eszkoz_id) { // leltárkörzetbe tartozó eszköz
-        row = { fellelheto: true }
+        row.fellelheto = true
         response = await API.post('vir/update/leltar.leltariv_eszkoz/' + this.leltarivEszkoz.leltariv_eszkoz_id.toString(), row)
         if (!checkResponse(response)) return
         this.felvettEszkozok.unshift({ id: this.felvettEszkozokId, name: this.eszkoz.name, label: 'Fellelt eszköz' })
         EventBus.$emit('inform', { type: 'alert', variation: 'success', message: 'Felvéve!' })
         this.reloadTrigger = !this.reloadTrigger
       } else { // új tárgyi eszköz
-        row = {
-          leltariv_id: this.leltariv.id,
-          eszkoz_id: this.eszkoz.id
-        }
+        row.leltariv_id = this.leltariv.id
+        row.eszkoz_id = this.eszkoz.id
         response = await API.post('vir/create/leltar.leltariv_ujeszkoz', row)
         if (!checkResponse(response)) return
         this.felvettEszkozok.unshift({ id: this.felvettEszkozokId, name: this.eszkoz.name, label: 'Új eszköz' })
@@ -117,6 +129,7 @@ export default {
       if (!this.kezi) return
       this.felveheto = false
       this.leltarivEszkoz = content
+      if (!this.leltarivEszkoz.megjegyzes) this.leltarivEszkoz.megjegyzes = ''
       const params = { domain: [['id', '=', this.leltarivEszkoz.eszkoz_id[0]]] }
       const response = await API.get('vir/searchRead/leltar.eszkoz?params=' + JSON.stringify(params))
       if (!checkResponse(response)) return

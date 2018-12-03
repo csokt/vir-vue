@@ -42,7 +42,11 @@ export default {
 
   methods: {
     async readEszkozok () {
-      if (!this.leltarivId) { this.eszkozok = []; return }
+      if (!this.leltarivId) {
+        this.eszkozok = []
+        this.$emit('length', 0)
+        return
+      }
       let params
       if (this.filter === 'uj') {
         params = { domain: [['leltariv_id', '=', this.leltarivId], ['leltariv_ujeszkoz_id', '>', 0]] }
@@ -56,6 +60,7 @@ export default {
       const response = await API.get('vir/searchRead/leltar.leltariv_osszes?params=' + JSON.stringify(params))
       if (!checkResponse(response)) return
       this.eszkozok = response.data
+      this.$emit('length', this.eszkozok.length)
     },
 
     utc2local (utc) { return utc2local(utc) }
