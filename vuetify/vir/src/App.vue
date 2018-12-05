@@ -15,7 +15,7 @@
 
     <v-footer app height=36 color="grey lighten-3" fixed>
       <v-layout column>
-        <Inform/>
+        <SmartInform/>
         <div style="text-align: center;">
           <span>
             {{user.name}}
@@ -30,14 +30,12 @@
 <script>
 import { get } from 'vuex-pathify'
 import { API, EventBus } from '@/util'
-import Menu from '@/components/base/Menu.vue'
-import Inform from '@/components/base/Inform.vue'
+import SmartInform from '@/components/base/SmartInform.vue'
 
 export default {
   name: 'App',
   components: {
-    Menu,
-    Inform
+    SmartInform
   },
 
   data () {

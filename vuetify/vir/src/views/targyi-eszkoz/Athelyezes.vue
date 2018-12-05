@@ -1,40 +1,61 @@
 <template>
   <v-container grid-list-lg>
     <v-layout justify-space-around wrap>
-      <Card>
+      <BaseCard>
         <v-card-text>
-          <Autocomplete v-model="ujLeltarkorzetId" label="Új leltárkörzet" itemClass="body-2" :apiUrl="apiUrl" @change="ujLeltarkorzet = $event"/>
-          <Eszkoz v-model="leltariSzam" :reloadTrigger="reloadTrigger" @change="eszkoz = $event"/>
-          <EszkozInfo :eszkoz="eszkoz"/>
+          <SmartAutocomplete
+            v-model="ujLeltarkorzetId"
+            label="Új leltárkörzet"
+            itemClass="body-2"
+            :apiUrl="apiUrl"
+            @change="ujLeltarkorzet = $event"
+          />
+          <Eszkoz
+            v-model="leltariSzam"
+            :reloadTrigger="reloadTrigger"
+            @change="eszkoz = $event"
+          />
+          <BaseEszkozInfo :eszkoz="eszkoz"
+          />
         </v-card-text>
         <v-card-actions>
-          <v-btn color="primary" :disabled="!athelyezheto" @click="athelyez">Áthelyezés az új körzetbe</v-btn>
+          <v-btn
+            color="primary"
+            :disabled="!athelyezheto"
+            @click="athelyez"
+          >
+            Áthelyezés az új körzetbe
+          </v-btn>
         </v-card-actions>
-      </Card>
-      <Card title="Eszköz mozgásai">
+      </BaseCard>
+      <BaseCard title="Eszköz mozgásai">
         <v-card-text>
-          <EszkozMozgas filter="eszkoz" :eszkozId="eszkoz.id" :reloadTrigger="reloadTrigger"/>
+          <EszkozMozgas
+            filter="eszkoz"
+            :eszkozId="eszkoz.id"
+            :reloadTrigger="reloadTrigger"
+          />
         </v-card-text>
-      </Card>
+      </BaseCard>
     </v-layout>
   </v-container>
 </template>
 
 <script>
 import { API, EventBus, checkResponse } from '@/util'
-import Card from '@/components/base/Card.vue'
-import Autocomplete from '@/components/base/Autocomplete.vue'
+import BaseCard from '@/components/base/BaseCard.vue'
+import SmartAutocomplete from '@/components/base/SmartAutocomplete.vue'
 import Eszkoz from '@/components/targyi-eszkoz/Eszkoz.vue'
-import EszkozInfo from '@/components/targyi-eszkoz/EszkozInfo.vue'
+import BaseEszkozInfo from '@/components/targyi-eszkoz/BaseEszkozInfo.vue'
 import EszkozMozgas from '@/components/targyi-eszkoz/EszkozMozgas.vue'
 
 export default {
   name: 'targyi-eszkoz-athelyezes',
   components: {
-    Card,
-    Autocomplete,
+    BaseCard,
+    SmartAutocomplete,
     Eszkoz,
-    EszkozInfo,
+    BaseEszkozInfo,
     EszkozMozgas
   },
 

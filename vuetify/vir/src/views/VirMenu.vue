@@ -1,9 +1,9 @@
 <template>
   <v-container>
     <v-layout justify-space-around wrap>
-      <Card elevation="elevation-1">
-        <Menu :items="showItems"/>
-      </Card>
+      <BaseCard elevation="elevation-1">
+        <BaseMenu :items="showItems"/>
+      </BaseCard>
     </v-layout>
   </v-container>
 </template>
@@ -11,14 +11,14 @@
 <script>
 import { get } from 'vuex-pathify'
 import { groupId } from '@/util.js'
-import Card from '@/components/base/Card.vue'
-import Menu from '@/components/base/Menu.vue'
+import BaseCard from '@/components/base/BaseCard.vue'
+import BaseMenu from '@/components/base/BaseMenu.vue'
 
 export default {
   name: 'virmenu',
   components: {
-    Card,
-    Menu
+    BaseCard,
+    BaseMenu
   },
 
   props: {

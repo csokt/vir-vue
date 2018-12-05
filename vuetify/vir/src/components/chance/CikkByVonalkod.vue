@@ -1,5 +1,5 @@
 <template>
-  <Qlookup
+  <SmartLookup
     :value="value"
     @input="$emit('input', $event)"
     label="Vonalkód"
@@ -12,11 +12,11 @@
 </template>
 
 <script>
-import Qlookup from '@/components/base/Qlookup.vue'
+import SmartLookup from '@/components/base/SmartLookup.vue'
 
 export default {
   components: {
-    Qlookup
+    SmartLookup
   },
 
   props: {

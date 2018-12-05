@@ -1,20 +1,45 @@
 <template>
   <v-container grid-list-lg>
     <v-layout justify-space-around wrap>
-      <Card>
+      <BaseCard>
         <v-card-text>
-          <Autocomplete ref="hely" v-model="helyId" label="Hely" itemClass="body-2" :apiUrl="apiUrl" @change="hely = $event; $refs.cikkszam.focus()"/>
-          <v-text-field ref="cikkszam" v-model="cikkszam" label="Cikkszám" clearable @keyup.enter="$refs.megnevezes.focus()"/>
-          <v-text-field ref="osztaly" mask="N" v-model="osztaly" label="Osztály" clearable @keyup.enter="$refs.megnevezes.focus()"/>
-          <v-text-field ref="megnevezes" v-model="cikk.megnevezes" label="Megnevezés" readonly/>
+          <SmartAutocomplete
+            ref="hely"
+            v-model="helyId"
+            label="Hely"
+            itemClass="body-2"
+            :apiUrl="apiUrl"
+            @change="hely = $event; $refs.cikkszam.focus()"
+          />
+          <v-text-field
+            ref="cikkszam"
+            v-model="cikkszam"
+            label="Cikkszám"
+            clearable
+            @keyup.enter="$refs.megnevezes.focus()"
+          />
+          <v-text-field
+            ref="osztaly"
+            v-model="osztaly"
+            mask="N"
+            label="Osztály"
+            clearable
+            @keyup.enter="$refs.megnevezes.focus()"
+          />
+          <v-text-field
+            ref="megnevezes"
+            v-model="cikk.megnevezes"
+            label="Megnevezés"
+            readonly
+          />
         </v-card-text>
-      </Card>
+      </BaseCard>
 
-      <Card title="Készlet">
+      <BaseCard title="Készlet">
         <v-card-text>
           <KeszletTable :searchParams="keszletSearchParams"/>
         </v-card-text>
-      </Card>
+      </BaseCard>
     </v-layout>
   </v-container>
 <!--
@@ -23,15 +48,15 @@
 
 <script>
 import { API, checkResponse } from '@/util'
-import Card from '@/components/base/Card.vue'
-import Autocomplete from '@/components/base/Autocomplete.vue'
+import BaseCard from '@/components/base/BaseCard.vue'
+import SmartAutocomplete from '@/components/base/SmartAutocomplete.vue'
 import KeszletTable from '@/components/chance/KeszletTable.vue'
 
 export default {
   name: 'chance-keszlet',
   components: {
-    Card,
-    Autocomplete,
+    BaseCard,
+    SmartAutocomplete,
     KeszletTable
   },
 

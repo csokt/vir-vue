@@ -5,7 +5,10 @@
     no-data-text="Nincs készleten"
     hide-actions
   >
-    <template slot="items" slot-scope="props">
+    <template
+      slot="items"
+      slot-scope="props"
+    >
       <td>{{ props.item.meret }}</td>
       <td>{{ props.item.szin }}</td>
       <td class="text-xs-right">{{ props.item.vonalkod }}</td>

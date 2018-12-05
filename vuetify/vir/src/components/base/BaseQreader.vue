@@ -1,7 +1,14 @@
 <template>
-  <v-dialog v-model="dialog" persistent max-width="400">
+  <v-dialog
+    v-model="dialog"
+    persistent
+    max-width="400"
+  >
     <v-card>
-      <v-card-title class="title grey--text" @click.stop="onBack">
+      <v-card-title
+        class="title grey--text"
+        @click.stop="onBack"
+      >
         <v-icon v-if="!required">
           arrow_back
         </v-icon>
@@ -13,8 +20,7 @@
           :paused="!dialog"
           :track="false"
           @decode="onDecode"
-        >
-        </QrcodeReader>
+        />
       </v-img>
     </v-card>
   </v-dialog>

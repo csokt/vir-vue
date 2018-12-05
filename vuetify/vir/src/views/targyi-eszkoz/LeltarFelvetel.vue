@@ -1,16 +1,49 @@
 <template>
   <v-container grid-list-lg>
     <v-layout justify-space-around wrap>
-      <Card>
+      <BaseCard>
         <v-card-text>
-          <v-textarea v-model="leltariv.name" label="Leltárkörzet" rows="1" auto-grow readonly/>
-          <Eszkoz v-model="leltariSzam" :focus="true" @change="onChange($event)"/>
-          <EszkozInfo :eszkoz="eszkoz"/>
-          <v-checkbox v-if="kezi" ref="serult_cimke" v-model="leltarivEszkoz.serult_cimke" label="Sérült / hiányzó címke?"/>
-          <v-checkbox v-if="kezi" v-model="leltarivEszkoz.selejtezni" label="Selejtezni?"/>
-          <v-textarea v-if="kezi" ref="megjegyzes" v-model="leltarivEszkoz.megjegyzes" label="Megjegyzés" rows="1" auto-grow/>
+          <v-textarea
+            v-model="leltariv.name"
+            label="Leltárkörzet"
+            rows="1"
+            auto-grow
+            readonly
+          />
+          <Eszkoz
+            v-model="leltariSzam"
+            :focus="true"
+            @change="onChange($event)"
+          />
+          <BaseEszkozInfo :eszkoz="eszkoz"/>
+          <v-checkbox
+            v-if="kezi"
+            ref="serult_cimke"
+            v-model="leltarivEszkoz.serult_cimke"
+            label="Sérült / hiányzó címke?"
+            />
+          <v-checkbox
+            v-if="kezi"
+            v-model="leltarivEszkoz.selejtezni"
+            label="Selejtezni?"
+            />
+          <v-textarea
+            v-if="kezi"
+            ref="megjegyzes"
+            v-model="leltarivEszkoz.megjegyzes"
+            label="Megjegyzés"
+            rows="1"
+            auto-grow
+          />
         </v-card-text>
-        <v-btn v-if="kezi" color="primary" :disabled="!felveheto" @click="felvesz">Tárgyi eszköz felvétele</v-btn>
+        <v-btn
+          v-if="kezi"
+          color="primary"
+          :disabled="!felveheto"
+          @click="felvesz"
+        >
+          Tárgyi eszköz felvétele
+        </v-btn>
         <v-card-text>
           <v-text-field readonly/>
           <v-textarea
@@ -23,12 +56,18 @@
             readonly
           />
         </v-card-text>
-      </Card>
-      <Card :title="titleEszkozok">
+      </BaseCard>
+      <BaseCard :title="titleEszkozok">
         <v-card-text>
-          <LeltarivEszkozok filter="hiany" :leltarivId="leltariv.id" :reloadTrigger="reloadTrigger" @length="lengthEszkozok=$event" @select="onSelect($event)"/>
+          <LeltarivEszkozok
+            filter="hiany"
+            :leltarivId="leltariv.id"
+            :reloadTrigger="reloadTrigger"
+            @length="lengthEszkozok=$event"
+            @select="onSelect($event)"
+          />
         </v-card-text>
-      </Card>
+      </BaseCard>
     </v-layout>
   </v-container>
 </template>
@@ -36,17 +75,17 @@
 <script>
 import { get } from 'vuex-pathify'
 import { API, EventBus, checkResponse } from '@/util'
-import Card from '@/components/base/Card.vue'
+import BaseCard from '@/components/base/BaseCard.vue'
 import Eszkoz from '@/components/targyi-eszkoz/Eszkoz.vue'
-import EszkozInfo from '@/components/targyi-eszkoz/EszkozInfo.vue'
+import BaseEszkozInfo from '@/components/targyi-eszkoz/BaseEszkozInfo.vue'
 import LeltarivEszkozok from '@/components/targyi-eszkoz/LeltarivEszkozok.vue'
 
 export default {
   name: 'targyi-eszkoz-leltar-felvetel',
   components: {
-    Card,
+    BaseCard,
     Eszkoz,
-    EszkozInfo,
+    BaseEszkozInfo,
     LeltarivEszkozok
   },
 

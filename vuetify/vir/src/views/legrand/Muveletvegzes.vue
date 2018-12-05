@@ -1,39 +1,76 @@
 <template>
   <v-container grid-list-lg>
     <v-layout justify-space-around wrap>
-      <Card>
+      <BaseCard>
         <v-card-text>
-          <Autocomplete v-model="helyId" label="Gyártási hely" itemClass="body-2" :apiUrl="helyApiUrl" @change="hely = $event"/>
-          <Autocomplete v-model="szemelyId" label="Dolgozó" itemClass="body-2" :apiUrl="szemelyApiUrl" @change="szemely = $event"/>
-          <Autocomplete v-model="szefoMuveletId" label="Művelet" itemClass="body-2" :apiUrl="szefoMuveletApiUrl" @change="szefoMuvelet = $event"/>
-          <v-text-field v-model="gyartasiLap" label="Gyártási lap" readonly/>
-          <v-text-field v-model="szefoMuvelet.hiany_db" label="Hiány" readonly/>
-          <v-text-field ref="mennyiseg" v-model="mennyiseg" label="Mennyiség" @keyup.enter="$refs.mennyiseg.blur()"/>
+          <SmartAutocomplete
+            v-model="helyId"
+            label="Gyártási hely"
+            itemClass="body-2"
+            :apiUrl="helyApiUrl"
+            @change="hely = $event"
+          />
+          <SmartAutocomplete
+            v-model="szemelyId"
+            label="Dolgozó"
+            itemClass="body-2"
+            :apiUrl="szemelyApiUrl"
+            @change="szemely = $event"
+          />
+          <SmartAutocomplete
+            v-model="szefoMuveletId"
+            label="Művelet"
+            itemClass="body-2"
+            :apiUrl="szefoMuveletApiUrl"
+            @change="szefoMuvelet = $event"
+          />
+          <v-text-field
+            v-model="gyartasiLap"
+            label="Gyártási lap"
+            readonly
+          />
+          <v-text-field
+            v-model="szefoMuvelet.hiany_db"
+            label="Hiány"
+            readonly
+          />
+          <v-text-field
+            ref="mennyiseg"
+            v-model="mennyiseg"
+            label="Mennyiség"
+            @keyup.enter="$refs.mennyiseg.blur()"
+          />
         </v-card-text>
         <v-card-actions>
-          <v-btn color="primary" :disabled="!mentheto" @click="ment">Mentés</v-btn>
+          <v-btn
+            color="primary"
+            :disabled="!mentheto"
+            @click="ment"
+          >
+            Mentés
+          </v-btn>
         </v-card-actions>
-      </Card>
-      <Card title="Felvett műveletek">
+      </BaseCard>
+      <BaseCard title="Felvett műveletek">
         <v-card-text>
           <MuveletvegzesTable :reloadTrigger="reloadTrigger"/>
         </v-card-text>
-      </Card>
+      </BaseCard>
     </v-layout>
   </v-container>
 </template>
 
 <script>
 import { API, EventBus, checkResponse } from '@/util'
-import Card from '@/components/base/Card.vue'
-import Autocomplete from '@/components/base/Autocomplete.vue'
+import BaseCard from '@/components/base/BaseCard.vue'
+import SmartAutocomplete from '@/components/base/SmartAutocomplete.vue'
 import MuveletvegzesTable from '@/components/legrand/MuveletvegzesTable.vue'
 
 export default {
   name: 'legrand-muveletvegzes',
   components: {
-    Card,
-    Autocomplete,
+    BaseCard,
+    SmartAutocomplete,
     MuveletvegzesTable
   },
 

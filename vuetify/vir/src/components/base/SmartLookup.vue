@@ -1,21 +1,21 @@
 <template>
-  <Qfield
+  <BaseQfield
     :value="value"
-    @input="$emit('input', $event)"
     :label="label"
-    @change="onChange"
     :focus="focus"
+    @input="$emit('input', $event)"
+    @change="onChange"
   />
 </template>
 
 <script>
 import { API, EventBus } from '@/util'
-import Qfield from '@/components/base/Qfield.vue'
+import BaseQfield from '@/components/base/BaseQfield.vue'
 
 export default {
   name: 'qlookup',
   components: {
-    Qfield
+    BaseQfield
   },
 
   props: {

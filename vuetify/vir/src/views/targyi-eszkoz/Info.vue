@@ -1,33 +1,39 @@
 <template>
   <v-container grid-list-lg>
     <v-layout justify-space-around wrap>
-      <Card>
+      <BaseCard>
         <v-card-text>
-          <Eszkoz v-model="leltariSzam"  @change="eszkoz = $event"/>
-          <EszkozInfo :eszkoz="eszkoz"/>
+          <Eszkoz
+            v-model="leltariSzam"
+            @change="eszkoz = $event"
+          />
+          <BaseEszkozInfo :eszkoz="eszkoz"/>
         </v-card-text>
-      </Card>
-      <Card title="Eszköz mozgásai">
+      </BaseCard>
+      <BaseCard title="Eszköz mozgásai">
         <v-card-text>
-          <EszkozMozgas filter="eszkoz" :eszkozId="eszkoz.id"/>
+          <EszkozMozgas
+            filter="eszkoz"
+            :eszkozId="eszkoz.id"
+          />
         </v-card-text>
-      </Card>
+      </BaseCard>
     </v-layout>
   </v-container>
 </template>
 
 <script>
-import Card from '@/components/base/Card.vue'
+import BaseCard from '@/components/base/BaseCard.vue'
 import Eszkoz from '@/components/targyi-eszkoz/Eszkoz.vue'
-import EszkozInfo from '@/components/targyi-eszkoz/EszkozInfo.vue'
+import BaseEszkozInfo from '@/components/targyi-eszkoz/BaseEszkozInfo.vue'
 import EszkozMozgas from '@/components/targyi-eszkoz/EszkozMozgas.vue'
 
 export default {
   name: 'targyi-eszkoz-info',
   components: {
-    Card,
+    BaseCard,
     Eszkoz,
-    EszkozInfo,
+    BaseEszkozInfo,
     EszkozMozgas
   },
 

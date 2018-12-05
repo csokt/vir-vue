@@ -1,21 +1,39 @@
 <template>
   <v-container grid-list-lg>
     <v-layout justify-space-around wrap>
-      <Card>
+      <BaseCard>
         <v-card-text>
-          <Autocomplete v-model="ujHasznaloId" label="Új használó" itemClass="body-2" :apiUrl="apiUrl"/>
-          <Eszkoz v-model="leltariSzam" :reloadTrigger="reloadTrigger" @change="eszkoz = $event"/>
-          <EszkozInfo :eszkoz="eszkoz"/>
+          <SmartAutocomplete
+            v-model="ujHasznaloId"
+            label="Új használó"
+            itemClass="body-2"
+            :apiUrl="apiUrl"
+          />
+          <Eszkoz
+            v-model="leltariSzam"
+            :reloadTrigger="reloadTrigger"
+            @change="eszkoz = $event"
+          />
+          <BaseEszkozInfo :eszkoz="eszkoz"/>
         </v-card-text>
         <v-card-actions>
-          <v-btn color="primary" :disabled="!atadhato" @click="atad">Használatba adás</v-btn>
+          <v-btn
+            color="primary"
+            :disabled="!atadhato"
+            @click="atad"
+          >
+            Használatba adás
+          </v-btn>
         </v-card-actions>
-      </Card>
-      <Card title="Jelenleg használatban">
+      </BaseCard>
+      <BaseCard title="Jelenleg használatban">
         <v-card-text>
-          <Eszkozhasznalo :hasznaloId="ujHasznaloId" :reloadTrigger="reloadTrigger"/>
+          <Eszkozhasznalo
+            :hasznaloId="ujHasznaloId"
+            :reloadTrigger="reloadTrigger"
+          />
         </v-card-text>
-      </Card>
+      </BaseCard>
     </v-layout>
   </v-container>
 <!--
@@ -24,19 +42,19 @@
 
 <script>
 import { API, EventBus, checkResponse } from '@/util'
-import Card from '@/components/base/Card.vue'
-import Autocomplete from '@/components/base/Autocomplete.vue'
+import BaseCard from '@/components/base/BaseCard.vue'
+import SmartAutocomplete from '@/components/base/SmartAutocomplete.vue'
 import Eszkoz from '@/components/targyi-eszkoz/Eszkoz.vue'
-import EszkozInfo from '@/components/targyi-eszkoz/EszkozInfo.vue'
+import BaseEszkozInfo from '@/components/targyi-eszkoz/BaseEszkozInfo.vue'
 import Eszkozhasznalo from '@/components/targyi-eszkoz/Eszkozhasznalo.vue'
 
 export default {
   name: 'targyi-eszkoz-szemelynek',
   components: {
-    Card,
-    Autocomplete,
+    BaseCard,
+    SmartAutocomplete,
     Eszkoz,
-    EszkozInfo,
+    BaseEszkozInfo,
     Eszkozhasznalo
   },
 

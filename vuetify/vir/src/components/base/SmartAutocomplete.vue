@@ -1,30 +1,34 @@
 <template>
   <v-autocomplete ref="element"
     :value="value"
-    @input="$emit('input', $event)"
     :items="items"
     :loading="isLoading"
     :search-input.sync="searchInput"
     clearable
-    @click:clear="items = []"
     no-filter
     hide-no-data
     :item-text="itemText"
     :item-value="itemValue"
     :label="label"
+    @input="$emit('input', $event)"
+    @click:clear="items = []"
     @change="onChange"
   >
     <template
       slot="selection"
       slot-scope="{ item }"
     >
-      <span class="mt-2"> {{ item[itemText] }} </span>
+      <span class="mt-2">
+        {{ item[itemText] }}
+      </span>
     </template>
     <template
       slot="item"
       slot-scope="{ item }"
     >
-      <span :class="itemClass"> {{ item[itemText] }} </span>
+      <span :class="itemClass">
+        {{ item[itemText] }}
+      </span>
     </template>
   </v-autocomplete>
 <!--

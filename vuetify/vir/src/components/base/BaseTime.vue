@@ -24,8 +24,20 @@
       full-width
     >
       <v-spacer></v-spacer>
-      <v-btn flat color="primary" @click="modal2 = false">Elvet</v-btn>
-      <v-btn flat color="primary" @click="onSave">Ment</v-btn>
+      <v-btn
+        flat
+        color="primary"
+        @click="modal2 = false"
+      >
+        Elvet
+      </v-btn>
+      <v-btn
+        flat
+        color="primary"
+        @click="onSave"
+      >
+        Ment
+      </v-btn>
     </v-time-picker>
   </v-dialog>
 <!--

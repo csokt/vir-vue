@@ -4,12 +4,12 @@
       ref="textfield"
       :value="value"
       :label="label"
+      append-outer-icon="select_all"
       @input="$emit('input', $event)"
       @change="$emit('change', $event)"
-      append-outer-icon="select_all"
       @click:append-outer="dialog = true"
     />
-    <Qreader
+    <BaseQreader
       :label="label"
       :dialog="dialog"
       :required="required"
@@ -20,11 +20,11 @@
 </template>
 
 <script>
-import Qreader from './Qreader.vue'
+import BaseQreader from './BaseQreader.vue'
 
 export default {
   components: {
-    Qreader
+    BaseQreader
   },
 
   props: {

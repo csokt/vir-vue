@@ -1,35 +1,53 @@
 <template>
   <v-container grid-list-lg>
     <v-layout justify-space-around wrap>
-      <Card title="Választható eszközök">
+      <BaseCard title="Választható eszközök">
         <v-card-text>
-          <EszkozMozgas filter="erkeztetes" :reloadTrigger="reloadTrigger" @select="onSelect($event)"/>
+          <EszkozMozgas
+            filter="erkeztetes"
+            :reloadTrigger="reloadTrigger"
+            @select="onSelect($event)"
+          />
         </v-card-text>
-      </Card>
-      <Card>
+      </BaseCard>
+      <BaseCard>
         <v-card-text>
-          <MozgasInfo :mozgas="mozgas"/>
+          <BaseMozgasInfo :mozgas="mozgas"/>
         </v-card-text>
         <v-card-actions>
-          <v-btn v-if="!sztorno" color="primary" :disabled="mozgas.megerkezett" @click="erkeztet">Érkeztetés</v-btn>
-          <v-btn v-if="sztorno" color="primary" :disabled="mozgas.megerkezett" @click="sztornoz">Sztornózás</v-btn>
+          <v-btn
+            v-if="!sztorno"
+            color="primary"
+            :disabled="mozgas.megerkezett"
+            @click="erkeztet"
+          >
+            Érkeztetés
+          </v-btn>
+          <v-btn
+            v-if="sztorno"
+            color="primary"
+            :disabled="mozgas.megerkezett"
+            @click="sztornoz"
+          >
+            Sztornózás
+          </v-btn>
         </v-card-actions>
-      </Card>
+      </BaseCard>
     </v-layout>
   </v-container>
 </template>
 
 <script>
 import { API, checkResponse } from '@/util'
-import Card from '@/components/base/Card.vue'
+import BaseCard from '@/components/base/BaseCard.vue'
 import EszkozMozgas from '@/components/targyi-eszkoz/EszkozMozgas.vue'
-import MozgasInfo from '@/components/targyi-eszkoz/MozgasInfo.vue'
+import BaseMozgasInfo from '@/components/targyi-eszkoz/BaseMozgasInfo.vue'
 
 export default {
   name: 'targyi-eszkoz-erkeztetes',
   components: {
-    Card,
-    MozgasInfo,
+    BaseCard,
+    BaseMozgasInfo,
     EszkozMozgas
   },
 

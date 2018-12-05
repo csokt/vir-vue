@@ -1,24 +1,24 @@
 <template>
-  <Qlookup
+  <SmartLookup
     :value="value"
-    @input="$emit('input', $event)"
     label="Leltári szám"
     :focus="focus"
     :apiUrl="apiUrl"
-    @change="$emit('change', $event)"
     :reloadTrigger="reloadTrigger"
+    @input="$emit('input', $event)"
+    @change="$emit('change', $event)"
   />
 <!--
 -->
 </template>
 
 <script>
-import Qlookup from '@/components/base/Qlookup.vue'
+import SmartLookup from '@/components/base/SmartLookup.vue'
 
 export default {
   name: 'eszkoz',
   components: {
-    Qlookup
+    SmartLookup
   },
 
   props: {

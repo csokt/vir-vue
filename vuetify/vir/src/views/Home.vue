@@ -1,15 +1,22 @@
 <template>
   <v-container>
     <v-layout justify-space-around wrap>
-      <Card v-if="user.id" elevation="elevation-1">
-        <Menu :items="showItems"/>
-      </Card>
-      <Card v-if="!user.id" title="Kérem jelentkezzen be!">
-      </Card>
+      <BaseCard
+        v-if="user.id"
+        elevation="elevation-1"
+      >
+        <BaseMenu :items="showItems"/>
+      </BaseCard>
+
+      <BaseCard
+        v-if="!user.id"
+        title="Kérem jelentkezzen be!"
+      >
+      </BaseCard>
     </v-layout>
   </v-container>
 <!--
-      <Card v-if="user.id" elevation="elevation-1" :title="'Üdvözlöm ' + user.name + '!'">
+      <BaseCard v-if="user.id" elevation="elevation-1" :title="'Üdvözlöm ' + user.name + '!'">
       <v-btn color="primary" @click="restartBackend">Restart backend</v-btn>
 -->
 </template>
@@ -17,14 +24,14 @@
 <script>
 import { get } from 'vuex-pathify'
 import { groupId } from '@/util.js'
-import Card from '@/components/base/Card.vue'
-import Menu from '@/components/base/Menu.vue'
+import BaseCard from '@/components/base/BaseCard.vue'
+import BaseMenu from '@/components/base/BaseMenu.vue'
 
 export default {
   name: 'home',
   components: {
-    Card,
-    Menu
+    BaseCard,
+    BaseMenu
   },
 
   computed: {

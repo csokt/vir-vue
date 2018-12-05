@@ -1,22 +1,72 @@
 <template>
   <v-container grid-list-lg>
     <v-layout justify-space-around wrap>
-      <Card>
+      <BaseCard>
         <v-card-text>
-          <v-textarea v-model="leltariv.name" label="Leltárkörzet" rows="1" auto-grow readonly/>
-          <v-text-field ref="kod"        v-model="ismeretlen.kod"        label="Kód"        clearable @keyup.enter="$refs.megnevezes.focus()" :rules="[rules.required, rules.kod]" validate-on-blur/>
-          <v-text-field ref="megnevezes" v-model="ismeretlen.megnevezes" label="Megnevezés" clearable @keyup.enter="$refs.megjegyzes.focus()" :rules="[rules.required]"/>
-          <v-text-field ref="megjegyzes" v-model="ismeretlen.megjegyzes" label="Megjegyzés" clearable @keyup.enter="$refs.megjegyzes.blur()"/>
+          <v-textarea
+            v-model="leltariv.name"
+            label="Leltárkörzet"
+            rows="1"
+            auto-grow readonly
+          />
+          <v-text-field
+            ref="kod"
+            v-model="ismeretlen.kod"
+            label="Kód"
+            clearable
+            :rules="[rules.required, rules.kod]"
+            validate-on-blur
+            @keyup.enter="$refs.megnevezes.focus()"
+          />
+          <v-text-field
+            ref="megnevezes"
+            v-model="ismeretlen.megnevezes"
+            label="Megnevezés"
+            clearable
+            :rules="[rules.required]"
+            @keyup.enter="$refs.megjegyzes.focus()"
+          />
+          <v-text-field
+
+              ref=
+              "megjegyzes"
+            v-model="ismeretlen.megjegyzes"
+            label="Megjegyzés"
+            clearable
+            @keyup.enter="$refs.megjegyzes.blur()"
+          />
         </v-card-text>
-        <v-btn color="primary" :disabled="!checkFields" @click="felvesz">Felvesz</v-btn>
-        <v-btn color="primary" :disabled="!checkFields || !ismeretlen.id" @click="modosit">Módosít</v-btn>
-        <v-btn color="primary" :disabled="!checkFields || !ismeretlen.id" @click="torol">Töröl</v-btn>
-      </Card>
-      <Card title="Felvett ismeretlen eszközök">
+        <v-btn
+          color="primary"
+          :disabled="!checkFields"
+          @click="felvesz"
+        >
+          Felvesz
+        </v-btn>
+        <v-btn
+          color="primary"
+          :disabled="!checkFields || !ismeretlen.id"
+          @click="modosit"
+        >
+          Módosít
+        </v-btn>
+        <v-btn
+          color="primary"
+          :disabled="!checkFields || !ismeretlen.id"
+          @click="torol"
+        >
+          Töröl
+        </v-btn>
+      </BaseCard>
+      <BaseCard title="Felvett ismeretlen eszközök">
         <v-card-text>
-          <LeltarivIsmeretlen :leltarivId="leltariv.id" :reloadTrigger="reloadTrigger" @select="onSelect($event)"/>
+          <LeltarivIsmeretlen
+            :leltarivId="leltariv.id"
+            :reloadTrigger="reloadTrigger"
+            @select="onSelect($event)"
+          />
         </v-card-text>
-      </Card>
+      </BaseCard>
     </v-layout>
   </v-container>
 </template>
@@ -24,13 +74,13 @@
 <script>
 import { get } from 'vuex-pathify'
 import { API, EventBus, checkResponse } from '@/util'
-import Card from '@/components/base/Card.vue'
+import BaseCard from '@/components/base/BaseCard.vue'
 import LeltarivIsmeretlen from '@/components/targyi-eszkoz/LeltarivIsmeretlen.vue'
 
 export default {
   name: 'targyi-eszkoz-leltar-ismeretlen',
   components: {
-    Card,
+    BaseCard,
     LeltarivIsmeretlen
   },
 

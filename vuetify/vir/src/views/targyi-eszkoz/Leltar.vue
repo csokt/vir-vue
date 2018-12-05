@@ -1,31 +1,38 @@
 <template>
   <v-container grid-list-lg>
     <v-layout justify-space-around wrap>
-      <Card>
+      <BaseCard>
         <v-card-text>
-          <Autocomplete v-model="leltarivId" label="Leltárív" itemClass="body-2" :apiUrl="apiUrl" :parentSearch="leltariv.name" @change="$store.set('leltariv', $event)"/>
-          <Menu :items="showItems"/>
+          <SmartAutocomplete
+            v-model="leltarivId"
+            label="Leltárív"
+            itemClass="body-2"
+            :apiUrl="apiUrl"
+            :parentSearch="leltariv.name"
+            @change="$store.set('leltariv', $event)"
+          />
+          <BaseMenu :items="showItems"/>
         </v-card-text>
-      </Card>
+      </BaseCard>
     </v-layout>
   </v-container>
 </template>
 
 <script>
 import { get } from 'vuex-pathify'
-import Card from '@/components/base/Card.vue'
-import Menu from '@/components/base/Menu.vue'
-import Autocomplete from '@/components/base/Autocomplete.vue'
-import KorzetInfo from '@/components/targyi-eszkoz/KorzetInfo.vue'
+import BaseCard from '@/components/base/BaseCard.vue'
+import BaseMenu from '@/components/base/BaseMenu.vue'
+import SmartAutocomplete from '@/components/base/SmartAutocomplete.vue'
+import BaseKorzetInfo from '@/components/targyi-eszkoz/BaseKorzetInfo.vue'
 import KorzetEszkozok from '@/components/targyi-eszkoz/KorzetEszkozok.vue'
 
 export default {
   name: 'targyi-eszkoz-leltar',
   components: {
-    Card,
-    Menu,
-    Autocomplete,
-    KorzetInfo,
+    BaseCard,
+    BaseMenu,
+    SmartAutocomplete,
+    BaseKorzetInfo,
     KorzetEszkozok
   },
 

@@ -5,7 +5,10 @@
     no-data-text=""
     hide-actions
   >
-    <template slot="items" slot-scope="props">
+    <template
+      slot="items"
+      slot-scope="props"
+    >
       <td>{{ props.item.szemely_id[1] }}</td>
       <td>{{ props.item.szefo_muvelet_id[1] }}</td>
       <td class="text-xs-right">{{ props.item.mennyiseg }}</td>
