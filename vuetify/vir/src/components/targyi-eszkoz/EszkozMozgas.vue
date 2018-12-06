@@ -1,27 +1,29 @@
 <template>
   <div>
-    <v-textarea
-      v-if="filter === 'eszkoz'"
-      v-for="row in mozgas"
-      :key="row.id"
-      v-model="row.hova_leltarkorzet_id[1]"
-      :label="utc2local(row.create_date)"
-      rows="1"
-      auto-grow
-      readonly
-      @click.stop="$emit('select', row)"
-    />
-    <v-textarea
-      v-if="filter === 'erkeztetes'"
-      v-for="row in mozgas"
-      :key="row.id"
-      v-model="row.eszkoz_id[1]"
-      :label="row.hova_leltarkorzet_id[1]"
-      rows="1"
-      auto-grow
-      readonly
-      @click.stop="$emit('select', row)"
-    />
+    <div v-if="filter === 'eszkoz'">
+      <v-textarea
+        v-for="row in mozgas"
+        :key="row.id"
+        v-model="row.hova_leltarkorzet_id[1]"
+        :label="utc2local(row.create_date)"
+        rows="1"
+        auto-grow
+        readonly
+        @click.stop="$emit('select', row)"
+      />
+    </div>
+    <div v-if="filter === 'erkeztetes'">
+      <v-textarea
+        v-for="row in mozgas"
+        :key="row.id"
+        v-model="row.eszkoz_id[1]"
+        :label="row.hova_leltarkorzet_id[1]"
+        rows="1"
+        auto-grow
+        readonly
+        @click.stop="$emit('select', row)"
+      />
+    </div>
   </div>
 <!--
 -->

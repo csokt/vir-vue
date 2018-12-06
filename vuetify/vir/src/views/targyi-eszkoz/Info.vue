@@ -3,7 +3,7 @@
     <v-layout justify-space-around wrap>
       <BaseCard>
         <v-card-text>
-          <Eszkoz
+          <LookupEszkoz
             v-model="leltariSzam"
             @change="eszkoz = $event"
           />
@@ -24,7 +24,7 @@
 
 <script>
 import BaseCard from '@/components/base/BaseCard.vue'
-import Eszkoz from '@/components/targyi-eszkoz/Eszkoz.vue'
+import LookupEszkoz from '@/components/targyi-eszkoz/LookupEszkoz.vue'
 import BaseEszkozInfo from '@/components/targyi-eszkoz/BaseEszkozInfo.vue'
 import EszkozMozgas from '@/components/targyi-eszkoz/EszkozMozgas.vue'
 
@@ -32,7 +32,7 @@ export default {
   name: 'targyi-eszkoz-info',
   components: {
     BaseCard,
-    Eszkoz,
+    LookupEszkoz,
     BaseEszkozInfo,
     EszkozMozgas
   },

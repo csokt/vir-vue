@@ -10,7 +10,7 @@
             auto-grow
             readonly
           />
-          <Eszkoz
+          <LookupEszkoz
             v-model="leltariSzam"
             :focus="true"
             @change="onChange($event)"
@@ -67,14 +67,14 @@
 import { get } from 'vuex-pathify'
 import { API, EventBus, checkResponse } from '@/util'
 import BaseCard from '@/components/base/BaseCard.vue'
-import Eszkoz from '@/components/targyi-eszkoz/Eszkoz.vue'
+import LookupEszkoz from '@/components/targyi-eszkoz/LookupEszkoz.vue'
 import LeltarivEszkozok from '@/components/targyi-eszkoz/LeltarivEszkozok.vue'
 
 export default {
   name: 'targyi-eszkoz-leltar-eszkozadat',
   components: {
     BaseCard,
-    Eszkoz,
+    LookupEszkoz,
     LeltarivEszkozok
   },
 

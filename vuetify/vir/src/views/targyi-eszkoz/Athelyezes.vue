@@ -10,7 +10,7 @@
             :apiUrl="apiUrl"
             @change="ujLeltarkorzet = $event"
           />
-          <Eszkoz
+          <LookupEszkoz
             v-model="leltariSzam"
             :reloadTrigger="reloadTrigger"
             @change="eszkoz = $event"
@@ -45,7 +45,7 @@
 import { API, EventBus, checkResponse } from '@/util'
 import BaseCard from '@/components/base/BaseCard.vue'
 import SmartAutocomplete from '@/components/base/SmartAutocomplete.vue'
-import Eszkoz from '@/components/targyi-eszkoz/Eszkoz.vue'
+import LookupEszkoz from '@/components/targyi-eszkoz/LookupEszkoz.vue'
 import BaseEszkozInfo from '@/components/targyi-eszkoz/BaseEszkozInfo.vue'
 import EszkozMozgas from '@/components/targyi-eszkoz/EszkozMozgas.vue'
 
@@ -54,7 +54,7 @@ export default {
   components: {
     BaseCard,
     SmartAutocomplete,
-    Eszkoz,
+    LookupEszkoz,
     BaseEszkozInfo,
     EszkozMozgas
   },

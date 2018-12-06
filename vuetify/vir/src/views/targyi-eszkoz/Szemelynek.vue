@@ -9,7 +9,7 @@
             itemClass="body-2"
             :apiUrl="apiUrl"
           />
-          <Eszkoz
+          <LookupEszkoz
             v-model="leltariSzam"
             :reloadTrigger="reloadTrigger"
             @change="eszkoz = $event"
@@ -44,7 +44,7 @@
 import { API, EventBus, checkResponse } from '@/util'
 import BaseCard from '@/components/base/BaseCard.vue'
 import SmartAutocomplete from '@/components/base/SmartAutocomplete.vue'
-import Eszkoz from '@/components/targyi-eszkoz/Eszkoz.vue'
+import LookupEszkoz from '@/components/targyi-eszkoz/LookupEszkoz.vue'
 import BaseEszkozInfo from '@/components/targyi-eszkoz/BaseEszkozInfo.vue'
 import Eszkozhasznalo from '@/components/targyi-eszkoz/Eszkozhasznalo.vue'
 
@@ -53,7 +53,7 @@ export default {
   components: {
     BaseCard,
     SmartAutocomplete,
-    Eszkoz,
+    LookupEszkoz,
     BaseEszkozInfo,
     Eszkozhasznalo
   },

@@ -11,7 +11,7 @@
             :parentSearch="cikk.name"
             @change="cikk = $event"
           />
-          <CikkByVonalkod
+          <LookupCikkByVonalkod
             v-model="cikk.vonalkod"
             @change="cikk = $event"
           />
@@ -30,7 +30,7 @@
 <script>
 import BaseCard from '@/components/base/BaseCard.vue'
 import SmartAutocomplete from '@/components/base/SmartAutocomplete.vue'
-import CikkByVonalkod from '@/components/chance/CikkByVonalkod.vue'
+import LookupCikkByVonalkod from '@/components/chance/LookupCikkByVonalkod.vue'
 import BaseCikkInfo from '@/components/chance/BaseCikkInfo.vue'
 import CikkKeszlet from '@/components/chance/CikkKeszlet.vue'
 
@@ -39,7 +39,7 @@ export default {
   components: {
     BaseCard,
     SmartAutocomplete,
-    CikkByVonalkod,
+    LookupCikkByVonalkod,
     BaseCikkInfo,
     CikkKeszlet
   },
