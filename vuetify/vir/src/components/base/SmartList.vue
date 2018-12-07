@@ -1,5 +1,10 @@
 <template>
   <div>
+    <ApiGet
+      v-model="items"
+      :reloadTrigger="reloadTrigger"
+      :apiUrl="apiUrl"
+    />
     <BaseList
       :items="items"
       :itemkey="itemkey"
@@ -7,14 +12,7 @@
       :label="label"
       @select="$emit('select', $event)"
     />
-    <ApiGet
-      v-model="items"
-      :reloadTrigger="reloadTrigger"
-      :apiUrl="apiUrl"
-    />
 </div>
-<!--
--->
 </template>
 
 <script>

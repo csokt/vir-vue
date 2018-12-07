@@ -26,7 +26,7 @@ export default {
   computed: {
     apiUrl () {
       const params = { domain: [['cikk_id', '=', this.cikkId], ['szefo_e', '=', true], ['raktaron', '!=', 0]] }
-      return 'vir/searchRead/chance.keszlet?params=' + JSON.stringify(params)
+      return 'vir/searchRead/legrand.keszlet?params=' + JSON.stringify(params)
     }
   },
 

@@ -1,8 +1,3 @@
-<template>
-  <div>
-  </div>
-</template>
-
 <script>
 import { API, checkResponse } from '@/util'
 
@@ -28,6 +23,10 @@ export default {
       if (!checkResponse(response)) return
       this.$emit('input', response.data)
     }
+  },
+
+  render: function (h) {
+    return h() // avoid warning message
   }
 }
 </script>

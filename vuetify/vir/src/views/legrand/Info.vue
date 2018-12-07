@@ -16,7 +16,7 @@
       </BaseCard>
       <BaseCard title="Cikk készlet">
         <v-card-text>
-          <CikkKeszlet :cikkId="cikk.id"/>
+          <ListCikkKeszlet :cikkId="cikk.id"/>
         </v-card-text>
       </BaseCard>
     </v-layout>
@@ -27,7 +27,7 @@
 import BaseCard from '@/components/base/BaseCard.vue'
 import SmartAutocomplete from '@/components/base/SmartAutocomplete.vue'
 import BaseCikkInfo from '@/components/legrand/BaseCikkInfo.vue'
-import CikkKeszlet from '@/components/legrand/CikkKeszlet.vue'
+import ListCikkKeszlet from '@/components/legrand/ListCikkKeszlet.vue'
 
 export default {
   name: 'legrand-info',
@@ -35,7 +35,7 @@ export default {
     BaseCard,
     SmartAutocomplete,
     BaseCikkInfo,
-    CikkKeszlet
+    ListCikkKeszlet
   },
 
   data () {
