@@ -20,7 +20,7 @@
       </BaseCard>
       <BaseCard title="Cikk készlet">
         <v-card-text>
-          <CikkKeszlet :cikkId="cikk.id"/>
+          <ListCikkKeszlet :cikkId="cikk.id"/>
         </v-card-text>
       </BaseCard>
     </v-layout>
@@ -32,7 +32,7 @@ import BaseCard from '@/components/base/BaseCard.vue'
 import SmartAutocomplete from '@/components/base/SmartAutocomplete.vue'
 import LookupCikkByVonalkod from '@/components/chance/LookupCikkByVonalkod.vue'
 import BaseCikkInfo from '@/components/chance/BaseCikkInfo.vue'
-import CikkKeszlet from '@/components/chance/CikkKeszlet.vue'
+import ListCikkKeszlet from '@/components/chance/ListCikkKeszlet.vue'
 
 export default {
   name: 'chance-info',
@@ -41,7 +41,7 @@ export default {
     SmartAutocomplete,
     LookupCikkByVonalkod,
     BaseCikkInfo,
-    CikkKeszlet
+    ListCikkKeszlet
   },
 
   data () {
