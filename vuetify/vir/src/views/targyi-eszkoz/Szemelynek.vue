@@ -8,6 +8,7 @@
             label="Új használó"
             itemClass="body-2"
             :apiUrl="apiUrl"
+            @searchInput="searchInput = $event"
           />
           <LookupEszkoz
             v-model="leltariSzam"
@@ -43,23 +44,24 @@
 <script>
 import { API, EventBus, checkResponse } from '@/util'
 import BaseCard from '@/components/base/BaseCard.vue'
+import BaseEszkozInfo from '@/components/targyi-eszkoz/BaseEszkozInfo.vue'
 import SmartAutocomplete from '@/components/base/SmartAutocomplete.vue'
 import LookupEszkoz from '@/components/targyi-eszkoz/LookupEszkoz.vue'
-import BaseEszkozInfo from '@/components/targyi-eszkoz/BaseEszkozInfo.vue'
 import Eszkozhasznalo from '@/components/targyi-eszkoz/Eszkozhasznalo.vue'
 
 export default {
   name: 'targyi-eszkoz-szemelynek',
   components: {
     BaseCard,
+    BaseEszkozInfo,
     SmartAutocomplete,
     LookupEszkoz,
-    BaseEszkozInfo,
     Eszkozhasznalo
   },
 
   data () {
     return {
+      searchInput: '',
       ujHasznaloId: 0,
       leltariSzam: '',
       reloadTrigger: false,
@@ -68,17 +70,17 @@ export default {
   },
 
   computed: {
+    apiUrl () {
+      const params = { domain: [['name', 'ilike', this.searchInput]], limit: 10 }
+      return 'vir/searchRead/hr.employee?params=' + JSON.stringify(params)
+    },
+
     atadhato () {
       return this.ujHasznaloId && this.eszkoz.id && this.ujHasznaloId !== this.eszkoz.akt_hasznalo_id[0]
     }
   },
 
   methods: {
-    apiUrl (content) {
-      const params = { domain: [['name', 'ilike', content]], limit: 8 }
-      return 'vir/searchRead/hr.employee?params=' + JSON.stringify(params)
-    },
-
     async atad () {
       const row = {
         eszkoz_id: this.eszkoz.id,

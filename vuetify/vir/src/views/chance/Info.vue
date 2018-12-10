@@ -8,12 +8,12 @@
             label="Cikkazonosító"
             itemClass="body-2"
             :apiUrl="apiUrl"
-            :parentSearch="cikk.name"
+            @searchInput="searchInput = $event"
             @change="cikk = $event"
           />
           <LookupCikkByVonalkod
             v-model="cikk.vonalkod"
-            @change="cikk = $event"
+            @change="cikk = $event; searchInput = cikk.name"
           />
           <BaseCikkInfo :cikk="cikk"/>
         </v-card-text>
@@ -46,13 +46,14 @@ export default {
 
   data () {
     return {
+      searchInput: '',
       cikk: {}
     }
   },
 
-  methods: {
-    apiUrl (content) {
-      const params = { domain: [['name', 'ilike', content]], order: 'name', limit: 20 }
+  computed: {
+    apiUrl () {
+      const params = { domain: [['name', 'ilike', this.searchInput]], order: 'name', limit: 10 }
       return 'vir/searchRead/chance.cikk?params=' + JSON.stringify(params)
     }
   },

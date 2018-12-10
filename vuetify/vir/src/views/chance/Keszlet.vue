@@ -9,6 +9,7 @@
             label="Hely"
             itemClass="body-2"
             :apiUrl="apiUrl"
+            @searchInput="searchInput = $event"
             @change="hely = $event; $refs.cikkszam.focus()"
           />
           <v-text-field
@@ -62,6 +63,7 @@ export default {
 
   data () {
     return {
+      searchInput: '',
       helyId: 0,
       cikkszam: '',
       osztaly: '1',
@@ -71,6 +73,11 @@ export default {
   },
 
   computed: {
+    apiUrl () {
+      const params = { domain: [['name', 'ilike', this.searchInput], ['szefo_e', '=', true]], order: 'name', limit: 10 }
+      return 'vir/searchRead/chance.hely?params=' + JSON.stringify(params)
+    },
+
     keszletSearchParams () {
       if (!this.hely.id || !this.cikk.id || !this.osztaly) return ''
       const params = { domain: [['hely_id', '=', this.hely.id], ['cikkszam', '=', this.cikkszam], ['osztaly', '=', this.osztaly], ['szefo_e', '=', true], ['raktaron', '!=', 0]], limit: 200 }
@@ -88,13 +95,6 @@ export default {
       if (response.data.length) {
         this.cikk = response.data[0]
       }
-    }
-  },
-
-  methods: {
-    apiUrl (content) {
-      const params = { domain: [['name', 'ilike', content], ['szefo_e', '=', true]], order: 'name', limit: 10 }
-      return 'vir/searchRead/chance.hely?params=' + JSON.stringify(params)
     }
   },
 

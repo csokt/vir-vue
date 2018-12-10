@@ -8,6 +8,7 @@
             label="Új leltárkörzet"
             itemClass="body-2"
             :apiUrl="apiUrl"
+            @searchInput="searchInput = $event"
             @change="ujLeltarkorzet = $event"
           />
           <LookupEszkoz
@@ -44,23 +45,24 @@
 <script>
 import { API, EventBus, checkResponse } from '@/util'
 import BaseCard from '@/components/base/BaseCard.vue'
+import BaseEszkozInfo from '@/components/targyi-eszkoz/BaseEszkozInfo.vue'
 import SmartAutocomplete from '@/components/base/SmartAutocomplete.vue'
 import LookupEszkoz from '@/components/targyi-eszkoz/LookupEszkoz.vue'
-import BaseEszkozInfo from '@/components/targyi-eszkoz/BaseEszkozInfo.vue'
 import EszkozMozgas from '@/components/targyi-eszkoz/EszkozMozgas.vue'
 
 export default {
   name: 'targyi-eszkoz-athelyezes',
   components: {
     BaseCard,
+    BaseEszkozInfo,
     SmartAutocomplete,
     LookupEszkoz,
-    BaseEszkozInfo,
     EszkozMozgas
   },
 
   data () {
     return {
+      searchInput: '',
       ujLeltarkorzetId: 0,
       ujLeltarkorzet: {},
       leltariSzam: '',
@@ -70,17 +72,17 @@ export default {
   },
 
   computed: {
+    apiUrl () {
+      const params = { domain: [['name', 'ilike', this.searchInput]], limit: 10 }
+      return 'vir/searchRead/leltar.korzet?params=' + JSON.stringify(params)
+    },
+
     athelyezheto () {
       return this.ujLeltarkorzet.id && this.eszkoz.id && this.ujLeltarkorzet.id !== this.eszkoz.akt_leltarkorzet_id[0]
     }
   },
 
   methods: {
-    apiUrl (content) {
-      const params = { domain: [['name', 'ilike', content]], limit: 8 }
-      return 'vir/searchRead/leltar.korzet?params=' + JSON.stringify(params)
-    },
-
     async athelyez () {
       const row = {
         eszkoz_id: this.eszkoz.id,

@@ -9,6 +9,7 @@
             itemClass="body-2"
             :apiUrl="apiUrl"
             :parentSearch="leltariv.name"
+            @searchInput="searchInput = $event"
             @change="$store.set('leltariv', $event)"
           />
           <BaseMenu :items="showItems"/>
@@ -22,8 +23,8 @@
 import { get } from 'vuex-pathify'
 import BaseCard from '@/components/base/BaseCard.vue'
 import BaseMenu from '@/components/base/BaseMenu.vue'
-import SmartAutocomplete from '@/components/base/SmartAutocomplete.vue'
 import BaseKorzetInfo from '@/components/targyi-eszkoz/BaseKorzetInfo.vue'
+import SmartAutocomplete from '@/components/base/SmartAutocomplete.vue'
 import KorzetEszkozok from '@/components/targyi-eszkoz/KorzetEszkozok.vue'
 
 export default {
@@ -31,19 +32,25 @@ export default {
   components: {
     BaseCard,
     BaseMenu,
-    SmartAutocomplete,
     BaseKorzetInfo,
+    SmartAutocomplete,
     KorzetEszkozok
   },
 
   data () {
     return {
+      searchInput: '',
       leltarivId: 0
     }
   },
 
   computed: {
     ...get(['leltariv']),
+
+    apiUrl () {
+      const params = { domain: [['name', 'ilike', this.searchInput], ['state', '=', 'terv']], limit: 10 }
+      return 'vir/searchRead/leltar.leltariv?params=' + JSON.stringify(params)
+    },
 
     showItems () {
       if (!this.leltariv.id) return []
@@ -59,15 +66,9 @@ export default {
     }
   },
 
-  methods: {
-    apiUrl (content) {
-      const params = { domain: [['name', 'ilike', content], ['state', '=', 'terv']], limit: 8 }
-      return 'vir/searchRead/leltar.leltariv?params=' + JSON.stringify(params)
-    }
-  },
-
-  created () {
+  mounted () {
     this.$store.set('pageTitle', 'Tárgyi eszköz leltár')
+    this.searchInput = this.leltariv.name
     this.leltarivId = this.leltariv.id
   }
 }

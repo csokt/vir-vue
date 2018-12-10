@@ -40,8 +40,8 @@
 <script>
 import { API, checkResponse } from '@/util'
 import BaseCard from '@/components/base/BaseCard.vue'
-import EszkozMozgas from '@/components/targyi-eszkoz/EszkozMozgas.vue'
 import BaseMozgasInfo from '@/components/targyi-eszkoz/BaseMozgasInfo.vue'
+import EszkozMozgas from '@/components/targyi-eszkoz/EszkozMozgas.vue'
 
 export default {
   name: 'targyi-eszkoz-erkeztetes',

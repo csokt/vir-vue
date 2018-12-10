@@ -8,6 +8,7 @@
             label="Leltárkörzet"
             itemClass="body-2"
             :apiUrl="apiUrl"
+            @searchInput="searchInput = $event"
             @change="leltarkorzet = $event"
           />
           <BaseKorzetInfo :leltarkorzet="leltarkorzet"/>
@@ -24,29 +25,30 @@
 
 <script>
 import BaseCard from '@/components/base/BaseCard.vue'
-import SmartAutocomplete from '@/components/base/SmartAutocomplete.vue'
 import BaseKorzetInfo from '@/components/targyi-eszkoz/BaseKorzetInfo.vue'
+import SmartAutocomplete from '@/components/base/SmartAutocomplete.vue'
 import KorzetEszkozok from '@/components/targyi-eszkoz/KorzetEszkozok.vue'
 
 export default {
   name: 'targyi-eszkoz-leltarkorzet',
   components: {
     BaseCard,
-    SmartAutocomplete,
     BaseKorzetInfo,
+    SmartAutocomplete,
     KorzetEszkozok
   },
 
   data () {
     return {
+      searchInput: '',
       leltarkorzetId: 0,
       leltarkorzet: {}
     }
   },
 
-  methods: {
-    apiUrl (content) {
-      const params = { domain: [['name', 'ilike', content]], limit: 8 }
+  computed: {
+    apiUrl () {
+      const params = { domain: [['name', 'ilike', this.searchInput]], limit: 10 }
       return 'vir/searchRead/leltar.korzet?params=' + JSON.stringify(params)
     }
   },

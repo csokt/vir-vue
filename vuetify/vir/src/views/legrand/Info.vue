@@ -9,6 +9,7 @@
             itemClass="body-2"
             :apiUrl="apiUrl"
             item-text="cikkszam"
+            @searchInput="searchInput = $event"
             @change="cikk = $event"
           />
           <BaseCikkInfo :cikk="cikk"/>
@@ -25,29 +26,30 @@
 
 <script>
 import BaseCard from '@/components/base/BaseCard.vue'
-import SmartAutocomplete from '@/components/base/SmartAutocomplete.vue'
 import BaseCikkInfo from '@/components/legrand/BaseCikkInfo.vue'
+import SmartAutocomplete from '@/components/base/SmartAutocomplete.vue'
 import ListCikkKeszlet from '@/components/legrand/ListCikkKeszlet.vue'
 
 export default {
   name: 'legrand-info',
   components: {
     BaseCard,
-    SmartAutocomplete,
     BaseCikkInfo,
+    SmartAutocomplete,
     ListCikkKeszlet
   },
 
   data () {
     return {
+      searchInput: '',
       cikkId: 0,
       cikk: {}
     }
   },
 
-  methods: {
-    apiUrl (content) {
-      const params = { domain: [['cikkszam', 'ilike', content]], order: 'cikkszam', limit: 10 }
+  computed: {
+    apiUrl () {
+      const params = { domain: [['cikkszam', 'ilike', this.searchInput]], order: 'cikkszam', limit: 10 }
       return 'vir/searchRead/legrand.cikk?params=' + JSON.stringify(params)
     }
   },

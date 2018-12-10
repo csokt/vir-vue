@@ -24,16 +24,16 @@
 
 <script>
 import BaseCard from '@/components/base/BaseCard.vue'
-import LookupEszkoz from '@/components/targyi-eszkoz/LookupEszkoz.vue'
 import BaseEszkozInfo from '@/components/targyi-eszkoz/BaseEszkozInfo.vue'
+import LookupEszkoz from '@/components/targyi-eszkoz/LookupEszkoz.vue'
 import EszkozMozgas from '@/components/targyi-eszkoz/EszkozMozgas.vue'
 
 export default {
   name: 'targyi-eszkoz-info',
   components: {
     BaseCard,
-    LookupEszkoz,
     BaseEszkozInfo,
+    LookupEszkoz,
     EszkozMozgas
   },
 

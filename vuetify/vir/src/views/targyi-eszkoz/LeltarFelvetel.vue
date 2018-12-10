@@ -76,16 +76,16 @@
 import { get } from 'vuex-pathify'
 import { API, EventBus, checkResponse } from '@/util'
 import BaseCard from '@/components/base/BaseCard.vue'
-import LookupEszkoz from '@/components/targyi-eszkoz/LookupEszkoz.vue'
 import BaseEszkozInfo from '@/components/targyi-eszkoz/BaseEszkozInfo.vue'
+import LookupEszkoz from '@/components/targyi-eszkoz/LookupEszkoz.vue'
 import LeltarivEszkozok from '@/components/targyi-eszkoz/LeltarivEszkozok.vue'
 
 export default {
   name: 'targyi-eszkoz-leltar-felvetel',
   components: {
     BaseCard,
-    LookupEszkoz,
     BaseEszkozInfo,
+    LookupEszkoz,
     LeltarivEszkozok
   },
 

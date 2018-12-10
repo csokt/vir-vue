@@ -8,6 +8,7 @@
             label="Gyártási hely"
             itemClass="body-2"
             :apiUrl="helyApiUrl"
+            @searchInput="helySearchInput = $event"
             @change="hely = $event"
           />
           <SmartAutocomplete
@@ -15,6 +16,7 @@
             label="Dolgozó"
             itemClass="body-2"
             :apiUrl="szemelyApiUrl"
+            @searchInput="szemelySearchInput = $event"
             @change="szemely = $event"
           />
           <SmartAutocomplete
@@ -22,6 +24,7 @@
             label="Művelet"
             itemClass="body-2"
             :apiUrl="szefoMuveletApiUrl"
+            @searchInput="szefoSearchInput = $event"
             @change="szefoMuvelet = $event"
           />
           <v-text-field
@@ -76,10 +79,13 @@ export default {
 
   data () {
     return {
+      helySearchInput: '',
       helyId: 0,
       hely: {},
+      szemelySearchInput: '',
       szemelyId: 0,
       szemely: {},
+      szefoSearchInput: '',
       szefoMuveletId: 0,
       szefoMuvelet: {},
       mennyiseg: null,
@@ -88,6 +94,21 @@ export default {
   },
 
   computed: {
+    helyApiUrl () {
+      const params = { domain: [['name', 'ilike', this.helySearchInput], ['szefo_e', '=', true]], order: 'name', limit: 10 }
+      return 'vir/searchRead/legrand.hely?params=' + JSON.stringify(params)
+    },
+
+    szemelyApiUrl () {
+      const params = { domain: [['name', 'ilike', this.szemelySearchInput]], order: 'name', limit: 10 }
+      return 'vir/searchRead/nexon.szemely?params=' + JSON.stringify(params)
+    },
+
+    szefoMuveletApiUrl () {
+      const params = { domain: [['name', 'ilike', this.szefoSearchInput]], limit: 30 }
+      return 'vir/searchRead/legrand.gylap_szefo_muvelet?params=' + JSON.stringify(params)
+    },
+
     gyartasiLap () {
       return this.szefoMuvelet.id && this.szefoMuvelet.gyartasi_lap_id[1]
     },
@@ -98,21 +119,6 @@ export default {
   },
 
   methods: {
-    helyApiUrl (content) {
-      const params = { domain: [['name', 'ilike', content], ['szefo_e', '=', true]], order: 'name', limit: 10 }
-      return 'vir/searchRead/legrand.hely?params=' + JSON.stringify(params)
-    },
-
-    szemelyApiUrl (content) {
-      const params = { domain: [['name', 'ilike', content]], order: 'name', limit: 10 }
-      return 'vir/searchRead/nexon.szemely?params=' + JSON.stringify(params)
-    },
-
-    szefoMuveletApiUrl (content) {
-      const params = { domain: [['name', 'ilike', content]], limit: 30 }
-      return 'vir/searchRead/legrand.gylap_szefo_muvelet?params=' + JSON.stringify(params)
-    },
-
     async ment () {
       const row = {
         szefo_muvelet_id: this.szefoMuveletId,

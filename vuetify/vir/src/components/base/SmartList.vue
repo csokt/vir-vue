@@ -4,6 +4,7 @@
       v-model="items"
       :reloadTrigger="reloadTrigger"
       :apiUrl="apiUrl"
+      expect="array"
     />
     <BaseList
       :items="items"
