@@ -7,12 +7,14 @@
             v-model="cikk.id"
             label="Cikkazonosító"
             itemClass="body-2"
-            :apiUrl="apiUrl"
+            :apiUrl="cikkApiUrl"
             @searchInput="searchInput = $event"
             @change="cikk = $event"
           />
-          <LookupCikkByVonalkod
+          <SmartLookup
             v-model="cikk.vonalkod"
+            label="Vonalkód"
+            :apiUrl="vonalkodApiUrl"
             @change="cikk = $event; searchInput = cikk.name"
           />
           <BaseCikkInfo :cikk="cikk"/>
@@ -30,7 +32,7 @@
 <script>
 import BaseCard from '@/components/base/BaseCard.vue'
 import SmartAutocomplete from '@/components/base/SmartAutocomplete.vue'
-import LookupCikkByVonalkod from '@/components/chance/LookupCikkByVonalkod.vue'
+import SmartLookup from '@/components/base/SmartLookup.vue'
 import BaseCikkInfo from '@/components/chance/BaseCikkInfo.vue'
 import ListCikkKeszlet from '@/components/chance/ListCikkKeszlet.vue'
 
@@ -39,7 +41,7 @@ export default {
   components: {
     BaseCard,
     SmartAutocomplete,
-    LookupCikkByVonalkod,
+    SmartLookup,
     BaseCikkInfo,
     ListCikkKeszlet
   },
@@ -52,8 +54,13 @@ export default {
   },
 
   computed: {
-    apiUrl () {
+    cikkApiUrl () {
       const params = { domain: [['name', 'ilike', this.searchInput]], order: 'name', limit: 10 }
+      return 'vir/searchRead/chance.cikk?params=' + JSON.stringify(params)
+    },
+
+    vonalkodApiUrl () {
+      const params = { domain: [['vonalkod', '=', this.cikk.vonalkod]] }
       return 'vir/searchRead/chance.cikk?params=' + JSON.stringify(params)
     }
   },

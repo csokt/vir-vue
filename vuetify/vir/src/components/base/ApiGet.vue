@@ -14,21 +14,24 @@ export default {
         ].indexOf(value) !== -1
       }
     },
-    reloadTrigger: Boolean,
-    apiUrl: String
+    apiUrl: String,
+    watchApiUrl: {
+      type: Boolean,
+      default: true
+    }
   },
 
   watch: {
-    reloadTrigger: function () {
-      this.apiGet()
-    },
     apiUrl: function () {
-      this.apiGet()
+      if (this.watchApiUrl) {
+        this.apiGet()
+      }
     }
   },
 
   methods: {
     async apiGet () {
+      await this.$nextTick()
       this.$emit('loading', true)
       const response = await API.get(this.apiUrl)
       this.$emit('loading', false)
@@ -52,6 +55,11 @@ export default {
         this.$emit('input', null)
       }
     }
+  },
+
+  created () {
+    this.$emit('apiGetHandler', this.apiGet)
+    this.apiGet()
   },
 
   render: function (h) {

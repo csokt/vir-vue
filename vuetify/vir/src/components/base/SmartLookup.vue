@@ -1,20 +1,31 @@
 <template>
-  <BaseQfield
-    :value="value"
-    :label="label"
-    :focus="focus"
-    @input="$emit('input', $event)"
-    @change="onChange"
-  />
+  <div>
+    <BaseQfield
+      :value="value"
+      :label="label"
+      :focus="focus"
+      @input="$emit('input', $event)"
+      @change="onChange"
+    />
+    <ApiGet
+      :apiUrl="apiUrl"
+      :watchApiUrl="false"
+      expect="object"
+      @apiGetHandler="onApiGetHandler"
+      @input="onApiInput"
+    />
+  </div>
 </template>
 
 <script>
-import { API, EventBus } from '@/util'
+import { EventBus } from '@/util'
+import ApiGet from '@/components/base/ApiGet.vue'
 import BaseQfield from '@/components/base/BaseQfield.vue'
 
 export default {
   name: 'qlookup',
   components: {
+    ApiGet,
     BaseQfield
   },
 
@@ -22,32 +33,30 @@ export default {
     value: String,
     label: String,
     focus: Boolean,
-    apiUrl: Function,
-    reloadTrigger: Boolean,
+    apiUrl: {
+      type: String,
+      required: true
+    },
     notFoundMessage: {
       type: String,
       default: 'A keresett adat nem található!'
     }
   },
 
-  watch: {
-    reloadTrigger: function () {
-      this.onChange(this.value)
-    }
-  },
-
   methods: {
-    async onChange (content) {
-      const response = await API.get(this.apiUrl(content))
-      if (response.ok && Array.isArray(response.data) && response.data.length) {
-        this.$emit('change', response.data[0])
-      } else if (response.ok && typeof response.data === 'object' && response.data.constructor === Object) {
-        this.$emit('change', response.data)
-      } else {
-        this.$emit('change', {})
-        if (this.value) {
-          EventBus.$emit('inform', { type: 'alert', variation: 'warning', message: this.notFoundMessage })
-        }
+    onChange (content) {
+      this.apiGet()
+    },
+
+    onApiGetHandler (content) {
+      this.$emit('apiGetHandler', content)
+      this.apiGet = content
+    },
+
+    onApiInput (content) {
+      this.$emit('change', content)
+      if (this.value && Object.keys(content).length === 0) {
+        EventBus.$emit('inform', { type: 'alert', variation: 'warning', message: this.notFoundMessage })
       }
     }
   }

@@ -1,7 +1,6 @@
 <template>
   <div>
     <SmartList
-      :reloadTrigger="reloadTrigger"
       :apiUrl="apiUrl"
       value="raktaron"
       :label="label"
@@ -19,7 +18,6 @@ export default {
   },
 
   props: {
-    reloadTrigger: Boolean,
     cikkId: Number
   },
 

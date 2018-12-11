@@ -14,13 +14,12 @@ BaseQfield            ( BaseQreader )
 SmartInform
 SmartAutocomplete     ( ApiGet )
 SmartList             ( ApiGet, BaseList )
-SmartLookup           ( BaseQfield )
+SmartLookup           ( ApiGet, BaseQfield )
 
 /chance
 BaseCikkInfo
 KeszletTable
 ListCikkKeszlet       ( SmartList )
-LookupCikkByVonalkod  ( SmartLookup )
 
 /legrand
 BaseCikkInfo

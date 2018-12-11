@@ -4,9 +4,9 @@
     label="Leltári szám"
     :focus="focus"
     :apiUrl="apiUrl"
-    :reloadTrigger="reloadTrigger"
     @input="$emit('input', $event)"
     @change="$emit('change', $event)"
+    @apiGetHandler="onApiGetHandler"
   />
 <!--
 -->
@@ -27,10 +27,23 @@ export default {
     reloadTrigger: Boolean
   },
 
-  methods: {
-    apiUrl (content) {
-      const params = { domain: [['leltari_szam', '=', content]] }
+  computed: {
+    apiUrl () {
+      const params = { domain: [['leltari_szam', '=', this.value]] }
       return 'vir/searchRead/leltar.eszkoz?params=' + JSON.stringify(params)
+    }
+  },
+
+  watch: {
+    reloadTrigger: function () {
+      this.apiGet()
+    }
+  },
+
+  methods: {
+    onApiGetHandler (content) {
+      this.$emit('apiGetHandler', content)
+      this.apiGet = content
     }
   }
 }

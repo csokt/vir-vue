@@ -1,11 +1,5 @@
 <template>
   <div>
-    <ApiGet
-      v-model="items"
-      :apiUrl="apiUrl"
-      expect="array"
-      @loading="isLoading = $event"
-    />
     <v-autocomplete ref="element"
       :value="value"
       :items="items"
@@ -37,6 +31,12 @@
         </span>
       </template>
     </v-autocomplete>
+    <ApiGet
+      v-model="items"
+      :apiUrl="apiUrl"
+      expect="array"
+      @loading="isLoading = $event"
+    />
   </div>
 <!--
       @click:clear="items = []"

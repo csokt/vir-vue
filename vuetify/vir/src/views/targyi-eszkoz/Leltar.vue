@@ -8,7 +8,6 @@
             label="Leltárív"
             itemClass="body-2"
             :apiUrl="apiUrl"
-            :parentSearch="leltariv.name"
             @searchInput="searchInput = $event"
             @change="$store.set('leltariv', $event)"
           />
@@ -39,8 +38,8 @@ export default {
 
   data () {
     return {
-      searchInput: '',
-      leltarivId: 0
+      searchInput: '', // SmartAutocomplete
+      leltarivId: 0 // SmartAutocomplete
     }
   },
 
@@ -66,7 +65,7 @@ export default {
     }
   },
 
-  mounted () {
+  created () {
     this.$store.set('pageTitle', 'Tárgyi eszköz leltár')
     this.searchInput = this.leltariv.name
     this.leltarivId = this.leltariv.id
