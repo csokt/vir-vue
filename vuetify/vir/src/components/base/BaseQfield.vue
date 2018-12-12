@@ -30,7 +30,6 @@ export default {
   props: {
     value: String,
     label: String,
-    focus: Boolean,
     required: {
       type: Boolean,
       default: false
@@ -47,9 +46,13 @@ export default {
     }
   },
 
-  mounted () {
-    if (this.focus) {
+  methods: {
+    focus () {
       this.$refs.textfield.focus()
+    },
+
+    blur () {
+      this.$refs.textfield.blur()
     }
   }
 }

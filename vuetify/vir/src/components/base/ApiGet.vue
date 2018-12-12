@@ -32,6 +32,16 @@ export default {
   methods: {
     async apiGet () {
       await this.$nextTick()
+      if (!this.apiUrl) {
+        if (this.expect === 'array') {
+          this.$emit('input', [])
+        } else if (this.expect === 'object') {
+          this.$emit('input', {})
+        } else {
+          this.$emit('input', null)
+        }
+        return
+      }
       this.$emit('loading', true)
       const response = await API.get(this.apiUrl)
       this.$emit('loading', false)
@@ -54,6 +64,10 @@ export default {
       } else {
         this.$emit('input', null)
       }
+    },
+
+    reload () {
+      this.apiGet()
     }
   },
 

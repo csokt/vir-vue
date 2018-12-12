@@ -1,18 +1,6 @@
 <template>
   <div>
-    <v-text-field
-      v-if="!qrcode"
-      ref="textfield"
-      :value="value"
-      :label="label"
-      clearable
-      @input="$emit('input', $event)"
-      @change="onChange"
-      @click:clear="onChange"
-      @keyup.enter="$emit('enter')"
-    />
     <BaseQfield
-      v-if="qrcode"
       ref="textfield"
       :value="value"
       :label="label"
@@ -44,10 +32,6 @@ export default {
   props: {
     value: String,
     label: String,
-    qrcode: {
-      type: Boolean,
-      default: false
-    },
     apiUrl: {
       type: String,
       required: true

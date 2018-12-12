@@ -11,7 +11,7 @@
             @searchInput="searchInput = $event"
             @change="cikk = $event"
           />
-          <SmartLookup
+          <SmartQlookup
             v-model="cikk.vonalkod"
             label="Vonalkód"
             :apiUrl="vonalkodApiUrl"
@@ -32,7 +32,7 @@
 <script>
 import BaseCard from '@/components/base/BaseCard.vue'
 import SmartAutocomplete from '@/components/base/SmartAutocomplete.vue'
-import SmartLookup from '@/components/base/SmartLookup.vue'
+import SmartQlookup from '@/components/base/SmartQlookup.vue'
 import BaseCikkInfo from '@/components/chance/BaseCikkInfo.vue'
 import ListCikkKeszlet from '@/components/chance/ListCikkKeszlet.vue'
 
@@ -41,7 +41,7 @@ export default {
   components: {
     BaseCard,
     SmartAutocomplete,
-    SmartLookup,
+    SmartQlookup,
     BaseCikkInfo,
     ListCikkKeszlet
   },

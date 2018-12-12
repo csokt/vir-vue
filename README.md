@@ -14,11 +14,12 @@ BaseQfield            ( BaseQreader )
 SmartInform
 SmartAutocomplete     ( ApiGet )
 SmartList             ( ApiGet, BaseList )
-SmartLookup           ( ApiGet, BaseQfield )
+SmartLookup           ( ApiGet )
+SmartQlookup          ( ApiGet, BaseQfield )
 
 /chance
 BaseCikkInfo
-KeszletTable
+KeszletTable          ( ApiGet )
 ListCikkKeszlet       ( SmartList )
 
 /legrand
@@ -35,7 +36,7 @@ EszkozMozgas
 KorzetEszkozok
 LeltarivEszkozok
 LeltarivIsmeretlen
-LookupEszkoz          ( SmartLookup )
+LookupEszkoz          ( SmartQlookup )
 
 
 # view component dependencies
@@ -45,7 +46,7 @@ VirMenu               ( BaseCard, BaseMenu )
 
 /chance
 Info                  ( BaseCard, BaseCikkInfo, SmartAutocomplete, LookupCikkByVonalkod, ListCikkKeszlet )
-Keszlet               ( BaseCard, SmartAutocomplete, KeszletTable )
+Keszlet               ( BaseCard, SmartAutocomplete, SmartLookup, KeszletTable )
 
 /legrand
 Info                  ( BaseCard, BaseCikkInfo, SmartAutocomplete, ListCikkKeszlet )

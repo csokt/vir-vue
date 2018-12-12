@@ -7,7 +7,7 @@ const device = Math.max(viewport.height, viewport.width) < 800 ? 'phone' : 'tabl
 const facingMode = device === 'phone' ? 'environment' : 'user'
 
 let Store = {
-  version: '18.12.06',
+  version: '18.12.12',
   teszt: teszt,
   privateIP: '',
   publicIP: '',

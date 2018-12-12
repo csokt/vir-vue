@@ -1,6 +1,7 @@
 <template>
   <div>
-    <v-autocomplete ref="element"
+    <v-autocomplete
+      ref="element"
       :value="value"
       :items="items"
       :loading="isLoading"
@@ -32,6 +33,7 @@
       </template>
     </v-autocomplete>
     <ApiGet
+      ref="apiget"
       v-model="items"
       :apiUrl="apiUrl"
       expect="array"
@@ -87,13 +89,6 @@ export default {
       if (content) {
         this.$emit('searchInput', content)
       }
-    // },
-
-    // value (content) {
-    //   if (!content) {
-    //     this.items = []
-    //     this.$emit('change', {})
-    //   }
     }
   },
 
@@ -102,6 +97,10 @@ export default {
       this.$refs.element.blur()
       const obj = this.items.find(o => o[this.itemValue] === content) || {}
       this.$emit('change', { ...obj })
+    },
+
+    reload () {
+      this.$refs.apiget.reload()
     }
   }
 }

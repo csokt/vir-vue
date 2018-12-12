@@ -62,13 +62,13 @@ export default {
       this.message = ''
       try {
         const filter = {
-          'kötő': RegExp('^Lefordított|^Fotó|^Teljes fotó|^Műszaki|^Kötés'),
-          'szabó': RegExp('^Lefordított|^KONF|^Konfekci|^Fotó|^Teljes fotó|^Videó|^Egyéb|^Műszaki|^Szabási|^Kötés'),
-          'logisztikus': RegExp('^Lefordított|^KONF|^Konfekci|^Fotó|^Teljes fotó|^Videó|^Egyéb|^Műszaki|^Szabási|^Kötés'),
-          'varró': RegExp('^Lefordított|^KONF|^Konfekci|^Fotó|^Teljes fotó|^Videó|^Egyéb'),
-          'varró2': RegExp('^Lefordított|^KONF|^Konfekci|^Fotó|^Teljes fotó|^Videó|^Egyéb'),
-          'technológus': RegExp('^Lefordított|^KONF|^Konfekci|^Fotó|^Teljes fotó|^Videó|^Egyéb'),
-          'meo': RegExp('^Lefordított|^KONF|^Konfekci|^Fotó|^Teljes fotó|^Videó|^Egyéb'),
+          'kötő': RegExp('^Készáru|^Lefordított|^Fotó|^Teljes fotó|^Műszaki|^Kötés'),
+          'szabó': RegExp('^Készáru|^Lefordított|^KONF|^Konfekci|^Fotó|^Teljes fotó|^Videó|^Egyéb|^Műszaki|^Szabási|^Kötés'),
+          'logisztikus': RegExp('^Készáru|^Lefordított|^KONF|^Konfekci|^Fotó|^Teljes fotó|^Videó|^Egyéb|^Műszaki|^Szabási|^Kötés'),
+          'varró': RegExp('^Készáru|^Lefordított|^KONF|^Konfekci|^Fotó|^Teljes fotó|^Videó|^Egyéb'),
+          'varró2': RegExp('^Készáru|^Lefordított|^KONF|^Konfekci|^Fotó|^Teljes fotó|^Videó|^Egyéb'),
+          'technológus': RegExp('^Készáru|^Lefordított|^KONF|^Konfekci|^Fotó|^Teljes fotó|^Videó|^Egyéb'),
+          'meo': RegExp('^Készáru|^Lefordított|^KONF|^Konfekci|^Fotó|^Teljes fotó|^Videó|^Egyéb'),
           'kódoló': RegExp('^Fotó|^Egyéb')
         }
         const response = await HTTP.get('api2/search/?per_page=200&q=' + this.search)

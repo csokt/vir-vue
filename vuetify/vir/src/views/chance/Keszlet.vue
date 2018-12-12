@@ -8,16 +8,17 @@
             v-model="helyId"
             label="Hely"
             itemClass="body-2"
-            :apiUrl="apiUrl"
-            @searchInput="searchInput = $event"
+            :apiUrl="helyApiUrl"
+            @searchInput="helySearchInput = $event"
             @change="hely = $event; $refs.cikkszam.focus()"
           />
-          <v-text-field
+          <SmartLookup
             ref="cikkszam"
             v-model="cikkszam"
             label="Cikkszám"
-            clearable
-            @keyup.enter="$refs.megnevezes.focus()"
+            :apiUrl="cikkApiUrl"
+            @change="cikk = $event"
+            @enter="$refs.megnevezes.focus()"
           />
           <v-text-field
             ref="osztaly"
@@ -38,7 +39,7 @@
 
       <BaseCard title="Készlet">
         <v-card-text>
-          <KeszletTable :searchParams="keszletSearchParams"/>
+          <KeszletTable :apiUrl="keszletApiUrl"/>
         </v-card-text>
       </BaseCard>
     </v-layout>
@@ -48,9 +49,9 @@
 </template>
 
 <script>
-import { API, checkResponse } from '@/util'
 import BaseCard from '@/components/base/BaseCard.vue'
 import SmartAutocomplete from '@/components/base/SmartAutocomplete.vue'
+import SmartLookup from '@/components/base/SmartLookup.vue'
 import KeszletTable from '@/components/chance/KeszletTable.vue'
 
 export default {
@@ -58,43 +59,39 @@ export default {
   components: {
     BaseCard,
     SmartAutocomplete,
+    SmartLookup,
     KeszletTable
   },
 
   data () {
     return {
-      searchInput: '',
-      helyId: 0,
-      cikkszam: '',
-      osztaly: '1',
-      hely: {},
-      cikk: {}
+      helySearchInput: '', // SmartAutocomplete
+      helyId: 0, // SmartAutocomplete
+      hely: {}, // SmartAutocomplete
+      cikkszam: '', // SmartLookup
+      cikk: {}, // SmartLookup
+      osztaly: '1' // v-text-field
     }
   },
 
   computed: {
-    apiUrl () {
-      const params = { domain: [['name', 'ilike', this.searchInput], ['szefo_e', '=', true]], order: 'name', limit: 10 }
+    helyApiUrl () {
+      const params = { domain: [['name', 'ilike', this.helySearchInput], ['szefo_e', '=', true]], order: 'name', limit: 10 }
       return 'vir/searchRead/chance.hely?params=' + JSON.stringify(params)
     },
 
-    keszletSearchParams () {
-      if (!this.hely.id || !this.cikk.id || !this.osztaly) return ''
-      const params = { domain: [['hely_id', '=', this.hely.id], ['cikkszam', '=', this.cikkszam], ['osztaly', '=', this.osztaly], ['szefo_e', '=', true], ['raktaron', '!=', 0]], limit: 200 }
-      return JSON.stringify(params)
-    }
-  },
-
-  watch: {
-    cikkszam: async function () {
-      this.cikk = {}
-      if (this.cikkszam.length < 5) { return }
-      const params = { domain: [['cikkszam', '=', this.cikkszam]], limit: 1 }
-      const response = await API.get('vir/searchRead/chance.cikk?params=' + JSON.stringify(params))
-      if (!checkResponse(response)) return
-      if (response.data.length) {
-        this.cikk = response.data[0]
+    cikkApiUrl () {
+      if (!this.cikkszam || this.cikkszam.length < 5) {
+        return ''
       }
+      const params = { domain: [['cikkszam', '=', this.cikkszam]], limit: 1 }
+      return 'vir/searchRead/chance.cikk?params=' + JSON.stringify(params)
+    },
+
+    keszletApiUrl () {
+      if (!this.hely.id || !this.cikk.cikkszam || !this.osztaly) return ''
+      const params = { domain: [['hely_id', '=', this.hely.id], ['cikkszam', '=', this.cikk.cikkszam], ['osztaly', '=', this.osztaly], ['szefo_e', '=', true], ['raktaron', '!=', 0]], limit: 200 }
+      return 'vir/searchRead/chance.keszlet?params=' + JSON.stringify(params)
     }
   },
 

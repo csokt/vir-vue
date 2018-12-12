@@ -8,6 +8,7 @@
       @select="$emit('select', $event)"
     />
     <ApiGet
+      ref="apiget"
       v-model="items"
       :apiUrl="apiUrl"
       expect="array"
@@ -36,6 +37,12 @@ export default {
   data () {
     return {
       items: [] // BaseList ApiGet
+    }
+  },
+
+  methods: {
+    reload () {
+      this.$refs.apiget.reload()
     }
   }
 }

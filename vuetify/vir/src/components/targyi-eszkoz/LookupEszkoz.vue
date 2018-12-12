@@ -1,5 +1,5 @@
 <template>
-  <SmartLookup
+  <SmartQlookup
     :value="value"
     label="Leltári szám"
     :focus="focus"
@@ -13,12 +13,12 @@
 </template>
 
 <script>
-import SmartLookup from '@/components/base/SmartLookup.vue'
+import SmartQlookup from '@/components/base/SmartQlookup.vue'
 
 export default {
   name: 'eszkoz',
   components: {
-    SmartLookup
+    SmartQlookup
   },
 
   props: {
