@@ -27,9 +27,7 @@
             @keyup.enter="$refs.megjegyzes.focus()"
           />
           <v-text-field
-
-              ref=
-              "megjegyzes"
+            ref="megjegyzes"
             v-model="ismeretlen.megjegyzes"
             label="Megjegyzés"
             clearable
@@ -60,9 +58,11 @@
       </BaseCard>
       <BaseCard title="Felvett ismeretlen eszközök">
         <v-card-text>
-          <LeltarivIsmeretlen
-            :leltarivId="leltariv.id"
-            :reloadTrigger="reloadTrigger"
+          <SmartList
+            ref="eszkozok"
+            :apiUrl="apiUrl"
+            value="name"
+            :label="label"
             @select="onSelect($event)"
           />
         </v-card-text>
@@ -73,15 +73,15 @@
 
 <script>
 import { get } from 'vuex-pathify'
-import { API, EventBus, checkResponse } from '@/util'
+import { API, EventBus, utc2local, checkResponse } from '@/util'
 import BaseCard from '@/components/base/BaseCard.vue'
-import LeltarivIsmeretlen from '@/components/targyi-eszkoz/LeltarivIsmeretlen.vue'
+import SmartList from '@/components/base/SmartList.vue'
 
 export default {
   name: 'targyi-eszkoz-leltar-ismeretlen',
   components: {
     BaseCard,
-    LeltarivIsmeretlen
+    SmartList
   },
 
   data () {
@@ -93,8 +93,7 @@ export default {
           const pattern = /^\d\d\/\d\d\d$/
           return pattern.test(value) || 'Érvénytelen kód formátum'
         }
-      },
-      reloadTrigger: false
+      }
     }
   },
 
@@ -112,29 +111,41 @@ export default {
         megnevezes: this.ismeretlen.megnevezes,
         megjegyzes: this.ismeretlen.megjegyzes
       }
+    },
+
+    apiUrl () {
+      if (!this.leltariv.id) {
+        return ''
+      }
+      const params = { domain: [['leltariv_id', '=', this.leltariv.id]] }
+      return 'vir/searchRead/leltar.leltariv_ismeretlen?params=' + JSON.stringify(params)
     }
   },
 
   methods: {
+    label (item) {
+      return utc2local(item.write_date)
+    },
+
     async felvesz () {
       const response = await API.post('vir/create/leltar.leltariv_ismeretlen', this.row)
       if (!checkResponse(response)) return
       EventBus.$emit('inform', { type: 'alert', variation: 'success', message: 'Felvéve!' })
-      this.reloadTrigger = !this.reloadTrigger
+      this.$refs.eszkozok.reload()
     },
 
     async modosit () {
       const response = await API.post('vir/update/leltar.leltariv_ismeretlen/' + this.ismeretlen.id.toString(), this.row)
       if (!checkResponse(response)) return
       EventBus.$emit('inform', { type: 'alert', variation: 'success', message: 'Módosítva!' })
-      this.reloadTrigger = !this.reloadTrigger
+      this.$refs.eszkozok.reload()
     },
 
     async torol () {
       const response = await API.post('vir/delete/leltar.leltariv_ismeretlen/' + this.ismeretlen.id.toString())
       if (!checkResponse(response)) return
       EventBus.$emit('inform', { type: 'alert', variation: 'success', message: 'Törölve!' })
-      this.reloadTrigger = !this.reloadTrigger
+      this.$refs.eszkozok.reload()
     },
 
     async onSelect (content) {

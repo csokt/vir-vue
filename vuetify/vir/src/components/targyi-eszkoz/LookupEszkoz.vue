@@ -1,8 +1,9 @@
 <template>
-  <SmartQlookup
+  <SmartLookup
+    ref="smartlookup"
     :value="value"
     label="Leltári szám"
-    :focus="focus"
+    qrcode
     :apiUrl="apiUrl"
     @input="$emit('input', $event)"
     @change="$emit('change', $event)"
@@ -13,17 +14,16 @@
 </template>
 
 <script>
-import SmartQlookup from '@/components/base/SmartQlookup.vue'
+import SmartLookup from '@/components/base/SmartLookup.vue'
 
 export default {
   name: 'eszkoz',
   components: {
-    SmartQlookup
+    SmartLookup
   },
 
   props: {
     value: String,
-    focus: Boolean,
     reloadTrigger: Boolean
   },
 
@@ -44,6 +44,18 @@ export default {
     onApiGetHandler (content) {
       this.$emit('apiGetHandler', content)
       this.apiGet = content
+    },
+
+    reload () {
+      this.$refs.smartlookup.reload()
+    },
+
+    focus () {
+      this.$refs.smartlookup.focus()
+    },
+
+    blur () {
+      this.$refs.smartlookup.blur()
     }
   }
 }

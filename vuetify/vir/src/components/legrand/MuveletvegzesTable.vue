@@ -1,27 +1,36 @@
 <template>
-  <v-data-table
-    :headers="headers"
-    :items="muveletek"
-    no-data-text=""
-    hide-actions
-  >
-    <template
-      slot="items"
-      slot-scope="props"
+  <div>
+    <v-data-table
+      :headers="headers"
+      :items="items"
+      no-data-text=""
+      hide-actions
     >
-      <td>{{ props.item.szemely_id[1] }}</td>
-      <td>{{ props.item.szefo_muvelet_id[1] }}</td>
-      <td class="text-xs-right">{{ props.item.mennyiseg }}</td>
-    </template>
-  </v-data-table>
+      <template
+        slot="items"
+        slot-scope="props"
+      >
+        <td>{{ props.item.szemely_id[1] }}</td>
+        <td>{{ props.item.szefo_muvelet_id[1] }}</td>
+        <td class="text-xs-right">{{ props.item.mennyiseg }}</td>
+      </template>
+    </v-data-table>
+    <ApiGet
+      ref="apiget"
+      v-model="items"
+      :apiUrl="apiUrl"
+      expect="array"
+      @apiGetHandler="$emit('apiGetHandler', $event)"
+    />
+  </div>
 </template>
 
 <script>
-import { API, checkResponse } from '@/util'
+import ApiGet from '@/components/base/ApiGet.vue'
 
 export default {
-  props: {
-    reloadTrigger: Boolean
+  components: {
+    ApiGet
   },
 
   data () {
@@ -31,26 +40,20 @@ export default {
         { text: 'Művelet', sortable: false },
         { text: 'Mennyiség', sortable: false, align: 'right', width: '1%' }
       ],
-      muveletek: []
+      items: []
     }
   },
 
-  watch: {
-    reloadTrigger: function () {
-      this.loadData()
+  computed: {
+    apiUrl () {
+      return 'vir/searchRead/legrand.muveletvegzes?params=' + JSON.stringify({ limit: 10 })
     }
   },
 
   methods: {
-    async loadData () {
-      const response = await API.get('vir/searchRead/legrand.muveletvegzes?params=' + JSON.stringify({ limit: 10 }))
-      if (!checkResponse(response)) return
-      this.muveletek = response.data
+    reload () {
+      this.$refs.apiget.reload()
     }
-  },
-
-  created () {
-    this.loadData()
   }
 }
 </script>

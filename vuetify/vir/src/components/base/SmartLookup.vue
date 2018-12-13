@@ -42,13 +42,13 @@ export default {
   },
 
   props: {
-    value: String,
-    label: String,
-    qrcode: {
+    value: String, // v-text-field BaseQfield
+    label: String, // v-text-field BaseQfield
+    qrcode: { // v-text-field BaseQfield
       type: Boolean,
       default: false
     },
-    apiUrl: {
+    apiUrl: { // ApiGet
       type: String,
       required: true
     },

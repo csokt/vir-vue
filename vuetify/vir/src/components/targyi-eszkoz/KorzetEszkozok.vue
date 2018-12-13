@@ -10,17 +10,26 @@
       readonly
       @click.stop="$emit('select', row)"
     />
+    <ApiGet
+      ref="apiget"
+      v-model="eszkozok"
+      :apiUrl="apiUrl"
+      expect="array"
+    />
 </div>
 <!--
 -->
 </template>
 
 <script>
-import { API, checkResponse } from '@/util'
+import ApiGet from '@/components/base/ApiGet.vue'
 
 export default {
+  components: {
+    ApiGet
+  },
+
   props: {
-    reloadTrigger: Boolean,
     leltarkorzetId: Number
   },
 
@@ -30,22 +39,19 @@ export default {
     }
   },
 
-  watch: {
-    reloadTrigger: function () {
-      this.readEszkozok()
-    },
-    leltarkorzetId: function () {
-      this.readEszkozok()
+  computed: {
+    apiUrl () {
+      if (!this.leltarkorzetId) {
+        return ''
+      }
+      const params = { domain: [['akt_leltarkorzet_id', '=', this.leltarkorzetId]] }
+      return 'vir/searchRead/leltar.eszkoz?params=' + JSON.stringify(params)
     }
   },
 
   methods: {
-    async readEszkozok () {
-      if (!this.leltarkorzetId) { this.eszkozok = []; return }
-      const params = { domain: [['akt_leltarkorzet_id', '=', this.leltarkorzetId]] }
-      const response = await API.get('vir/searchRead/leltar.eszkoz?params=' + JSON.stringify(params))
-      if (!checkResponse(response)) return
-      this.eszkozok = response.data
+    reload () {
+      this.$refs.apiget.reload()
     }
   }
 }

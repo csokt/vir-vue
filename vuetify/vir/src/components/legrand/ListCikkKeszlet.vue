@@ -1,6 +1,7 @@
 <template>
   <div>
     <SmartList
+      ref="smartlist"
       :apiUrl="apiUrl"
       value="raktaron"
       :label="label"
@@ -31,6 +32,10 @@ export default {
   methods: {
     label (item) {
       return item.hely_id[1]
+    },
+
+    reload () {
+      this.$refs.smartlist.reload()
     }
   }
 }

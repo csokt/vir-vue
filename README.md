@@ -14,8 +14,7 @@ BaseQfield            ( BaseQreader )
 SmartInform
 SmartAutocomplete     ( ApiGet )
 SmartList             ( ApiGet, BaseList )
-SmartLookup           ( ApiGet )
-SmartQlookup          ( ApiGet, BaseQfield )
+SmartLookup           ( ApiGet, BaseQfield )
 
 /chance
 BaseCikkInfo
@@ -25,7 +24,7 @@ ListCikkKeszlet       ( SmartList )
 /legrand
 BaseCikkInfo
 ListCikkKeszlet       ( SmartList )
-MuveletvegzesTable
+MuveletvegzesTable    ( ApiGet )
 
 /targyi-eszkoz
 BaseEszkozInfo
@@ -33,10 +32,9 @@ BaseKorzetInfo
 BaseMozgasInfo
 Eszkozhasznalo
 EszkozMozgas
-KorzetEszkozok
-LeltarivEszkozok
-LeltarivIsmeretlen
-LookupEszkoz          ( SmartQlookup )
+KorzetEszkozok        ( ApiGet )
+LeltarivEszkozok      ( ApiGet )
+LookupEszkoz          ( SmartLookup )
 
 
 # view component dependencies
@@ -45,7 +43,7 @@ Home                  ( BaseCard, BaseMenu )
 VirMenu               ( BaseCard, BaseMenu )
 
 /chance
-Info                  ( BaseCard, BaseCikkInfo, SmartAutocomplete, LookupCikkByVonalkod, ListCikkKeszlet )
+Info                  ( BaseCard, BaseCikkInfo, SmartAutocomplete, SmartLookup, ListCikkKeszlet )
 Keszlet               ( BaseCard, SmartAutocomplete, SmartLookup, KeszletTable )
 
 /legrand
@@ -58,8 +56,8 @@ Erkeztetes            ( BaseCard, BaseMozgasInfo, EszkozMozgas )
 Info                  ( BaseCard, BaseEszkozInfo, LookupEszkoz, EszkozMozgas )
 LeltarEszkozadat      ( BaseCard, LookupEszkoz, LeltarivEszkozok )
 LeltarFelvetel        ( BaseCard, BaseEszkozInfo, LookupEszkoz, LeltarivEszkozok )
-LeltarIsmeretlen      ( BaseCard, LeltarivIsmeretlen )
+LeltarIsmeretlen      ( BaseCard, SmartList )
 Leltarkorzet          ( BaseCard, BaseKorzetInfo, SmartAutocomplete, KorzetEszkozok )
 LeltarLeltarivEszkoz  ( BaseCard, LeltarivEszkozok )
-Leltar                ( BaseCard, BaseMenu, BaseKorzetInfo, SmartAutocomplete, KorzetEszkozok )
+Leltar                ( BaseCard, BaseMenu, SmartAutocomplete )
 Szemelynek            ( BaseCard, BaseEszkozInfo, SmartAutocomplete, LookupEszkoz, Eszkozhasznalo )

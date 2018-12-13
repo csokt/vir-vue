@@ -56,7 +56,7 @@
       </BaseCard>
       <BaseCard title="Felvett műveletek">
         <v-card-text>
-          <MuveletvegzesTable :reloadTrigger="reloadTrigger"/>
+          <MuveletvegzesTable ref="muveletvegzes"/>
         </v-card-text>
       </BaseCard>
     </v-layout>
@@ -130,7 +130,7 @@ export default {
       if (!checkResponse(response)) return
       this.szefoMuveletId = 0
       this.mennyiseg = null
-      this.reloadTrigger = !this.reloadTrigger
+      this.$refs.muveletvegzes.reload()
       EventBus.$emit('inform', { type: 'alert', variation: 'success', message: 'Rögzítve!' })
     }
   },

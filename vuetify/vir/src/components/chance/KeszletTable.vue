@@ -17,6 +17,7 @@
       </template>
     </v-data-table>
     <ApiGet
+      ref="apiget"
       v-model="items"
       :apiUrl="apiUrl"
       expect="array"
@@ -49,6 +50,12 @@ export default {
         { text: 'Raktáron', value: 'raktaron', align: 'right', width: '1%' }
       ],
       items: []
+    }
+  },
+
+  methods: {
+    reload () {
+      this.$refs.apiget.reload()
     }
   }
 }

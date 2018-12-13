@@ -22,18 +22,14 @@
 import { get } from 'vuex-pathify'
 import BaseCard from '@/components/base/BaseCard.vue'
 import BaseMenu from '@/components/base/BaseMenu.vue'
-import BaseKorzetInfo from '@/components/targyi-eszkoz/BaseKorzetInfo.vue'
 import SmartAutocomplete from '@/components/base/SmartAutocomplete.vue'
-import KorzetEszkozok from '@/components/targyi-eszkoz/KorzetEszkozok.vue'
 
 export default {
   name: 'targyi-eszkoz-leltar',
   components: {
     BaseCard,
     BaseMenu,
-    BaseKorzetInfo,
-    SmartAutocomplete,
-    KorzetEszkozok
+    SmartAutocomplete
   },
 
   data () {

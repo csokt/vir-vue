@@ -10,18 +10,28 @@
       readonly
       @click.stop="$emit('select', row)"
     />
+    <ApiGet
+      ref="apiget"
+      v-model="eszkozok"
+      :apiUrl="apiUrl"
+      expect="array"
+    />
 </div>
 <!--
 -->
 </template>
 
 <script>
-import { API, utc2local, checkResponse } from '@/util'
+import ApiGet from '@/components/base/ApiGet.vue'
+import { utc2local } from '@/util'
 
 export default {
+  components: {
+    ApiGet
+  },
+
   props: {
     filter: String, // uj, fellelt, hiany
-    reloadTrigger: Boolean,
     leltarivId: Number
   },
 
@@ -31,21 +41,10 @@ export default {
     }
   },
 
-  watch: {
-    reloadTrigger: function () {
-      this.readEszkozok()
-    },
-    leltarivId: function () {
-      this.readEszkozok()
-    }
-  },
-
-  methods: {
-    async readEszkozok () {
+  computed: {
+    apiUrl () {
       if (!this.leltarivId) {
-        this.eszkozok = []
-        this.$emit('length', 0)
-        return
+        return ''
       }
       let params
       if (this.filter === 'uj') {
@@ -57,18 +56,17 @@ export default {
       } else {
         return
       }
-      const response = await API.get('vir/searchRead/leltar.leltariv_osszes?params=' + JSON.stringify(params))
-      if (!checkResponse(response)) return
-      this.eszkozok = response.data
-      this.$emit('length', this.eszkozok.length)
-    },
-
-    utc2local (utc) { return utc2local(utc) }
+      return 'vir/searchRead/leltar.leltariv_osszes?params=' + JSON.stringify(params)
+    }
   },
 
-  created () {
-    if (this.leltarivId) {
-      this.readEszkozok()
+  methods: {
+    utc2local (utc) {
+      return utc2local(utc)
+    },
+
+    reload () {
+      this.$refs.apiget.reload()
     }
   }
 }
