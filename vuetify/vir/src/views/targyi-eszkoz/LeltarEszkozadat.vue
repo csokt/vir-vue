@@ -11,8 +11,8 @@
             readonly
           />
           <LookupEszkoz
+            ref="lookupeszkoz"
             v-model="leltariSzam"
-            :focus="true"
             @change="onChange($event)"
           />
           <v-textarea
@@ -155,6 +155,10 @@ export default {
 
   created () {
     this.$store.set('pageTitle', 'Selejtezés, sérült címke')
+  },
+
+  mounted () {
+    this.$refs.lookupeszkoz.focus()
   }
 }
 </script>
