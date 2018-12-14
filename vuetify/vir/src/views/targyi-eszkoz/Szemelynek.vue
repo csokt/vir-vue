@@ -7,12 +7,12 @@
             v-model="ujHasznaloId"
             label="Új használó"
             itemClass="body-2"
-            :apiUrl="apiUrl"
+            :apiUrl="hasznaloApiUrl"
             @searchInput="searchInput = $event"
           />
           <LookupEszkoz
+            ref="lookupeszkoz"
             v-model="leltariSzam"
-            :reloadTrigger="reloadTrigger"
             @change="eszkoz = $event"
           />
           <BaseEszkozInfo :eszkoz="eszkoz"/>
@@ -29,9 +29,12 @@
       </BaseCard>
       <BaseCard title="Jelenleg használatban">
         <v-card-text>
-          <Eszkozhasznalo
-            :hasznaloId="ujHasznaloId"
-            :reloadTrigger="reloadTrigger"
+          <SmartList
+            ref="eszkozok"
+            :apiUrl="eszkozokApiUrl"
+            value="name"
+            :label="label"
+            @select="onSelect($event)"
           />
         </v-card-text>
       </BaseCard>
@@ -42,12 +45,12 @@
 </template>
 
 <script>
-import { API, EventBus, checkResponse } from '@/util'
+import { API, EventBus, utc2local, checkResponse } from '@/util'
 import BaseCard from '@/components/base/BaseCard.vue'
 import BaseEszkozInfo from '@/components/targyi-eszkoz/BaseEszkozInfo.vue'
 import SmartAutocomplete from '@/components/base/SmartAutocomplete.vue'
+import SmartList from '@/components/base/SmartList.vue'
 import LookupEszkoz from '@/components/targyi-eszkoz/LookupEszkoz.vue'
-import Eszkozhasznalo from '@/components/targyi-eszkoz/Eszkozhasznalo.vue'
 
 export default {
   name: 'targyi-eszkoz-szemelynek',
@@ -55,8 +58,8 @@ export default {
     BaseCard,
     BaseEszkozInfo,
     SmartAutocomplete,
-    LookupEszkoz,
-    Eszkozhasznalo
+    SmartList,
+    LookupEszkoz
   },
 
   data () {
@@ -64,15 +67,22 @@ export default {
       searchInput: '',
       ujHasznaloId: 0,
       leltariSzam: '',
-      reloadTrigger: false,
       eszkoz: {}
     }
   },
 
   computed: {
-    apiUrl () {
+    hasznaloApiUrl () {
       const params = { domain: [['name', 'ilike', this.searchInput]], limit: 10 }
       return 'vir/searchRead/hr.employee?params=' + JSON.stringify(params)
+    },
+
+    eszkozokApiUrl () {
+      if (!this.ujHasznaloId) {
+        return ''
+      }
+      const params = { domain: [['akt_hasznalo_id', '=', this.ujHasznaloId]] }
+      return 'vir/searchRead/leltar.eszkoz?params=' + JSON.stringify(params)
     },
 
     atadhato () {
@@ -81,6 +91,10 @@ export default {
   },
 
   methods: {
+    label (item) {
+      return utc2local(item.write_date)
+    },
+
     async atad () {
       const row = {
         eszkoz_id: this.eszkoz.id,
@@ -90,7 +104,8 @@ export default {
       const response = await API.post('vir/create/leltar.eszkozatvetel', row)
       if (!checkResponse(response)) return
       EventBus.$emit('inform', { type: 'alert', variation: 'success', message: 'Átadva!' })
-      this.reloadTrigger = !this.reloadTrigger
+      this.$refs.lookupeszkoz.reload()
+      this.$refs.eszkozok.reload()
     }
   },
 

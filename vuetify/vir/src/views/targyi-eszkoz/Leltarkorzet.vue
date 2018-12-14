@@ -7,7 +7,7 @@
             v-model="leltarkorzetId"
             label="Leltárkörzet"
             itemClass="body-2"
-            :apiUrl="apiUrl"
+            :apiUrl="korzetApiUrl"
             @searchInput="searchInput = $event"
             @change="leltarkorzet = $event"
           />
@@ -16,7 +16,13 @@
       </BaseCard>
       <BaseCard title="Tárgyi eszközök">
         <v-card-text>
-          <KorzetEszkozok :leltarkorzetId="leltarkorzetId"/>
+          <SmartList
+            ref="smartlist"
+            :apiUrl="eszkozApiUrl"
+            value="name"
+            :label="label"
+            @select="$emit('select', $event)"
+          />
         </v-card-text>
       </BaseCard>
     </v-layout>
@@ -27,7 +33,7 @@
 import BaseCard from '@/components/base/BaseCard.vue'
 import BaseKorzetInfo from '@/components/targyi-eszkoz/BaseKorzetInfo.vue'
 import SmartAutocomplete from '@/components/base/SmartAutocomplete.vue'
-import KorzetEszkozok from '@/components/targyi-eszkoz/KorzetEszkozok.vue'
+import SmartList from '@/components/base/SmartList.vue'
 
 export default {
   name: 'targyi-eszkoz-leltarkorzet',
@@ -35,7 +41,7 @@ export default {
     BaseCard,
     BaseKorzetInfo,
     SmartAutocomplete,
-    KorzetEszkozok
+    SmartList
   },
 
   data () {
@@ -47,9 +53,26 @@ export default {
   },
 
   computed: {
-    apiUrl () {
+    korzetApiUrl () {
+      if (!this.searchInput) {
+        return ''
+      }
       const params = { domain: [['name', 'ilike', this.searchInput]], limit: 10 }
       return 'vir/searchRead/leltar.korzet?params=' + JSON.stringify(params)
+    },
+
+    eszkozApiUrl () {
+      if (!this.leltarkorzetId) {
+        return ''
+      }
+      const params = { domain: [['akt_leltarkorzet_id', '=', this.leltarkorzetId]] }
+      return 'vir/searchRead/leltar.eszkoz?params=' + JSON.stringify(params)
+    }
+  },
+
+  methods: {
+    label (item) {
+      return item.leltarcsoport_id[1]
     }
   },
 

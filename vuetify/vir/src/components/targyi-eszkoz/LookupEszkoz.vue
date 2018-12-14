@@ -7,7 +7,6 @@
     :apiUrl="apiUrl"
     @input="$emit('input', $event)"
     @change="$emit('change', $event)"
-    @apiGetHandler="onApiGetHandler"
   />
 <!--
 -->
@@ -23,8 +22,7 @@ export default {
   },
 
   props: {
-    value: String,
-    reloadTrigger: Boolean
+    value: String
   },
 
   computed: {
@@ -34,18 +32,7 @@ export default {
     }
   },
 
-  watch: {
-    reloadTrigger: function () {
-      this.apiGet()
-    }
-  },
-
   methods: {
-    onApiGetHandler (content) {
-      this.$emit('apiGetHandler', content)
-      this.apiGet = content
-    },
-
     reload () {
       this.$refs.smartlookup.reload()
     },

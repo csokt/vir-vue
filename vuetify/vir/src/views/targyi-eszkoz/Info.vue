@@ -13,7 +13,6 @@
       <BaseCard title="Eszköz mozgásai">
         <v-card-text>
           <EszkozMozgas
-            filter="eszkoz"
             :eszkozId="eszkoz.id"
           />
         </v-card-text>

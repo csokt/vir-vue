@@ -35,6 +35,7 @@ export default {
       if (!this.apiUrl) {
         if (this.expect === 'array') {
           this.$emit('input', [])
+          this.$emit('length', 0)
         } else if (this.expect === 'object') {
           this.$emit('input', {})
         } else {
@@ -50,8 +51,10 @@ export default {
       if (this.expect === 'array') {
         if (Array.isArray(data)) {
           this.$emit('input', data)
+          this.$emit('length', data.length)
         } else {
           this.$emit('input', [data])
+          this.$emit('length', 1)
         }
       } else if (this.expect === 'object') {
         if (Array.isArray(data) && data.length) {

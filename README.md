@@ -30,10 +30,8 @@ MuveletvegzesTable    ( ApiGet )
 BaseEszkozInfo
 BaseKorzetInfo
 BaseMozgasInfo
-Eszkozhasznalo
-EszkozMozgas
-KorzetEszkozok        ( ApiGet )
-LeltarivEszkozok      ( ApiGet )
+EszkozMozgas          ( SmartList )
+LeltarivEszkozok      ( SmartList )
 LookupEszkoz          ( SmartLookup )
 
 
@@ -52,12 +50,12 @@ Muveletvegzes         ( BaseCard, SmartAutocomplete, MuveletvegzesTable )
 
 /targyi-eszkoz
 Athelyezes            ( BaseCard, BaseEszkozInfo, SmartAutocomplete, LookupEszkoz, EszkozMozgas )
-Erkeztetes            ( BaseCard, BaseMozgasInfo, EszkozMozgas )
+Erkeztetes            ( BaseCard, BaseMozgasInfo, SmartList )
 Info                  ( BaseCard, BaseEszkozInfo, LookupEszkoz, EszkozMozgas )
 LeltarEszkozadat      ( BaseCard, LookupEszkoz, LeltarivEszkozok )
 LeltarFelvetel        ( BaseCard, BaseEszkozInfo, LookupEszkoz, LeltarivEszkozok )
 LeltarIsmeretlen      ( BaseCard, SmartList )
-Leltarkorzet          ( BaseCard, BaseKorzetInfo, SmartAutocomplete, KorzetEszkozok )
+Leltarkorzet          ( BaseCard, BaseKorzetInfo, SmartAutocomplete, SmartList )
 LeltarLeltarivEszkoz  ( BaseCard, LeltarivEszkozok )
 Leltar                ( BaseCard, BaseMenu, SmartAutocomplete )
-Szemelynek            ( BaseCard, BaseEszkozInfo, SmartAutocomplete, LookupEszkoz, Eszkozhasznalo )
+Szemelynek            ( BaseCard, BaseEszkozInfo, SmartAutocomplete, LookupEszkoz, SmartList )

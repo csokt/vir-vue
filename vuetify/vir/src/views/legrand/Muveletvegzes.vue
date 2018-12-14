@@ -88,8 +88,7 @@ export default {
       szefoSearchInput: '',
       szefoMuveletId: 0,
       szefoMuvelet: {},
-      mennyiseg: null,
-      reloadTrigger: false
+      mennyiseg: null
     }
   },
 

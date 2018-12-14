@@ -11,8 +11,8 @@
             readonly
           />
           <LookupEszkoz
+            ref="lookupeszkoz"
             v-model="leltariSzam"
-            :focus="true"
             @change="onChange($event)"
           />
           <BaseEszkozInfo :eszkoz="eszkoz"/>
@@ -60,9 +60,9 @@
       <BaseCard :title="titleEszkozok">
         <v-card-text>
           <LeltarivEszkozok
+            ref="leltariveszkozok"
             filter="hiany"
             :leltarivId="leltariv.id"
-            :reloadTrigger="reloadTrigger"
             @length="lengthEszkozok=$event"
             @select="onSelect($event)"
           />
@@ -99,7 +99,6 @@ export default {
       eszkoz: {},
       leltarivEszkoz: {},
       felveheto: false,
-      reloadTrigger: false,
       lengthEszkozok: 0,
       felvettEszkozokId: 0,
       felvettEszkozok: []
@@ -153,7 +152,7 @@ export default {
         if (!checkResponse(response)) return
         this.felvettEszkozok.unshift({ id: this.felvettEszkozokId, name: this.eszkoz.name, label: 'Fellelt eszköz' })
         EventBus.$emit('inform', { type: 'alert', variation: 'success', message: 'Felvéve!' })
-        this.reloadTrigger = !this.reloadTrigger
+        this.$refs.leltariveszkozok.reload()
       } else { // új tárgyi eszköz
         row.leltariv_id = this.leltariv.id
         row.eszkoz_id = this.eszkoz.id
@@ -181,6 +180,10 @@ export default {
 
   created () {
     this.$store.set('pageTitle', 'Tárgyi eszközök felvétele')
+  },
+
+  mounted () {
+    this.$refs.lookupeszkoz.focus()
   }
 }
 </script>

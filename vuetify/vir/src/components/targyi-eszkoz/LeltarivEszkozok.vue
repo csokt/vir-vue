@@ -1,44 +1,26 @@
 <template>
-  <div>
-    <v-textarea
-      v-for="row in eszkozok"
-      :key="row.id"
-      v-model="row.eszkoz_id[1]"
-      :label="utc2local(row.write_date)"
-      rows="1"
-      auto-grow
-      readonly
-      @click.stop="$emit('select', row)"
-    />
-    <ApiGet
-      ref="apiget"
-      v-model="eszkozok"
-      :apiUrl="apiUrl"
-      expect="array"
-    />
-</div>
-<!--
--->
+  <SmartList
+    ref="smartlist"
+    :apiUrl="apiUrl"
+    :value="model"
+    :label="label"
+    @select="$emit('select', $event)"
+    @length="$emit('length', $event)"
+  />
 </template>
 
 <script>
-import ApiGet from '@/components/base/ApiGet.vue'
 import { utc2local } from '@/util'
+import SmartList from '@/components/base/SmartList.vue'
 
 export default {
   components: {
-    ApiGet
+    SmartList
   },
 
   props: {
     filter: String, // uj, fellelt, hiany
     leltarivId: Number
-  },
-
-  data () {
-    return {
-      eszkozok: []
-    }
   },
 
   computed: {
@@ -54,15 +36,19 @@ export default {
       } else if (this.filter === 'hiany') {
         params = { domain: [['leltariv_id', '=', this.leltarivId], ['fellelheto', '=', false]] }
       } else {
-        return
+        return ''
       }
       return 'vir/searchRead/leltar.leltariv_osszes?params=' + JSON.stringify(params)
     }
   },
 
   methods: {
-    utc2local (utc) {
-      return utc2local(utc)
+    model (item) {
+      return item.eszkoz_id[1]
+    },
+
+    label (item) {
+      return utc2local(item.write_date)
     },
 
     reload () {

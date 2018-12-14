@@ -1,13 +1,11 @@
 <template>
-  <div>
-    <SmartList
-      ref="smartlist"
-      :apiUrl="apiUrl"
-      value="raktaron"
-      :label="label"
-      @select="$emit('select', $event)"
-    />
-</div>
+  <SmartList
+    ref="smartlist"
+    :apiUrl="apiUrl"
+    value="raktaron"
+    :label="label"
+    @select="$emit('select', $event)"
+  />
 </template>
 
 <script>

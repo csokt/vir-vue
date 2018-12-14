@@ -12,8 +12,8 @@
             @change="ujLeltarkorzet = $event"
           />
           <LookupEszkoz
+            ref="lookupeszkoz"
             v-model="leltariSzam"
-            :reloadTrigger="reloadTrigger"
             @change="eszkoz = $event"
           />
           <BaseEszkozInfo :eszkoz="eszkoz"
@@ -32,9 +32,8 @@
       <BaseCard title="Eszköz mozgásai">
         <v-card-text>
           <EszkozMozgas
-            filter="eszkoz"
+            ref="eszkozmozgas"
             :eszkozId="eszkoz.id"
-            :reloadTrigger="reloadTrigger"
           />
         </v-card-text>
       </BaseCard>
@@ -66,7 +65,6 @@ export default {
       ujLeltarkorzetId: 0,
       ujLeltarkorzet: {},
       leltariSzam: '',
-      reloadTrigger: false,
       eszkoz: {}
     }
   },
@@ -91,7 +89,8 @@ export default {
       const response = await API.post('vir/create/leltar.eszkozmozgas', row)
       if (!checkResponse(response)) return
       EventBus.$emit('inform', { type: 'alert', variation: 'success', message: 'Áthelyezve!' })
-      this.reloadTrigger = !this.reloadTrigger
+      this.$refs.lookupeszkoz.reload()
+      this.$refs.eszkozmozgas.reload()
     }
   },
 

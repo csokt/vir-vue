@@ -49,9 +49,9 @@
       <BaseCard :title="titleEszkozok">
         <v-card-text>
           <LeltarivEszkozok
+            ref="leltariveszkozok"
             filter="fellelt"
             :leltarivId="leltariv.id"
-            :reloadTrigger="reloadTrigger"
             @length="lengthEszkozok=$event"
             @select="onSelect($event)"
           />
@@ -84,7 +84,6 @@ export default {
       eszkoz: {},
       leltarivEszkoz: {},
       felveheto: false,
-      reloadTrigger: false,
       lengthEszkozok: 0
     }
   },
@@ -136,7 +135,7 @@ export default {
       }
       if (!checkResponse(response)) return
       EventBus.$emit('inform', { type: 'alert', variation: 'success', message: 'Felvéve!' })
-      this.reloadTrigger = !this.reloadTrigger
+      this.$refs.leltariveszkozok.reload()
     },
 
     async onSelect (content) {

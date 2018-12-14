@@ -12,6 +12,7 @@
       v-model="items"
       :apiUrl="apiUrl"
       expect="array"
+      @length="$emit('length', $event)"
     />
 </div>
 </template>
