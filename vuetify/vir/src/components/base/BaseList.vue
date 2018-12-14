@@ -31,11 +31,6 @@ export default {
     }
   },
 
-  data () {
-    return {
-    }
-  },
-
   methods: {
     itemvalue (item) {
       if (typeof this.value === 'string') {

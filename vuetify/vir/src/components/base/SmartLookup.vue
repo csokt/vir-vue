@@ -24,7 +24,6 @@
       :apiUrl="apiUrl"
       :watchApiUrl="false"
       expect="object"
-      @apiGetHandler="onApiGetHandler"
       @input="onApiInput"
     />
   </div>
@@ -61,11 +60,6 @@ export default {
   methods: {
     onChange (content) {
       this.apiGet()
-    },
-
-    onApiGetHandler (content) {
-      this.$emit('apiGetHandler', content)
-      this.apiGet = content
     },
 
     onApiInput (content) {

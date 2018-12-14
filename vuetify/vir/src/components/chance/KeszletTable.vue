@@ -21,7 +21,6 @@
       v-model="items"
       :apiUrl="apiUrl"
       expect="array"
-      @apiGetHandler="$emit('apiGetHandler', $event)"
     />
   </div>
 </template>

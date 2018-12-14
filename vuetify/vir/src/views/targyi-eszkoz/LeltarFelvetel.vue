@@ -119,7 +119,6 @@ export default {
       this.leltariSzam = ''
       if (!content.id) return
       this.eszkoz = content
-      // let params, response
       this.felvettEszkozokId += 1
 
       const params = { domain: [['leltariv_id', '=', this.leltariv.id], ['eszkoz_id', '=', this.eszkoz.id]], limit: 1 }

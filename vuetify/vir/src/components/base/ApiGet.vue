@@ -75,7 +75,6 @@ export default {
   },
 
   created () {
-    this.$emit('apiGetHandler', this.apiGet)
     this.apiGet()
   },
 
