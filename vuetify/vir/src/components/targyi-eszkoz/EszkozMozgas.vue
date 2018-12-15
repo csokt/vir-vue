@@ -40,6 +40,10 @@ export default {
 
     label (item) {
       return utc2local(item.create_date)
+    },
+
+    reload () {
+      this.$refs.smartlist.reload()
     }
   }
 }

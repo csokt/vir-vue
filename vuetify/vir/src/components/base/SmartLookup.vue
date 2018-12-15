@@ -7,8 +7,8 @@
       :label="label"
       clearable
       @input="$emit('input', $event)"
-      @change="onChange"
-      @click:clear="onChange"
+      @change="reload"
+      @click:clear="reload"
       @keyup.enter="$emit('enter')"
     />
     <BaseQfield
@@ -17,7 +17,7 @@
       :value="value"
       :label="label"
       @input="$emit('input', $event)"
-      @change="onChange"
+      @change="reload"
     />
     <ApiGet
       ref="apiget"
@@ -58,10 +58,6 @@ export default {
   },
 
   methods: {
-    onChange (content) {
-      this.apiGet()
-    },
-
     onApiInput (content) {
       this.$emit('change', content)
       if (this.value && Object.keys(content).length === 0) {

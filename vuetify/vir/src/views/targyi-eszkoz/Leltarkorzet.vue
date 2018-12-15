@@ -54,9 +54,6 @@ export default {
 
   computed: {
     korzetApiUrl () {
-      if (!this.searchInput) {
-        return ''
-      }
       const params = { domain: [['name', 'ilike', this.searchInput]], limit: 10 }
       return 'vir/searchRead/leltar.korzet?params=' + JSON.stringify(params)
     },

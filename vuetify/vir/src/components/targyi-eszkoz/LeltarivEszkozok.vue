@@ -52,7 +52,7 @@ export default {
     },
 
     reload () {
-      this.$refs.apiget.reload()
+      this.$refs.smartlist.reload()
     }
   }
 }
