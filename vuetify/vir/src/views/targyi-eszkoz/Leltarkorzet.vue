@@ -30,10 +30,10 @@
 </template>
 
 <script>
-import BaseCard from '@/components/base/BaseCard.vue'
+import BaseCard from '@/components/core/BaseCard.vue'
 import BaseKorzetInfo from '@/components/targyi-eszkoz/BaseKorzetInfo.vue'
-import SmartAutocomplete from '@/components/base/SmartAutocomplete.vue'
-import SmartList from '@/components/base/SmartList.vue'
+import SmartAutocomplete from '@/components/core/SmartAutocomplete.vue'
+import SmartList from '@/components/core/SmartList.vue'
 
 export default {
   name: 'targyi-eszkoz-leltarkorzet',

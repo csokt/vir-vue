@@ -12,7 +12,7 @@
 
 <script>
 import { utc2local } from '@/util'
-import SmartList from '@/components/base/SmartList.vue'
+import SmartList from '@/components/core/SmartList.vue'
 
 export default {
   components: {

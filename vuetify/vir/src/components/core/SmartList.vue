@@ -18,8 +18,8 @@
 </template>
 
 <script>
-import BaseList from '@/components/base/BaseList.vue'
-import ApiGet from '@/components/base/ApiGet.vue'
+import BaseList from '@/components/core/BaseList.vue'
+import ApiGet from '@/components/core/ApiGet.vue'
 
 export default {
   components: {

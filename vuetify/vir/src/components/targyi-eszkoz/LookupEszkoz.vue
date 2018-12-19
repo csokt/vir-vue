@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import SmartLookup from '@/components/base/SmartLookup.vue'
+import SmartLookup from '@/components/core/SmartLookup.vue'
 
 export default {
   name: 'eszkoz',

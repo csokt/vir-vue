@@ -31,8 +31,8 @@
 
 <script>
 import { EventBus } from '@/util'
-import ApiGet from '@/components/base/ApiGet.vue'
-import BaseQfield from '@/components/base/BaseQfield.vue'
+import ApiGet from '@/components/core/ApiGet.vue'
+import BaseQfield from '@/components/core/BaseQfield.vue'
 
 export default {
   components: {

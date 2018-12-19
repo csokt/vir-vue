@@ -46,10 +46,10 @@
 
 <script>
 import { API, EventBus, utc2local, checkResponse } from '@/util'
-import BaseCard from '@/components/base/BaseCard.vue'
+import BaseCard from '@/components/core/BaseCard.vue'
 import BaseEszkozInfo from '@/components/targyi-eszkoz/BaseEszkozInfo.vue'
-import SmartAutocomplete from '@/components/base/SmartAutocomplete.vue'
-import SmartList from '@/components/base/SmartList.vue'
+import SmartAutocomplete from '@/components/core/SmartAutocomplete.vue'
+import SmartList from '@/components/core/SmartList.vue'
 import LookupEszkoz from '@/components/targyi-eszkoz/LookupEszkoz.vue'
 
 export default {

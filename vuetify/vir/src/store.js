@@ -6,7 +6,7 @@ import { make } from 'vuex-pathify'
 Vue.use(Vuex)
 
 const state = {
-  version: '18.12.03',
+  version: '18.12.19',
   pageTitle: '',
   user: {},
   leltariv: {}

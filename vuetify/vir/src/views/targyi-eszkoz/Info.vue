@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import BaseCard from '@/components/base/BaseCard.vue'
+import BaseCard from '@/components/core/BaseCard.vue'
 import BaseEszkozInfo from '@/components/targyi-eszkoz/BaseEszkozInfo.vue'
 import LookupEszkoz from '@/components/targyi-eszkoz/LookupEszkoz.vue'
 import EszkozMozgas from '@/components/targyi-eszkoz/EszkozMozgas.vue'

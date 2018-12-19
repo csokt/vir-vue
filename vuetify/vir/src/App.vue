@@ -30,7 +30,7 @@
 <script>
 import { get } from 'vuex-pathify'
 import { API, EventBus } from '@/util'
-import SmartInform from '@/components/base/SmartInform.vue'
+import SmartInform from '@/components/core/SmartInform.vue'
 
 export default {
   name: 'App',

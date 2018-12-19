@@ -74,8 +74,8 @@
 <script>
 import { get } from 'vuex-pathify'
 import { API, EventBus, utc2local, checkResponse } from '@/util'
-import BaseCard from '@/components/base/BaseCard.vue'
-import SmartList from '@/components/base/SmartList.vue'
+import BaseCard from '@/components/core/BaseCard.vue'
+import SmartList from '@/components/core/SmartList.vue'
 
 export default {
   name: 'targyi-eszkoz-leltar-ismeretlen',

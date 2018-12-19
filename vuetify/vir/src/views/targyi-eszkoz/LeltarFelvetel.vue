@@ -75,7 +75,7 @@
 <script>
 import { get } from 'vuex-pathify'
 import { API, EventBus, checkResponse } from '@/util'
-import BaseCard from '@/components/base/BaseCard.vue'
+import BaseCard from '@/components/core/BaseCard.vue'
 import BaseEszkozInfo from '@/components/targyi-eszkoz/BaseEszkozInfo.vue'
 import LookupEszkoz from '@/components/targyi-eszkoz/LookupEszkoz.vue'
 import LeltarivEszkozok from '@/components/targyi-eszkoz/LeltarivEszkozok.vue'

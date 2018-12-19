@@ -20,9 +20,9 @@
 
 <script>
 import { get } from 'vuex-pathify'
-import BaseCard from '@/components/base/BaseCard.vue'
-import BaseMenu from '@/components/base/BaseMenu.vue'
-import SmartAutocomplete from '@/components/base/SmartAutocomplete.vue'
+import BaseCard from '@/components/core/BaseCard.vue'
+import BaseMenu from '@/components/core/BaseMenu.vue'
+import SmartAutocomplete from '@/components/core/SmartAutocomplete.vue'
 
 export default {
   name: 'targyi-eszkoz-leltar',

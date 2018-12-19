@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import ApiGet from '@/components/base/ApiGet.vue'
+import ApiGet from '@/components/core/ApiGet.vue'
 
 export default {
   components: {

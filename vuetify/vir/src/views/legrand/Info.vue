@@ -25,9 +25,9 @@
 </template>
 
 <script>
-import BaseCard from '@/components/base/BaseCard.vue'
+import BaseCard from '@/components/core/BaseCard.vue'
 import BaseCikkInfo from '@/components/legrand/BaseCikkInfo.vue'
-import SmartAutocomplete from '@/components/base/SmartAutocomplete.vue'
+import SmartAutocomplete from '@/components/core/SmartAutocomplete.vue'
 import ListCikkKeszlet from '@/components/legrand/ListCikkKeszlet.vue'
 
 export default {

@@ -49,9 +49,9 @@
 </template>
 
 <script>
-import BaseCard from '@/components/base/BaseCard.vue'
-import SmartAutocomplete from '@/components/base/SmartAutocomplete.vue'
-import SmartLookup from '@/components/base/SmartLookup.vue'
+import BaseCard from '@/components/core/BaseCard.vue'
+import SmartAutocomplete from '@/components/core/SmartAutocomplete.vue'
+import SmartLookup from '@/components/core/SmartLookup.vue'
 import KeszletTable from '@/components/chance/KeszletTable.vue'
 
 export default {

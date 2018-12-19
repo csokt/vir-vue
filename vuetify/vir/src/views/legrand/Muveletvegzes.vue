@@ -65,8 +65,8 @@
 
 <script>
 import { API, EventBus, checkResponse } from '@/util'
-import BaseCard from '@/components/base/BaseCard.vue'
-import SmartAutocomplete from '@/components/base/SmartAutocomplete.vue'
+import BaseCard from '@/components/core/BaseCard.vue'
+import SmartAutocomplete from '@/components/core/SmartAutocomplete.vue'
 import MuveletvegzesTable from '@/components/legrand/MuveletvegzesTable.vue'
 
 export default {

@@ -43,9 +43,9 @@
 
 <script>
 import { API, EventBus, checkResponse } from '@/util'
-import BaseCard from '@/components/base/BaseCard.vue'
+import BaseCard from '@/components/core/BaseCard.vue'
 import BaseEszkozInfo from '@/components/targyi-eszkoz/BaseEszkozInfo.vue'
-import SmartAutocomplete from '@/components/base/SmartAutocomplete.vue'
+import SmartAutocomplete from '@/components/core/SmartAutocomplete.vue'
 import LookupEszkoz from '@/components/targyi-eszkoz/LookupEszkoz.vue'
 import EszkozMozgas from '@/components/targyi-eszkoz/EszkozMozgas.vue'
 

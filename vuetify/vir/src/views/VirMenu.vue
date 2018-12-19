@@ -11,8 +11,8 @@
 <script>
 import { get } from 'vuex-pathify'
 import { groupId } from '@/util.js'
-import BaseCard from '@/components/base/BaseCard.vue'
-import BaseMenu from '@/components/base/BaseMenu.vue'
+import BaseCard from '@/components/core/BaseCard.vue'
+import BaseMenu from '@/components/core/BaseMenu.vue'
 
 export default {
   name: 'virmenu',

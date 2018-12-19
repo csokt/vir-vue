@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import SmartList from '@/components/base/SmartList.vue'
+import SmartList from '@/components/core/SmartList.vue'
 
 export default {
   components: {

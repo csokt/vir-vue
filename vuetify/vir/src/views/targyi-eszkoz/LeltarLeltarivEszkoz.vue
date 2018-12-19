@@ -15,7 +15,7 @@
 
 <script>
 import { get } from 'vuex-pathify'
-import BaseCard from '@/components/base/BaseCard.vue'
+import BaseCard from '@/components/core/BaseCard.vue'
 import LeltarivEszkozok from '@/components/targyi-eszkoz/LeltarivEszkozok.vue'
 
 export default {

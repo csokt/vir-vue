@@ -41,9 +41,9 @@
 
 <script>
 import { API, checkResponse } from '@/util'
-import BaseCard from '@/components/base/BaseCard.vue'
+import BaseCard from '@/components/core/BaseCard.vue'
 import BaseMozgasInfo from '@/components/targyi-eszkoz/BaseMozgasInfo.vue'
-import SmartList from '@/components/base/SmartList.vue'
+import SmartList from '@/components/core/SmartList.vue'
 
 export default {
   name: 'targyi-eszkoz-erkeztetes',
