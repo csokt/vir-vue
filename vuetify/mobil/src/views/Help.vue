@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid fill-height grid-list-lg>
+  <v-container pa-0>
     <v-layout  justify-center wrap>
       <v-flex xs12 sm8 md5>
         <v-textarea solo auto-grow readonly rows="1"

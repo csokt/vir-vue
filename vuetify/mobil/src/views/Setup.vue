@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid fill-height grid-list-lg>
+  <v-container grid-list-md pa-1>
     <v-layout  justify-center wrap>
       <LoopbackLogin  v-if="!isAuthenticated" msg="Login component"/>
       <LoopbackLogout v-if="isAuthenticated && isPinAuthenticated"  msg="Logout component"/>

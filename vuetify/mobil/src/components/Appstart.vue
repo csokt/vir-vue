@@ -1,5 +1,5 @@
 <template>
-  <BaseCard spacing="pa-0" elevation=1>
+  <BaseCard elevation=1>
     <BaseMenu :items="showApps" @select="start($event.href)"/>
     <v-card-actions v-if="showAdmin">
       <v-btn color="primary" @click="addUsers">Új felhasználók a VIR személyekből.</v-btn>

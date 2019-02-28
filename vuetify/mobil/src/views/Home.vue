@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid fill-height grid-list-lg>
+  <v-container pa-0>
     <v-layout  justify-center wrap>
       <Appstart v-if="isAuthenticated && isPinAuthenticated"/>
     </v-layout>
