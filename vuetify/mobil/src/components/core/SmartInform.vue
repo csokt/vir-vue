@@ -8,7 +8,6 @@
       >
         {{message}}
       </v-alert>
-
     </div>
 </template>
 

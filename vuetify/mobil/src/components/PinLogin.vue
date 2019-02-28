@@ -1,5 +1,5 @@
 <template>
-  <Card title="Képernyőzár PIN kód">
+  <BaseCard title="Képernyőzár PIN kód">
     <v-card-text>
       <v-form ref="pinLoginForm" v-model="valid" @submit.prevent="enter" lazy-validation>
         <v-text-field
@@ -15,19 +15,19 @@
     <v-card-actions>
       <v-btn color="primary" @click="enter">Feloldás</v-btn>
     </v-card-actions>
-  </Card>
+  </BaseCard>
 </template>
 
 <script>
 import { EventBus } from '@/util.js'
-import Card from '@/components/base/Card.vue'
+import BaseCard from '@/components/core/BaseCard.vue'
 import Store from '@/store'
 import { checkAuthentication } from '@/mixins.js'
 
 export default {
   name: 'pinLogin',
   components: {
-    Card
+    BaseCard
   },
 
   data: () => ({

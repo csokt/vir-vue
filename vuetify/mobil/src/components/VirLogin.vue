@@ -1,5 +1,5 @@
 <template>
-  <Card title="VIR">
+  <BaseCard title="VIR">
     <v-card-text>
       <v-form v-model="valid" lazy-validation>
         <v-text-field
@@ -22,18 +22,18 @@
     <v-card-actions>
       <v-btn color="primary" :disabled="!valid" @click="login">Bejelentkezés</v-btn>
     </v-card-actions>
-  </Card>
+  </BaseCard>
 </template>
 
 <script>
 import { API, EventBus, getVirUser } from '@/util.js'
-import Card from '@/components/base/Card.vue'
+import BaseCard from '@/components/core/BaseCard.vue'
 import Store from '@/store'
 
 export default {
   name: 'virLogin',
   components: {
-    Card
+    BaseCard
   },
 
   data: () => ({

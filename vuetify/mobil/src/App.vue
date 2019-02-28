@@ -18,7 +18,7 @@
 
     <v-footer app height=36 color="grey lighten-3" >
       <v-layout column>
-        <Inform/>
+        <SmartInform/>
         <div style="text-align: center;">
           <span>
             {{store.user && store.user.name}}
@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import Inform from '@/components/base/Inform.vue'
+import SmartInform from '@/components/core/SmartInform.vue'
 import { API, getUser, getVirUser } from '@/util.js'
 import Store from '@/store'
 
@@ -44,7 +44,7 @@ export default {
   },
 
   components: {
-    Inform
+    SmartInform
   },
 
   async created () {

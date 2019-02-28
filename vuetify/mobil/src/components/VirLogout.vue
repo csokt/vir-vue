@@ -1,5 +1,5 @@
 <template>
-  <Card title="VIR">
+  <BaseCard title="VIR">
     <v-card-text>
       <v-form @submit.prevent>
         <v-text-field
@@ -12,18 +12,18 @@
     <v-card-actions>
       <v-btn color="primary" @click="logout">Kijelentkezés</v-btn>
     </v-card-actions>
-  </Card>
+  </BaseCard>
 </template>
 
 <script>
 import { API, EventBus, getVirUser } from '@/util.js'
-import Card from '@/components/base/Card.vue'
+import BaseCard from '@/components/core/BaseCard.vue'
 import Store from '@/store'
 
 export default {
   name: 'virLogout',
   components: {
-    Card
+    BaseCard
   },
 
   data () {

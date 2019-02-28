@@ -1,23 +1,23 @@
 <template>
-  <Card elevation="elevation-1">
-    <Menu :items="showApps" @select="start($event.href)"/>
+  <BaseCard elevation="elevation-1">
+    <BaseMenu :items="showApps" @select="start($event.href)"/>
     <v-card-actions v-if="showAdmin">
       <v-btn color="primary" @click="addUsers">Új felhasználók a VIR személyekből.</v-btn>
     </v-card-actions>
-  </Card>
+  </BaseCard>
 </template>
 
 <script>
 import { API, EventBus } from '@/util.js'
-import Card from '@/components/base/Card.vue'
-import Menu from '@/components/base/Menu.vue'
+import BaseCard from '@/components/core/BaseCard.vue'
+import BaseMenu from '@/components/core/BaseMenu.vue'
 import Store from '@/store'
 
 export default {
   name: 'appstart',
   components: {
-    Card,
-    Menu
+    BaseCard,
+    BaseMenu
   },
 
   data: () => ({

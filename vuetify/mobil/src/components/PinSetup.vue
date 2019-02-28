@@ -1,5 +1,5 @@
 <template>
-  <Card title="Képernyőzár PIN kód">
+  <BaseCard title="Képernyőzár PIN kód">
     <v-card-text>
       <v-form v-model="valid" @submit.prevent="enter" lazy-validation>
         <v-text-field
@@ -13,18 +13,18 @@
     <v-card-actions>
       <v-btn color="primary" @click="enter">Beállítás</v-btn>
     </v-card-actions>
-  </Card>
+  </BaseCard>
 </template>
 
 <script>
 import { EventBus } from '@/util.js'
-import Card from '@/components/base/Card.vue'
+import BaseCard from '@/components/core/BaseCard.vue'
 import Store from '@/store'
 
 export default {
   name: 'pinSetup',
   components: {
-    Card
+    BaseCard
   },
 
   data: () => ({
