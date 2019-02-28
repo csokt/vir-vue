@@ -113,6 +113,7 @@ export default {
             gepkod: 0,
             muveletkodok: [],
             mennyiseg: null,
+            uzemnev: this.store.user.uzemnev,
             role: this.store.user.role
           }
           this.store.kodolasok = []
