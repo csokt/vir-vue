@@ -1,5 +1,5 @@
 <template>
-  <v-container grid-list-lg>
+  <v-container pa-0>
     <v-layout justify-space-around wrap>
       <BaseCard>
         <v-card-text>

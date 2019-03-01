@@ -1,6 +1,6 @@
 <template>
   <v-flex xs12 sm8 md5>
-    <v-card :class="elevation">
+    <v-card :elevation="elevation" tile>
       <v-card-title v-if="title">
         <div class="title grey--text">
           {{title}}
@@ -16,8 +16,8 @@ export default {
   props: {
     title: String,
     elevation: {
-      type: String,
-      default: 'elevation-8'
+      type: Number,
+      default: 3
     }
   }
 }

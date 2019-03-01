@@ -1,5 +1,5 @@
 <template>
-  <v-container grid-list-lg>
+  <v-container grid-list-lg pa-2>
     <v-layout justify-space-around wrap>
       <BaseCard title="Választható eszközök">
         <v-card-text>

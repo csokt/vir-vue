@@ -1,7 +1,7 @@
 <template>
-  <v-container>
+  <v-container pa-0>
     <v-layout justify-space-around wrap>
-      <BaseCard elevation="elevation-1">
+      <BaseCard>
         <BaseMenu :items="showItems"/>
       </BaseCard>
     </v-layout>

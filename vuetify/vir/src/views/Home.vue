@@ -1,9 +1,8 @@
 <template>
-  <v-container>
+  <v-container pa-0>
     <v-layout justify-space-around wrap>
       <BaseCard
         v-if="user.id"
-        elevation="elevation-1"
       >
         <BaseMenu :items="showItems"/>
       </BaseCard>
@@ -16,7 +15,6 @@
     </v-layout>
   </v-container>
 <!--
-      <BaseCard v-if="user.id" elevation="elevation-1" :title="'Üdvözlöm ' + user.name + '!'">
       <v-btn color="primary" @click="restartBackend">Restart backend</v-btn>
 -->
 </template>
