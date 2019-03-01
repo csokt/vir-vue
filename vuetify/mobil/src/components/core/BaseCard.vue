@@ -17,7 +17,7 @@ export default {
     title: String,
     elevation: {
       type: Number,
-      default: 4
+      default: 3
     }
   }
 }

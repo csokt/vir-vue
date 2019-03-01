@@ -21,10 +21,8 @@
         <SmartInform/>
         <div style="text-align: center;">
           <span>
-            {{store.teszt && 'TESZT'}}
             {{store.user && store.user.name}}
             {{store.version}}
-            {{store.teszt && 'TESZT'}}
           </span>
         </div>
       </v-layout>
