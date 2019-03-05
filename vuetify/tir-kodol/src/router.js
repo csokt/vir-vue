@@ -23,6 +23,14 @@ export default new Router({
     {
       path: '/norma',
       component: () => import(/* webpackChunkName: "norma" */ './views/Norma.vue')
+    },
+    {
+      path: '/tablazatok',
+      component: () => import(/* webpackChunkName: "tablazatok" */ './views/Tablazatok.vue')
+    },
+    {
+      path: '/table/:id',
+      component: () => import(/* webpackChunkName: "table" */ './views/Table.vue')
     // },
     // {
     //   path: '/targyi-eszkoz-erkeztetes',

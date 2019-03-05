@@ -1,36 +1,42 @@
 <template>
-  <v-container grid-list-lg>
+  <v-container pa-0>
     <v-layout justify-space-around wrap>
-      <Card>
-        <v-card-text>
+      <BaseCard>
+        <v-card-text class="pb-0">
           <v-text-field
             ref="element"
             v-model="search"
             label="Cikkszám keresése"
             clearable
-            :loading="isLoading"
-            @keyup.enter="doSearch"
-            append-outer-icon="send"
-            @click:append-outer="doSearch"
           />
         </v-card-text>
-        <SeaDocs :items="items"/>
-      </Card>
+        <v-card-media>
+          <SmartList
+            ref="seadocs"
+            :apiUrl="apiUrl"
+            itemkey = "fullpath"
+            value="name"
+            layout="list"
+            @select="onSelect($event)"
+          />
+        </v-card-media>
+      </BaseCard>
     </v-layout>
   </v-container>
+<!--
+-->
 </template>
 
 <script>
 import { get } from 'vuex-pathify'
-import { API, EventBus } from '@/util'
-import Card from '@/components/base/Card.vue'
-import SeaDocs from '@/components/SeaDocs.vue'
+import BaseCard from '@/components/core/BaseCard.vue'
+import SmartList from '@/components/core/SmartList.vue'
 
 export default {
   name: 'seasearch',
   components: {
-    Card,
-    SeaDocs
+    BaseCard,
+    SmartList
   },
 
   data () {
@@ -41,28 +47,30 @@ export default {
     }
   },
 
-  computed: get(['user']),
+  computed: {
+    ...get(['user']),
+
+    apiUrl () {
+      if (this.search.length < 5) return ''
+      return 'tir/seafile/' + this.search + '/' + this.user.tir_role
+    }
+  },
 
   methods: {
-    async doSearch () {
-      this.$refs.element.blur()
-      this.isLoading = true
-      const response = await API.get('tir/seafile/' + this.search + '/' + this.user.tir_role)
-      this.isLoading = false
-      if (response.ok) {
-        this.items = response.data
-        if (!this.items.length) {
-          this.message = 'Nincs adat!'
-          EventBus.$emit('inform', { type: 'alert', variation: 'warning', message: this.message })
-          // Log('message', {message: this.message})
-        }
+    onSelect (item) {
+      // Log('show', {file: item.fullpath})
+      const publicUrl = 'https://mobilszefo.hopto.org:19540/d/2e2d6b2c61fb4acdb9e2/'
+      let win = window.open(publicUrl + 'files/?p=' + item.fullpath, '_blank')
+      if (win) {
+        win.focus()
       } else {
-        this.message = 'Keresési hiba!'
-        EventBus.$emit('inform', { type: 'alert', variation: 'error', message: this.message })
-        // Log('message', {message: this.message})
-        console.log(response)
+        alert('Engedélyezze a felugró ablakokat ezen az oldalon!')
       }
     }
+  },
+
+  created () {
+    this.$store.set('pageTitle', 'Technológiai dokumentációk')
   }
 }
 </script>

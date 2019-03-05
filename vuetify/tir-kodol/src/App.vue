@@ -5,7 +5,7 @@
         arrow_back
       </v-icon>
       <v-spacer></v-spacer>
-      <v-toolbar-title v-text="title"></v-toolbar-title>
+      <v-toolbar-title v-text="this.pageTitle"></v-toolbar-title>
       <v-spacer></v-spacer>
     </v-toolbar>
 
@@ -15,7 +15,7 @@
 
     <v-footer app height=36 color="grey lighten-3" fixed>
       <v-layout column>
-        <Inform/>
+        <SmartInform/>
         <div style="text-align: center;">
           <span>
             {{user.name}}
@@ -29,15 +29,13 @@
 
 <script>
 import { get } from 'vuex-pathify'
-import Menu from '@/components/base/Menu.vue'
-import Inform from '@/components/base/Inform.vue'
 import { API, EventBus } from '@/util'
+import SmartInform from '@/components/core/SmartInform.vue'
 
 export default {
   name: 'App',
   components: {
-    Menu,
-    Inform
+    SmartInform
   },
 
   data () {
@@ -46,12 +44,10 @@ export default {
   },
 
   computed: {
-    ...get(['version', 'menuLevel', 'appPageTitle', 'modulePageTitle', 'user']),
+    ...get(['version', 'pageTitle', 'user']),
 
     title () {
-      if (this.menuLevel === 0) return 'Termelés információs rendszer'
-      if (this.menuLevel === 1) return this.appPageTitle
-      return this.modulePageTitle
+      return this.pageTitle
     }
   },
 
@@ -59,13 +55,12 @@ export default {
     async getUser (token) {
       if (token) {
         const response = await API.post('accounts/pulltoken/' + token)
-        // console.log(response)
         if (response.ok) {
           this.$store.commit('user', response.data.user)
           API.setHeader('Authorization', response.data.loopback_token)
           return
         } else {
-          console.log(response.problem)
+          // console.log(response.problem)
         }
       }
       EventBus.$emit('inform', { type: 'alert', variation: 'error', message: 'Érvénytelen felhasználó!' })

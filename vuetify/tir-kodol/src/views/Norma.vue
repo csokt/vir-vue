@@ -1,15 +1,15 @@
 <template>
-  <v-container grid-list-lg>
+  <v-container pa-0>
     <v-layout justify-space-around wrap>
-      <Card>
+      <BaseCard>
         <v-card-text>
-          <Mtime :value="kezdIdo" @input="$store.commit('kezdIdo', $event)" label="Munkaidő kezdete" :allowed-minutes="allowedMinutes"/>
+          <BaseTime :value="kezdIdo" @input="$store.commit('kezdIdo', $event)" label="Munkaidő kezdete" :allowed-minutes="allowedMinutes"/>
           <v-text-field v-model="aktIdo" label="Aktuális idő" readonly/>
           <v-text-field v-model="elteltPerc" label="Eltelt idő (perc)" readonly/>
           <v-text-field v-model="osszesNormaperc" label="Összes normaperc" readonly/>
           <v-text-field v-model="teljesitmeny" label="Teljesítmény %" readonly/>
         </v-card-text>
-      </Card>
+      </BaseCard>
     </v-layout>
   </v-container>
 </template>
@@ -17,14 +17,14 @@
 <script>
 import { get } from 'vuex-pathify'
 import { API, EventBus } from '@/util'
-import Card from '@/components/base/Card.vue'
-import Mtime from '@/components/base/Mtime.vue'
+import BaseCard from '@/components/core/BaseCard.vue'
+import BaseTime from '@/components/core/BaseTime.vue'
 
 export default {
   name: 'norma',
   components: {
-    Card,
-    Mtime
+    BaseCard,
+    BaseTime
   },
 
   data () {
@@ -68,6 +68,7 @@ export default {
 
   created () {
     // Log('navigate')
+    this.$store.set('pageTitle', 'Mai teljesítmény százalék')
     this.sumNormaperc()
   }
 }

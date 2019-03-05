@@ -21,4 +21,16 @@ const groupId = {
   LegrandUser: 67
 }
 
-export { API, EventBus, groupId }
+function utc2local (utc) {
+  return new Date(utc.replace(/ /, 'T') + 'Z').toLocaleString()
+}
+
+function checkResponse (response) {
+  if (!response.ok) {
+    EventBus.$emit('inform', { type: 'alert', variation: 'error', message: response.data.error.data.message })
+    console.log(response)
+  }
+  return response.ok
+}
+
+export { API, EventBus, groupId, utc2local, checkResponse }

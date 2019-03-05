@@ -5,6 +5,7 @@
       :itemkey="itemkey"
       :value="value"
       :label="label"
+      :layout="layout"
       @select="$emit('select', $event)"
     />
     <ApiGet
@@ -31,6 +32,7 @@ export default {
     itemkey: String, // BaseList
     value: [String, Function], // BaseList
     label: [String, Function], // BaseList
+    layout: String, // BaseList
     apiUrl: String // ApiGet
   },
 

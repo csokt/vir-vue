@@ -1,36 +1,38 @@
 <template>
-  <v-container grid-list-lg>
+  <v-container pa-0>
     <v-layout justify-space-around wrap>
-      <Card>
+      <BaseCard>
         <v-card-text>
-          <Munkalap v-model="munkalapazonosito"  @change="munkalap = $event"/>
-          <MunkalapInfo :munkalap="munkalap"/>
+          <LookupMunkalap v-model="munkalapazonosito"  @change="munkalap = $event"/>
+          <BaseMunkalapInfo :munkalap="munkalap"/>
         </v-card-text>
-      </Card>
+      </BaseCard>
     </v-layout>
   </v-container>
 </template>
 
 <script>
-import Card from '@/components/base/Card.vue'
-import Munkalap from '@/components/lookup/Munkalap.vue'
-import MunkalapInfo from '@/components/MunkalapInfo.vue'
+import BaseCard from '@/components/core/BaseCard.vue'
+import LookupMunkalap from '@/components/LookupMunkalap.vue'
+import BaseMunkalapInfo from '@/components/BaseMunkalapInfo.vue'
 
 export default {
   name: 'munkalap',
   components: {
-    Card,
-    Munkalap,
-    MunkalapInfo
+    BaseCard,
+    LookupMunkalap,
+    BaseMunkalapInfo
   },
 
   data () {
     return {
-      teszt: '',
-      qteszt: 'dummy',
       munkalapazonosito: '',
       munkalap: {}
     }
+  },
+
+  created () {
+    this.$store.set('pageTitle', 'Gyártási információk')
   }
 }
 </script>
