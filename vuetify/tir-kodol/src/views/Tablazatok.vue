@@ -6,37 +6,34 @@
       </BaseCard>
     </v-layout>
   </v-container>
-<!--
-      <v-btn color="primary" @click="restartBackend">Restart backend</v-btn>
--->
 </template>
 
 <script>
 import { get } from 'vuex-pathify'
+import { API, checkResponse } from '@/util'
 import BaseCard from '@/components/core/BaseCard.vue'
 import BaseMenu from '@/components/core/BaseMenu.vue'
 
 export default {
-  name: 'tablazat',
+  name: 'tablazatok',
   components: {
     BaseCard,
     BaseMenu
   },
 
   computed: {
-    ...get(['user']),
+    ...get(['user', 'views']),
 
     showItems () {
-      const items = [
-        { show: true, path: '/table/napikodolas', title: 'Mai napi kódolások' },
-        { show: true, path: '/table/havikodolas', title: 'Aktuális havi kódolások' }
-      ]
-      return items.filter(item => item.show)
+      return this.views.map(item => ({ path: '/table/' + item.id, title: item.label }))
     }
   },
 
-  created () {
+  async created () {
     this.$store.set('pageTitle', 'Táblázatok')
+    const response = await API.get('config/views/tablet/' + this.user.role)
+    if (!checkResponse(response)) return
+    this.$store.set('views', response.data)
   }
 }
 </script>

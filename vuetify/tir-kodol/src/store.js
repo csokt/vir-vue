@@ -9,6 +9,7 @@ const state = {
   version: '19.03.05',
   pageTitle: '',
   user: {},
+  views: [],
   kezdIdo: '05:30'
 }
 

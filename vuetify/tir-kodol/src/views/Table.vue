@@ -1,11 +1,28 @@
 <template>
-  <v-container pa-0>
-    <v-layout justify-space-around wrap>
-      <BaseCard>
-        <v-card-media>
-    Table {{$route.params.id}}
-        </v-card-media>
-      </BaseCard>
+  <v-container fluid pa-1>
+    <v-layout>
+      <v-flex>
+          <table class="table-striped" v-bind:style="{ 'font-size': view.tablefontsize }">
+            <thead v-bind:style="{ 'font-size': view.headfontsize }">
+              <tr>
+                <th v-for="field in view.fields" :key="'H' + field.name">{{field.label}}</th>
+              </tr>
+            </thead>
+            <tbody v-bind:style="{ 'font-size': view.bodyfontsize }">
+              <tr v-for="(row, index) in result.stat" :key="'S' + index" class="stat">
+                <td v-for="field in view.fields" :key="'S' + field.name" v-bind:style="{'font-size': field.fontsize }">{{row[field.name]}}</td>
+              </tr>
+              <template v-for="(row, index) in result.records">
+                <tr :key="'R' + index">
+                  <td v-for="field in view.fields" :key="'R' + field.name" @click="clickField(row, field)" v-bind:class="{ search: field.search }" v-bind:style="{ color: color(field, row[field.name]), 'font-size': field.fontsize }">{{row[field.name]}}</td>
+                </tr>
+                <tr :key="'I' + index" v-if="(index + 1) % view.head_after === 0" v-bind:style="{ 'font-size': view.headfontsize }">
+                  <th v-for="field in view.fields" :key="'I' + field.name">{{field.label}}</th>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+      </v-flex>
     </v-layout>
   </v-container>
 <!--
@@ -82,49 +99,41 @@ export default {
   },
 
   computed: {
-    ...get(['user', 'kezdIdo'])
-  //   view () {
-  //     return Config.views.find(o => o.id === this.$route.params.id)
-  //   }
+    ...get(['user', 'views'])
   },
 
   methods: {
-    async getView () {
-      const response = await API.get('config/views/tablet/varró')
+    async requestData () {
+      const response = await API.get('tir/tables/' + this.view.id + '?params=' + JSON.stringify(this.filter))
       if (!checkResponse(response)) return
-      this.view = response.data.find(o => o.id === this.$route.params.id) || {}
-      if (!this.view.id) {
-        EventBus.$emit('inform', { type: 'alert', variation: 'warning', message: 'A táblázat nem létezik!' })
-      }
+      this.result = response.data
+      this.spinner = false
+    },
+
+    //   clickField (row, field) {
+    //     if (field.search) {
+    //       let data = {}
+    //       data[field.name] = row[field.name]
+    //       Log('clickfield', data)
+    //       this.store.user.filterCikkszam = row[field.name]
+    //       this.$router.push('/search')
+    //     }
+    //   },
+
+    color (field, value) {
+      if (value > 0) { return field.positive }
+      if (value === 0) { return field.zero }
+      if (value < 0) { return field.negative }
     }
   },
 
-  // methods: {
-  //   async requestData () {
-  //     const response = await RpcView(this.view, this.filter)
-  //     this.result = response.result || {}
-  //     this.spinner = false
-  //   },
-  //   clickField (row, field) {
-  //     if (field.search) {
-  //       let data = {}
-  //       data[field.name] = row[field.name]
-  //       Log('clickfield', data)
-  //       this.store.user.filterCikkszam = row[field.name]
-  //       this.$router.push('/search')
-  //     }
-  //   },
-  //   color (field, value) {
-  //     if (value > 0) { return field.positive }
-  //     if (value === 0) { return field.zero }
-  //     if (value < 0) { return field.negative }
-  //   }
-  // },
-
   created () {
-    this.$store.set('pageTitle', 'Táblázat')
-    this.getView()
-  }
+    this.view = this.views.find(o => o.id === this.$route.params.id) || {}
+    if (!this.view.id) {
+      EventBus.$emit('inform', { type: 'alert', variation: 'warning', message: 'A táblázat nem létezik!' })
+    }
+    this.$store.set('pageTitle', this.view.label)
+  },
 
   // created () {
   //   if (!this.store.user) { this.$router.replace('/'); return }
@@ -142,14 +151,16 @@ export default {
   //   }
   //   this.filter = model
   // },
-  // mounted () {
+
+  mounted () {
   //   if (this.view.refresh) {
   //     this.myInterval = setInterval(() => {
   //       this.requestData()
   //     }, 1000 * this.view.refresh)
   //   }
-  //   this.requestData()
-  // },
+    this.requestData()
+  }
+
   // beforeDestroy () {
   //   if (this.myInterval) {
   //     clearInterval(this.myInterval)

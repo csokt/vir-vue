@@ -56,7 +56,7 @@ export default {
       if (token) {
         const response = await API.post('accounts/pulltoken/' + token)
         if (response.ok) {
-          this.$store.commit('user', response.data.user)
+          this.$store.commit('user', { ...response.data.user, role: response.data.user.tir_role })
           API.setHeader('Authorization', response.data.loopback_token)
           return
         } else {
