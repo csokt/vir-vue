@@ -1,6 +1,12 @@
 <template>
   <v-container fluid pa-1>
-    <v-layout>
+    <v-layout column>
+      <BaseCard v-if="isFilter">
+        <v-card-text>
+          <vue-form-generator :schema="view.schema" :model="filter" :options="formOptions"></vue-form-generator>
+        </v-card-text>
+      </BaseCard>
+
       <v-flex>
           <table class="table-striped" v-bind:style="{ 'font-size': view.tablefontsize }">
             <thead v-bind:style="{ 'font-size': view.headfontsize }">
@@ -23,6 +29,14 @@
             </tbody>
           </table>
       </v-flex>
+
+      <v-flex>
+        <h2>
+          <v-progress-circular v-if="spinner" indeterminate></v-progress-circular>
+          <span>{{result.records && result.records.length}} tétel</span>
+        </h2>
+      </v-flex>
+
     </v-layout>
   </v-container>
 <!--
@@ -38,31 +52,6 @@
       <q-btn @click="result = {}; spinner = true; isFilter = false; requestData()" push color="positive">Ment</q-btn>
     </div>
 
-    <table class="q-table cell-separator table-striped compact" v-bind:style="{ 'font-size': view.tablefontsize }">
-      <thead v-bind:style="{ 'font-size': view.headfontsize }">
-        <tr>
-          <th v-for="field in view.fields">{{field.label}}</th>
-        </tr>
-      </thead>
-      <tbody v-bind:style="{ 'font-size': view.bodyfontsize }">
-        <tr v-for="row in result.stat" class="stat">
-          <td v-for="field in view.fields" v-bind:style="{'font-size': field.fontsize }">{{row[field.name]}}</td>
-        </tr>
-        <template v-for="(row, index) in result.records">
-          <tr>
-            <td v-for="field in view.fields" @click="clickField(row, field)" v-bind:class="{ search: field.search }" v-bind:style="{ color: color(field, row[field.name]), 'font-size': field.fontsize }">{{row[field.name]}}</td>
-          </tr>
-          <tr v-if="(index + 1) % view.head_after === 0" v-bind:style="{ 'font-size': view.headfontsize }">
-            <th v-for="field in view.fields">{{field.label}}</th>
-          </tr>
-        </template>
-      </tbody>
-    </table>
-      <h5>
-        <q-spinner v-if="spinner" :size="40"/>
-        <span>{{result.records && result.records.length}} tétel</span>
-      </h5>
-  </div>
 -->
 </template>
 
@@ -71,16 +60,14 @@ import { get } from 'vuex-pathify'
 import { API, EventBus, checkResponse } from '@/util'
 import BaseCard from '@/components/core/BaseCard.vue'
 // import Vue from 'vue'
-// import VueFormGenerator from 'vue-form-generator/dist/vfg-core.js'
+import VueFormGenerator from 'vue-form-generator/dist/vfg-core.js'
 // Vue.use(VueFormGenerator)
-// // import "vue-form-generator/dist/vfg-core.css"
-// import Config from '../config'
-// import Store from '../store'
-// import { RpcView, Log } from '../rpc'
+import 'vue-form-generator/dist/vfg-core.css'
 
 export default {
-  name: 'table',
+  name: 'tablazat',
   components: {
+    'vue-form-generator': VueFormGenerator.component,
     BaseCard
   },
 
@@ -89,7 +76,7 @@ export default {
       view: {},
       result: {},
       filter: {},
-      isFilter: false,
+      isFilter: true,
       spinner: true,
       formOptions: {
         validateAfterLoad: true,
@@ -133,6 +120,16 @@ export default {
       EventBus.$emit('inform', { type: 'alert', variation: 'warning', message: 'A táblázat nem létezik!' })
     }
     this.$store.set('pageTitle', this.view.label)
+    let model = {}
+    for (let field of this.view.fields) {
+      if (!field.filter) { continue }
+      if (field.default) {
+        model[field.name] = this.user[field.default]
+      } else {
+        model[field.name] = null
+      }
+    }
+    this.filter = model
   },
 
   // created () {

@@ -18,8 +18,10 @@ import {
   VImg,
   VList,
   VNavigationDrawer,
+  VProgressCircular,
   VTextarea,
   VTextField,
+  VTimePicker,
   VToolbar,
   transitions
 } from 'vuetify'
@@ -44,8 +46,10 @@ Vue.use(Vuetify, {
     VImg,
     VList,
     VNavigationDrawer,
+    VProgressCircular,
     VTextarea,
     VTextField,
+    VTimePicker,
     VToolbar,
     transitions
   }

@@ -18,10 +18,13 @@ import {
   VImg,
   VList,
   VNavigationDrawer,
+  VProgressCircular,
+  VSubheader,
   VTextarea,
   VTextField,
   VTimePicker,
   VToolbar,
+  VTooltip,
   transitions
 } from 'vuetify'
 import 'vuetify/src/stylus/app.styl'
@@ -45,10 +48,13 @@ Vue.use(Vuetify, {
     VImg,
     VList,
     VNavigationDrawer,
+    VProgressCircular,
+    VSubheader,
     VTextarea,
     VTextField,
     VTimePicker,
     VToolbar,
+    VTooltip,
     transitions
   }
 })
