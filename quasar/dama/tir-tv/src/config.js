@@ -60,6 +60,40 @@ views:
     fontsize: 16px
 
 -
+  id:         logisztikaleadas_tv
+  database:   SzefoModulKeszlet
+  name:       monitor_szegedlogisztikaleadas
+  label:      Logisztika – napi leadás
+  device:     tv
+  refresh:    70
+  where:
+  order:      '[Cikk/IT]'
+  head_after: 100
+  limit:      50
+  sum:
+  - Rendelt db
+  - Előzőleg leadott db
+  - Leadott db
+  - Hátralék
+  - Hibák száma
+  fields:
+  - name:     Cikk/IT
+  - name:     Modell
+  - name:     Finomság
+    label:    gg
+  - name:     Megnevezés
+  - name:     Megrendelő
+  - name:     Rendelt db
+    label:    Rendelt
+  - name:     Előzőleg leadott db
+    label:    Előzőleg leadott
+  - name:     Leadott db
+    label:    Ma leadott
+  - name:     Hátralék
+  - name:     Hibák száma
+    label:    Hibák
+
+-
   id:         ram_logisztika_gyartasra_var_tv
   database:   SzefoModulKeszlet
   name:       monitor_ramviewtablet
