@@ -3,8 +3,11 @@
     <v-layout column>
       <BaseCard v-if="isFilter">
         <v-card-text>
-          <vue-form-generator :schema="view.schema" :model="filter" :options="formOptions"></vue-form-generator>
+          <v-form-base :value="filter" :schema="view.vuetify_schema" />
         </v-card-text>
+        <v-card-actions>
+          <v-btn color="primary" @click="result = {}; spinner = true; isFilter = false; requestData()">Ment</v-btn>
+        </v-card-actions>
       </BaseCard>
 
       <v-flex>
@@ -46,12 +49,6 @@
       <q-btn @click="isFilter = !isFilter" push color="primary">Szűrő</q-btn>
       <q-btn @click="$router.go(-1)" push color="warning">Vissza</q-btn>
     </div>
-
-    <div v-if="isFilter" class="panel-body">
-      <vue-form-generator :schema="view.schema" :model="filter" :options="formOptions"></vue-form-generator>
-      <q-btn @click="result = {}; spinner = true; isFilter = false; requestData()" push color="positive">Ment</q-btn>
-    </div>
-
 -->
 </template>
 
@@ -59,15 +56,12 @@
 import { get } from 'vuex-pathify'
 import { API, EventBus, checkResponse } from '@/util'
 import BaseCard from '@/components/core/BaseCard.vue'
-// import Vue from 'vue'
-import VueFormGenerator from 'vue-form-generator/dist/vfg-core.js'
-// Vue.use(VueFormGenerator)
-import 'vue-form-generator/dist/vfg-core.css'
+import VFormBase from 'vuetify-form-base'
 
 export default {
   name: 'tablazat',
   components: {
-    'vue-form-generator': VueFormGenerator.component,
+    VFormBase,
     BaseCard
   },
 
@@ -77,11 +71,7 @@ export default {
       result: {},
       filter: {},
       isFilter: true,
-      spinner: true,
-      formOptions: {
-        validateAfterLoad: true,
-        validateAfterChanged: true
-      }
+      spinner: true
     }
   },
 
@@ -91,7 +81,7 @@ export default {
 
   methods: {
     async requestData () {
-      const response = await API.get('tir/tables/' + this.view.id + '?params=' + JSON.stringify(this.filter))
+      const response = await API.get('tir/tables/' + this.view.id + '?filter=' + JSON.stringify(this.filter))
       if (!checkResponse(response)) return
       this.result = response.data
       this.spinner = false
