@@ -48,10 +48,10 @@ export default {
   },
 
   computed: {
-    ...get(['user']),
+    ...get(['defaults', 'user']),
 
     apiUrl () {
-      if (this.search.length < 5) return ''
+      if (this.search && this.search.length < 5) return ''
       return 'tir/seafile/' + this.search + '/' + this.user.tir_role
     }
   },
@@ -71,6 +71,8 @@ export default {
 
   created () {
     this.$store.set('pageTitle', 'Technológiai dokumentációk')
+    this.$store.set('showFilterIcon', false)
+    this.search = this.defaults.cikkszam
   }
 }
 </script>

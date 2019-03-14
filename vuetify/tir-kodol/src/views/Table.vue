@@ -1,12 +1,12 @@
 <template>
   <v-container fluid pa-1>
     <v-layout column>
-      <BaseCard v-if="isFilter">
+      <BaseCard v-if="showFilter">
         <v-card-text>
           <v-form-base :value="filter" :schema="view.vuetify_schema" />
         </v-card-text>
         <v-card-actions>
-          <v-btn color="primary" @click="result = {}; spinner = true; isFilter = false; requestData()">Ment</v-btn>
+          <v-btn color="primary" @click="result = {}; spinner = true; $store.set('showFilter', false); requestData()">Ment</v-btn>
         </v-card-actions>
       </BaseCard>
 
@@ -76,7 +76,7 @@ export default {
   },
 
   computed: {
-    ...get(['user', 'views'])
+    ...get(['showFilter', 'defaults', 'user', 'views'])
   },
 
   methods: {
@@ -87,15 +87,15 @@ export default {
       this.spinner = false
     },
 
-    //   clickField (row, field) {
-    //     if (field.search) {
-    //       let data = {}
-    //       data[field.name] = row[field.name]
-    //       Log('clickfield', data)
-    //       this.store.user.filterCikkszam = row[field.name]
-    //       this.$router.push('/search')
-    //     }
-    //   },
+    clickField (row, field) {
+      if (field.search) {
+        let data = {}
+        data[field.name] = row[field.name]
+        // Log('clickfield', data)
+        this.$store.set('defaults@' + field.search, row[field.name])
+        this.$router.push('/seasearch')
+      }
+    },
 
     color (field, value) {
       if (value > 0) { return field.positive }
@@ -110,11 +110,12 @@ export default {
       EventBus.$emit('inform', { type: 'alert', variation: 'warning', message: 'A táblázat nem létezik!' })
     }
     this.$store.set('pageTitle', this.view.label)
+    this.$store.set('showFilterIcon', true)
     let model = {}
     for (let field of this.view.fields) {
       if (!field.filter) { continue }
       if (field.default) {
-        model[field.name] = this.user[field.default]
+        model[field.name] = this.defaults[field.default]
       } else {
         model[field.name] = null
       }

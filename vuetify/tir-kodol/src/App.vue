@@ -7,6 +7,9 @@
       <v-spacer></v-spacer>
       <v-toolbar-title v-text="this.pageTitle"></v-toolbar-title>
       <v-spacer></v-spacer>
+      <v-icon v-if="showFilterIcon" @click.stop="$store.set('showFilter', !showFilter)">
+        filter_list
+      </v-icon>
     </v-toolbar>
 
     <v-content>
@@ -44,7 +47,7 @@ export default {
   },
 
   computed: {
-    ...get(['version', 'pageTitle', 'user']),
+    ...get(['version', 'pageTitle', 'showFilterIcon', 'showFilter', 'user']),
 
     title () {
       return this.pageTitle
@@ -57,6 +60,7 @@ export default {
         const response = await API.post('accounts/pulltoken/' + token)
         if (response.ok) {
           this.$store.commit('user', { ...response.data.user, role: response.data.user.tir_role })
+          this.$store.set('defaults@belepokod', this.user.tir_azonosito)
           API.setHeader('Authorization', response.data.loopback_token)
           return
         } else {

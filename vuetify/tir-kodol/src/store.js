@@ -8,6 +8,9 @@ Vue.use(Vuex)
 const state = {
   version: '19.03.05',
   pageTitle: '',
+  showFilterIcon: false,
+  showFilter: false,
+  defaults: {},
   user: {},
   views: [],
   kezdIdo: '05:30'

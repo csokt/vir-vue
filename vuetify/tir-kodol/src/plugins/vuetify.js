@@ -28,6 +28,12 @@ import {
   VTooltip,
   transitions
 } from 'vuetify'
+
+import {
+  Resize,
+  Touch
+} from 'vuetify/lib/directives'
+
 import 'vuetify/src/stylus/app.styl'
 
 Vue.use(Vuetify, {
@@ -58,5 +64,9 @@ Vue.use(Vuetify, {
     VToolbar,
     VTooltip,
     transitions
+  },
+  directives: {
+    Resize,
+    Touch
   }
 })

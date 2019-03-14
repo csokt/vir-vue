@@ -31,6 +31,7 @@ export default {
 
   async created () {
     this.$store.set('pageTitle', 'Táblázatok')
+    this.$store.set('showFilterIcon', false)
     const response = await API.get('config/views/tablet/' + this.user.role)
     if (!checkResponse(response)) return
     this.$store.set('views', response.data)
