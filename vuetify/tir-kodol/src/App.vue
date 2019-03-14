@@ -32,8 +32,10 @@
 
 <script>
 import { get } from 'vuex-pathify'
-import { API, EventBus } from '@/util'
+// import { API, checkResponse } from '@/util'
+import { API } from '@/util'
 import SmartInform from '@/components/core/SmartInform.vue'
+import Home from '@/views/Home.vue'
 
 export default {
   name: 'App',
@@ -59,20 +61,21 @@ export default {
       if (token) {
         const response = await API.post('accounts/pulltoken/' + token)
         if (response.ok) {
-          this.$store.commit('user', { ...response.data.user, role: response.data.user.tir_role })
-          this.$store.set('defaults@belepokod', this.user.tir_azonosito)
           API.setHeader('Authorization', response.data.loopback_token)
-          return
-        } else {
-          // console.log(response.problem)
+          Home.methods.gotUserQR.call(this, response.data.user.tir_azonosito)
+        }
+      } else {
+        const response = await API.post('tir/login')
+        if (response.ok) {
+          API.setHeader('Authorization', response.data.id)
         }
       }
-      EventBus.$emit('inform', { type: 'alert', variation: 'error', message: 'Érvénytelen felhasználó!' })
       this.$router.replace('/')
     }
   },
 
   created () {
+    console.log(Home)
     this.getUser(this.$route.query.token_uid)
   },
 

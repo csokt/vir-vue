@@ -27,8 +27,8 @@ function utc2local (utc) {
 
 function checkResponse (response) {
   if (!response.ok) {
-    EventBus.$emit('inform', { type: 'alert', variation: 'error', message: response.data.error.data.message })
-    console.log(response)
+    console.log('response:', response)
+    EventBus.$emit('inform', { type: 'alert', variation: 'error', message: response.data.error.message })
   }
   return response.ok
 }

@@ -13,6 +13,10 @@ export default new Router({
       component: Home
     },
     {
+      path: '/kodol',
+      component: () => import(/* webpackChunkName: "kodol" */ './views/Kodol.vue')
+    },
+    {
       path: '/munkalap',
       component: () => import(/* webpackChunkName: "munkalap" */ './views/Munkalap.vue')
     },

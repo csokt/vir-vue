@@ -42,14 +42,6 @@
 
     </v-layout>
   </v-container>
-<!--
-  <div>
-    <div>
-      <span><strong>{{store.user && store.user.name}}: {{view.label}}</strong></span>
-      <q-btn @click="isFilter = !isFilter" push color="primary">Szűrő</q-btn>
-      <q-btn @click="$router.go(-1)" push color="warning">Vissza</q-btn>
-    </div>
--->
 </template>
 
 <script>
@@ -70,7 +62,6 @@ export default {
       view: {},
       result: {},
       filter: {},
-      isFilter: true,
       spinner: true
     }
   },
@@ -105,6 +96,8 @@ export default {
   },
 
   created () {
+    // if (!this.store.user) { this.$router.replace('/'); return }
+    // Log('navigate')
     this.view = this.views.find(o => o.id === this.$route.params.id) || {}
     if (!this.view.id) {
       EventBus.$emit('inform', { type: 'alert', variation: 'warning', message: 'A táblázat nem létezik!' })
@@ -122,23 +115,6 @@ export default {
     }
     this.filter = model
   },
-
-  // created () {
-  //   if (!this.store.user) { this.$router.replace('/'); return }
-  //   Log('navigate')
-  //   const view = Config.views.find(o => o.id === this.$route.params.id)
-  //   let model = {}
-  //   for (let field of view.fields) {
-  //     if (!field.filter) { continue }
-  //     if (field.default) {
-  //       model[field.name] = this.store.user[field.default]
-  //     }
-  //     else {
-  //       model[field.name] = null
-  //     }
-  //   }
-  //   this.filter = model
-  // },
 
   mounted () {
   //   if (this.view.refresh) {

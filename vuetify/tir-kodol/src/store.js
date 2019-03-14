@@ -12,6 +12,7 @@ const state = {
   showFilter: false,
   defaults: {},
   user: {},
+  kodol: {},
   views: [],
   kezdIdo: '05:30'
 }

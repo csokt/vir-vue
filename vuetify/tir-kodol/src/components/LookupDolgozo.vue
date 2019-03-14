@@ -2,7 +2,7 @@
   <SmartLookup
     ref="smartlookup"
     :value="value"
-    label="Munkalap"
+    label="Dolgozó kód"
     qrcode
     :apiUrl="apiUrl"
     @input="$emit('input', $event)"
@@ -29,7 +29,7 @@ export default {
       if (!this.value) {
         return ''
       }
-      return 'tir/munkalapok/' + this.value
+      return 'tir/dolgozok/' + this.value
     }
   },
 
