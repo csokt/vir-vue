@@ -26,10 +26,11 @@ export default {
 
   computed: {
     apiUrl () {
-      if (!this.value) {
+      if (!this.value || this.value.length < 5) {
         return ''
       }
-      return 'tir/dolgozok/' + this.value
+      const value = parseInt(this.value) - 20000
+      return 'tir/dolgozok/' + value.toString()
     }
   },
 

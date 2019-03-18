@@ -3,6 +3,9 @@
     <v-layout justify-space-around wrap>
       <BaseCard v-if="user.name">
         <BaseMenu :items="showItems"/>
+        <v-card-actions>
+          <v-btn color="primary" @click="logout">Másik felhasználó választása</v-btn>
+        </v-card-actions>
       </BaseCard>
 
       <BaseCard v-if="!user.name" title="Kérem jelentkezzen be!">
@@ -72,9 +75,9 @@ export default {
 
     logout () {
       // Log('logout', this.store.user)
-      this.store.user = null
-      this.store.kodol = {}
-      this.store.infok = []
+      this.$store.set('user', {})
+      this.$store.set('kodol', {})
+      this.$store.set('infok', [])
     }
   },
 

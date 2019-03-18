@@ -13,6 +13,7 @@ const state = {
   defaults: {},
   user: {},
   kodol: {},
+  infok: [],
   views: [],
   kezdIdo: '05:30'
 }
