@@ -5,7 +5,8 @@
       ref="textfield"
       :value="value"
       :label="label"
-      clearable
+      :readonly="readonly"
+      :clearable="!readonly"
       @input="$emit('input', $event)"
       @change="reload"
       @click:clear="reload"
@@ -51,6 +52,7 @@ export default {
       type: String,
       required: true
     },
+    readonly: Boolean,
     notFoundMessage: {
       type: String,
       default: 'A keresett adat nem található!'

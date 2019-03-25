@@ -3,15 +3,15 @@
     <v-layout justify-space-around wrap>
       <BaseCard>
         <v-card-text>
-          <LookupDolgozo v-model="kodol.dolgozokod"  @change="kodol.dolgozo = $event"/>
-          <v-text-field v-model="kodol.dolgozo.dolgozonev" label="Dolgozó" readonly/>
-          <LookupMunkalap v-model="kodol.munkalapazonosito"  @change="kodol.munkalap = $event"/>
-          <v-text-field v-model="kodol.munkalap.kartoninfo" label="Kartoninfo" readonly/>
+          <LookupDolgozo v-model="kodol.dolgozokod" :readonly="user.role!=='kódoló'" @change="kodol.dolgozonev = $event.dolgozonev"/>
+          <v-text-field v-model="kodol.dolgozonev" label="Dolgozó" readonly/>
+          <LookupMunkalap v-model="kodol.munkalapazonosito"  @change="kodol.kartoninfo = $event.kartoninfo"/>
+          <v-text-field v-model="kodol.kartoninfo" label="Kartoninfo" readonly/>
           <v-text-field v-model="kodol.gepkod" type="number" label="Gépkód"/>
           <v-combobox v-model="kodol.muveletkodok" type="number" multiple chips deletable-chips clearable required label="Műveletkódok"/>
           <v-text-field v-model="kodol.mennyiseg" type="number" label="Mennyiség"/>
           <v-card-actions>
-            <v-btn color="primary" @click="pubKodolas">Adatok mentése</v-btn>
+            <v-btn :disabled="!ervenyes || feldolgozas" color="primary" @click="pubKodolas">Adatok mentése</v-btn>
           </v-card-actions>
         </v-card-text>
       </BaseCard>
@@ -38,7 +38,7 @@
 </template>
 
 <script>
-// import { get } from 'vuex-pathify'
+import { get } from 'vuex-pathify'
 import { API, EventBus } from '@/util'
 import BaseCard from '@/components/core/BaseCard.vue'
 import LookupDolgozo from '@/components/LookupDolgozo.vue'
@@ -54,19 +54,28 @@ export default {
 
   data () {
     return {
-      kodol: { dolgozo: {}, munkalap: {} },
+      kodol: {},
+      feldolgozas: false,
       kodolasok: []
     }
   },
 
   computed: {
-    // ...get(['kodolasok'])
+    ...get(['user']),
+
+    ervenyes () {
+      return this.kodol.dolgozonev && this.kodol.kartoninfo && this.kodol.muveletkodok.length && parseInt(this.kodol.mennyiseg)
+    }
   },
 
   methods: {
     async pubKodolas () {
+      if (this.kodol.gepkod !== parseInt(this.kodol.gepkod).toString() || parseInt(this.kodol.gepkod) < 0) {
+        EventBus.$emit('inform', { type: 'alert', variation: 'warning', message: 'Érvénytelen gépkód!' })
+        return
+      }
       try {
-        if (this.gepkod !== parseInt(this.gepkod) || this.gepkod < 0) {
+        if (parseInt(this.kodol.gepkod) < 0) {
           throw new TypeError('Érvénytelen gépkód!')
         }
       } catch (e) {
@@ -75,9 +84,9 @@ export default {
         console.log(e)
         return
       }
-      for (let i = 0; i < this.muveletkodok.length; i++) {
+      for (let i = 0; i < this.kodol.muveletkodok.length; i++) {
         try {
-          const kod = this.muveletkodok[i]
+          const kod = this.kodol.muveletkodok[i]
           if (Math.ceil(parseFloat(kod)) !== parseInt(kod) || parseInt(kod) <= 0) {
             throw new TypeError('Érvénytelen műveletkód!')
           }
@@ -89,7 +98,7 @@ export default {
         }
       }
       try {
-        if (this.mennyiseg !== parseInt(this.mennyiseg) || this.mennyiseg <= 0) {
+        if (parseInt(this.kodol.mennyiseg) <= 0) {
           throw new TypeError('Érvénytelen mennyiség!')
         }
       } catch (e) {
@@ -99,8 +108,10 @@ export default {
         return
       }
 
-      // this.mennyiseg = ''
+      this.kodol.mennyiseg = ''
       EventBus.$emit('inform', { type: 'alert', variation: 'success', message: 'Adatok elküldve!' })
+
+      if (!this.kodol.mennyiseg) return
 
       this.gepkod = this.gepkod || 0
       // Log('kodol', this.store.kodol)
@@ -141,6 +152,10 @@ export default {
   created () {
     this.$store.set('pageTitle', 'Teljesítmény kódolás')
     this.kodol = this.$store.copy('kodol')
+  },
+
+  destroyed () {
+    this.$store.set('kodol', this.kodol)
   }
 }
 </script>

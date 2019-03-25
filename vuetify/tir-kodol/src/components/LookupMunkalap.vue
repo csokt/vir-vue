@@ -26,7 +26,7 @@ export default {
 
   computed: {
     apiUrl () {
-      if (!this.value || this.value.length < 8) {
+      if (!this.value || this.value.length !== 8) {
         return ''
       }
       return 'tir/munkalapok/' + this.value

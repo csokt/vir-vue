@@ -3,7 +3,8 @@
     ref="smartlookup"
     :value="value"
     label="Dolgozó kód"
-    qrcode
+    :readonly="readonly"
+    :qrcode="!readonly"
     :apiUrl="apiUrl"
     @input="$emit('input', $event)"
     @change="$emit('change', $event)"
@@ -21,12 +22,13 @@ export default {
   },
 
   props: {
-    value: String
+    value: String,
+    readonly: Boolean
   },
 
   computed: {
     apiUrl () {
-      if (!this.value || this.value.length < 5) {
+      if (!this.value || this.value.length !== 5) {
         return ''
       }
       const value = parseInt(this.value) - 20000
