@@ -74,8 +74,8 @@ export default {
         EventBus.$emit('inform', { type: 'alert', variation: 'warning', message: 'Érvénytelen gépkód!' })
         return
       }
-      for (const kod of this.kodol.muveletkodok) {
-        if (kod !== parseInt(kod).toString() || parseInt(kod) < 1) {
+      for (const muveletkod of this.kodol.muveletkodok) {
+        if (muveletkod !== parseInt(muveletkod).toString() || parseInt(muveletkod) < 1) {
           EventBus.$emit('inform', { type: 'alert', variation: 'warning', message: 'Érvénytelen műveletkód!' })
           return
         }
@@ -87,22 +87,22 @@ export default {
       // Log('kodol', this.store.kodol)
       let message = ''
       this.feldolgozas = true
-      for (const kod of this.kodol.muveletkodok) {
-        this.kodol.muveletkod = kod
-        let doc = Object.assign({}, this.kodol)
-        doc.funkcio = '99994'
+      for (const muveletkod of this.kodol.muveletkodok) {
+        // let doc = Object.assign({}, this.kodol)
+        // doc.muveletkod = muveletkod
+        let doc = { ...this.kodol, muveletkod: muveletkod }
         this.kodolasok.unshift(doc)
         const response = await API.post('tir/kodol', doc)
         if (response.ok) {
-          this.kodolasok[0].eredmeny = response.data.message
-          this.kodolasok[0].error = parseInt(response.data.error)
-          if (this.kodolasok[0].error) {
+          doc.eredmeny = response.data.message
+          doc.error = parseInt(response.data.error)
+          if (doc.error) {
             message = 'Nem minden tételt sikerült bekódolni!'
           }
         } else {
           message = 'Kódoló szerver hiba, értesítse a rendszergazdát!'
-          this.kodolasok[0].eredmeny = 'Kódoló szerver hiba!'
-          this.kodolasok[0].error = 1
+          doc.eredmeny = 'Kódoló szerver hiba!'
+          doc.error = 1
           // Log('message', {message: message})
           console.log(response.problem)
           break
