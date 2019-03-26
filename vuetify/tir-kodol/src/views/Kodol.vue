@@ -25,7 +25,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(row,index) in kodolasok" :key="index" v-bind:class="{ 'text-negative': row.error }">
+            <tr v-for="(row,index) in kodolasok" :key="index" v-bind:class="{ 'red--text': row.error }">
               <td>{{row.muveletkod}}</td>
               <td>{{row.mennyiseg}}</td>
               <td>{{row.eredmeny}}</td>
@@ -64,7 +64,7 @@ export default {
     ...get(['user']),
 
     ervenyes () {
-      return this.kodol.dolgozonev && this.kodol.kartoninfo && this.kodol.muveletkodok.length && parseInt(this.kodol.mennyiseg)
+      return this.kodol.dolgozonev && this.kodol.kartoninfo && this.kodol.muveletkodok.length && parseInt(this.kodol.mennyiseg) > 0
     }
   },
 
@@ -74,88 +74,59 @@ export default {
         EventBus.$emit('inform', { type: 'alert', variation: 'warning', message: 'Érvénytelen gépkód!' })
         return
       }
-      try {
-        if (parseInt(this.kodol.gepkod) < 0) {
-          throw new TypeError('Érvénytelen gépkód!')
-        }
-      } catch (e) {
-        this.message = 'Érvénytelen gépkód!'
-        // Log('message', {message: e.message})
-        console.log(e)
-        return
-      }
-      for (let i = 0; i < this.kodol.muveletkodok.length; i++) {
-        try {
-          const kod = this.kodol.muveletkodok[i]
-          if (Math.ceil(parseFloat(kod)) !== parseInt(kod) || parseInt(kod) <= 0) {
-            throw new TypeError('Érvénytelen műveletkód!')
-          }
-        } catch (e) {
-          this.message = 'Érvénytelen műveletkód!'
-          // Log('message', {message: e.message})
-          console.log(e)
+      for (const kod of this.kodol.muveletkodok) {
+        if (kod !== parseInt(kod).toString() || parseInt(kod) < 1) {
+          EventBus.$emit('inform', { type: 'alert', variation: 'warning', message: 'Érvénytelen műveletkód!' })
           return
         }
       }
-      try {
-        if (parseInt(this.kodol.mennyiseg) <= 0) {
-          throw new TypeError('Érvénytelen mennyiség!')
-        }
-      } catch (e) {
-        this.message = 'Érvénytelen mennyiség!'
-        // Log('message', {message: e.message})
-        console.log(e)
+      if (this.kodol.mennyiseg !== parseInt(this.kodol.mennyiseg).toString() || parseInt(this.kodol.mennyiseg) < 0) {
+        EventBus.$emit('inform', { type: 'alert', variation: 'warning', message: 'Érvénytelen mennyiség!' })
         return
       }
-
-      this.kodol.mennyiseg = ''
-      EventBus.$emit('inform', { type: 'alert', variation: 'success', message: 'Adatok elküldve!' })
-
-      if (!this.kodol.mennyiseg) return
-
-      this.gepkod = this.gepkod || 0
       // Log('kodol', this.store.kodol)
-      this.message = ''
-      this.store.menthet = false
-      for (let i = 0; i < this.muveletkodok.length; i++) {
-        this.muveletkod = this.muveletkodok[i]
-        let doc = Object.assign({}, this.store.kodol)
-        doc.funkcio = 99994
-        doc.createdAt = new Date()
-        this.store.kodolasok.unshift(doc)
+      let message = ''
+      this.feldolgozas = true
+      for (const kod of this.kodol.muveletkodok) {
+        this.kodol.muveletkod = kod
+        let doc = Object.assign({}, this.kodol)
+        doc.funkcio = '99994'
+        this.kodolasok.unshift(doc)
         const response = await API.post('tir/kodol', doc)
         if (response.ok) {
-          this.store.kodolasok[0].eredmeny = response.data.message
-          this.store.kodolasok[0].error = parseInt(response.data.error)
-          if (this.store.kodolasok[0].error) {
-            this.message = 'Nem minden tételt sikerült bekódolni!'
+          this.kodolasok[0].eredmeny = response.data.message
+          this.kodolasok[0].error = parseInt(response.data.error)
+          if (this.kodolasok[0].error) {
+            message = 'Nem minden tételt sikerült bekódolni!'
           }
         } else {
-          this.message = 'Kódoló szerver hiba, értesítse a rendszergazdát!'
-          this.store.kodolasok[0].eredmeny = 'Kódoló szerver hiba!'
-          this.store.kodolasok[0].error = 1
-          // Log('message', {message: this.message})
+          message = 'Kódoló szerver hiba, értesítse a rendszergazdát!'
+          this.kodolasok[0].eredmeny = 'Kódoló szerver hiba!'
+          this.kodolasok[0].error = 1
+          // Log('message', {message: message})
           console.log(response.problem)
           break
         }
       }
-      if (!this.message) {
-        if (this.store.user.role !== 'szabó') {
-          this.muveletkodok = []
-        }
-        this.mennyiseg = null
+      this.feldolgozas = false
+      if (message) {
+        EventBus.$emit('inform', { type: 'alert', variation: 'error', message: message })
+        return
       }
-      this.store.menthet = true
+      EventBus.$emit('inform', { type: 'alert', variation: 'success', message: 'Tételek bekódolva!' })
+      this.kodol.mennyiseg = ''
     }
   },
 
   created () {
     this.$store.set('pageTitle', 'Teljesítmény kódolás')
     this.kodol = this.$store.copy('kodol')
+    this.kodolasok = this.$store.copy('kodolasok')
   },
 
   destroyed () {
     this.$store.set('kodol', this.kodol)
+    this.$store.set('kodolasok', this.kodolasok)
   }
 }
 </script>
