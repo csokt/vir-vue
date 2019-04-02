@@ -51,8 +51,8 @@ export default {
     ...get(['defaults', 'user']),
 
     apiUrl () {
-      if (this.search && this.search.length < 5) return ''
-      return 'tir/seafile/' + this.search + '/' + this.user.tir_role
+      if (!this.search || this.search.length < 5) return ''
+      return 'tir/seafile/' + this.search + '/' + this.user.role
     }
   },
 

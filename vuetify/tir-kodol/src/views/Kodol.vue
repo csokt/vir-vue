@@ -58,8 +58,8 @@
         <table>
           <thead>
             <tr>
-              <th>Műv.kód</th>
-              <th>Menny.</th>
+              <th>Műv.kód&nbsp;&nbsp;</th>
+              <th>Menny.&nbsp;&nbsp;</th>
               <th>Eredmény</th>
             </tr>
           </thead>

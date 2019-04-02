@@ -3,11 +3,32 @@
     <v-layout justify-space-around wrap>
       <BaseCard>
         <v-card-text>
-          <BaseTime :value="kezdIdo" @input="$store.commit('kezdIdo', $event)" label="Munkaidő kezdete" :allowed-minutes="allowedMinutes"/>
-          <v-text-field v-model="aktIdo" label="Aktuális idő" readonly/>
-          <v-text-field v-model="elteltPerc" label="Eltelt idő (perc)" readonly/>
-          <v-text-field v-model="osszesNormaperc" label="Összes normaperc" readonly/>
-          <v-text-field v-model="teljesitmeny" label="Teljesítmény %" readonly/>
+          <BaseTime
+            :value="kezdIdo"
+            @input="$store.commit('kezdIdo', $event)"
+            label="Munkaidő kezdete"
+            :allowed-minutes="allowedMinutes"
+          />
+          <v-text-field
+            v-model="aktIdo"
+            label="Aktuális idő"
+            readonly
+          />
+          <v-text-field
+            v-model="elteltPerc"
+            label="Eltelt idő (
+            perc)" readonly
+          />
+          <v-text-field
+            v-model="osszesNormaperc"
+            label="Összes normaperc"
+            readonly
+          />
+          <v-text-field
+            v-model="teljesitmeny"
+            label="Teljesítmény %"
+            readonly
+          />
         </v-card-text>
       </BaseCard>
     </v-layout>
@@ -55,7 +76,7 @@ export default {
 
     async sumNormaperc () {
       // Log('norma')
-      const response = await API.get('tir/normaperc/' + this.user.tir_azonosito)
+      const response = await API.get('tir/normaperc/' + this.user.belepokod)
       if (response.ok) {
         this.osszesNormaperc = Math.round(response.data.sum)
       } else {

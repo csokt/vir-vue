@@ -4,13 +4,21 @@
       <BaseCard v-if="user.name">
         <BaseMenu :items="showItems"/>
         <v-card-actions>
-          <v-btn color="primary" @click="logout">Másik felhasználó választása</v-btn>
+          <v-btn
+            color="primary"
+            @click="logout"
+          >
+            Másik felhasználó választása
+          </v-btn>
         </v-card-actions>
       </BaseCard>
 
       <BaseCard v-if="!user.name" title="Kérem jelentkezzen be!">
         <v-card-text>
-          <BaseQfield v-model="qrcode"  @change="gotUserQR"/>
+          <BaseQfield
+            v-model="qrcode"
+            @change="gotUserQR"
+          />
         </v-card-text>
       </BaseCard>
     </v-layout>
@@ -45,15 +53,27 @@ export default {
   computed: {
     ...get(['user']),
 
+    kodolhat () {
+      return this.user.role !== 'meo' && this.user.role !== 'kötő'
+    },
+
+    atadhat () {
+      return this.user.role === 'kódoló'
+    },
+
+    normazhat () {
+      return ['varró', 'varró2', 'szabó'].includes(this.user.role)
+    },
+
     showItems () {
       if (!this.user.name) return []
       const items = [
-        { show: true, path: '/kodol', icon: 'info', title: 'Kódolás' },
-        { show: true, path: '/atad', icon: 'info', title: 'Átadás' },
+        { show: this.kodolhat, path: '/kodol', icon: 'speaker_phone', title: 'Kódolás' },
+        { show: this.atadhat, path: '/atad', icon: 'speaker_phone', title: 'Átadás' },
         { show: true, path: '/munkalap', icon: 'info', title: 'Munkalap információk' },
-        { show: true, path: '/seasearch', icon: 'info', title: 'Dokumentációk' },
-        { show: true, path: '/norma', icon: 'info', title: 'Mai teljesítmény %' },
-        { show: true, path: '/tablazatok', icon: 'info', title: 'Táblázatok' }
+        { show: true, path: '/seasearch', icon: 'search', title: 'Dokumentációk' },
+        { show: this.normazhat, path: '/norma', icon: 'trending_up', title: 'Mai teljesítmény %' },
+        { show: true, path: '/tablazatok', icon: 'grid_on', title: 'Táblázatok' }
       ]
       return items.filter(item => item.show)
     }

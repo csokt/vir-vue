@@ -3,7 +3,7 @@
     <v-layout justify-space-around wrap>
       <BaseCard>
         <v-card-text>
-          <LookupMunkalap v-model="munkalapazonosito"  @change="munkalap = $event"/>
+          <LookupMunkalap v-model="munkalapazonosito"  @change="onChange"/>
           <BaseMunkalapInfo :munkalap="munkalap"/>
         </v-card-text>
       </BaseCard>
@@ -28,6 +28,13 @@ export default {
     return {
       munkalapazonosito: '',
       munkalap: {}
+    }
+  },
+
+  methods: {
+    onChange (item) {
+      this.munkalap = item
+      this.$store.set('defaults@cikkszam', this.munkalap.cikkszam)
     }
   },
 

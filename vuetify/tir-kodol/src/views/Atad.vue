@@ -50,8 +50,8 @@
         <table>
           <thead>
             <tr>
-              <th>Helykód</th>
-              <th>Munkalap</th>
+              <th>Helykód&nbsp;&nbsp;</th>
+              <th>Munkalap&nbsp;&nbsp;</th>
               <th>Eredmény</th>
             </tr>
           </thead>
