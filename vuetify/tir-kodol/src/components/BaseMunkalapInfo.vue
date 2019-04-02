@@ -26,10 +26,10 @@ export default {
 
   computed: {
     gepfinomsag () {
-      return this.munkalap.csoport4 + ' gg'
+      return this.munkalap.kartoninfo ? this.munkalap.csoport4 + ' gg' : ''
     },
     mosott () {
-      return this.munkalap.mosott === 'I' ? 'igen' : 'nem'
+      return this.munkalap.kartoninfo ? this.munkalap.mosott === 'I' ? 'igen' : 'nem' : ''
     }
   }
 }

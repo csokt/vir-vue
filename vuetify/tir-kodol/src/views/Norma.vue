@@ -82,7 +82,7 @@ export default {
       } else {
         EventBus.$emit('inform', { type: 'alert', variation: 'error', message: response.data.error.data.message })
         // Log('message', {message: this.message})
-        console.log(response)
+        // console.log(response)
       }
     }
   },

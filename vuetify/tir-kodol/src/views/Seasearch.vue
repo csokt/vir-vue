@@ -18,6 +18,7 @@
             value="name"
             layout="list"
             @select="onSelect($event)"
+            @change="onChange"
           />
         </v-card-media>
       </BaseCard>
@@ -29,6 +30,7 @@
 
 <script>
 import { get } from 'vuex-pathify'
+import { EventBus } from '@/util'
 import BaseCard from '@/components/core/BaseCard.vue'
 import SmartList from '@/components/core/SmartList.vue'
 
@@ -57,6 +59,12 @@ export default {
   },
 
   methods: {
+    onChange (content) {
+      if (this.apiUrl && !content.length) {
+        EventBus.$emit('inform', { type: 'alert', variation: 'warning', message: 'Nincs találat!' })
+      }
+    },
+
     onSelect (item) {
       // Log('show', {file: item.fullpath})
       const publicUrl = 'https://mobilszefo.hopto.org:19540/d/2e2d6b2c61fb4acdb9e2/'

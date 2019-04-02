@@ -75,7 +75,6 @@ export default {
   },
 
   created () {
-    console.log(Home)
     this.getUser(this.$route.query.token_uid)
   },
 

@@ -13,6 +13,7 @@
       v-model="items"
       :apiUrl="apiUrl"
       expect="array"
+      @input="onApiInput"
       @length="$emit('length', $event)"
     />
 </div>
@@ -43,6 +44,10 @@ export default {
   },
 
   methods: {
+    onApiInput (content) {
+      this.$emit('change', content)
+    },
+
     reload () {
       this.$refs.apiget.reload()
     }

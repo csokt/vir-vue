@@ -12,6 +12,7 @@
 </template>
 
 <script>
+import { get } from 'vuex-pathify'
 import BaseCard from '@/components/core/BaseCard.vue'
 import LookupMunkalap from '@/components/LookupMunkalap.vue'
 import BaseMunkalapInfo from '@/components/BaseMunkalapInfo.vue'
@@ -31,6 +32,8 @@ export default {
     }
   },
 
+  computed: get(['defaults']),
+
   methods: {
     onChange (item) {
       this.munkalap = item
@@ -40,6 +43,7 @@ export default {
 
   created () {
     this.$store.set('pageTitle', 'Gyártási információk')
+    this.munkalapazonosito = this.defaults.munkalapazonosito
   }
 }
 </script>

@@ -17,7 +17,7 @@
           <LookupMunkalap
             v-model="kodol.munkalapazonosito"
             @input="kodol.kartoninfo = ''"
-            @change="kodol.kartoninfo = $event.kartoninfo"
+            @change="onChangeMunkalap"
           />
           <v-text-field
             v-model="kodol.kartoninfo"
@@ -112,6 +112,14 @@ export default {
   },
 
   methods: {
+    onChangeMunkalap (item) {
+      // console.log('onChangeMunkalap', item)
+      this.kodol.kartoninfo = item.kartoninfo
+      if (!item.munkalapazonosito) { return }
+      this.$store.set('defaults@munkalapazonosito', item.munkalapazonosito)
+      this.$store.set('defaults@cikkszam', item.cikkszam)
+    },
+
     async pubKodolas () {
       if (this.kodol.gepkod !== parseInt(this.kodol.gepkod).toString() || parseInt(this.kodol.gepkod) < 0) {
         EventBus.$emit('inform', { type: 'alert', variation: 'warning', message: 'Érvénytelen gépkód!' })
@@ -147,7 +155,7 @@ export default {
           doc.eredmeny = 'Kódoló szerver hiba!'
           doc.error = 1
           // Log('message', {message: message})
-          console.log(response.problem)
+          // console.log(response.problem)
           break
         }
       }
