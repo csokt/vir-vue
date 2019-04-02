@@ -49,7 +49,7 @@ export default {
       if (!this.user.name) return []
       const items = [
         { show: true, path: '/kodol', icon: 'info', title: 'Kódolás' },
-        { show: false, path: '/atad', icon: 'info', title: 'Átadás' },
+        { show: true, path: '/atad', icon: 'info', title: 'Átadás' },
         { show: true, path: '/munkalap', icon: 'info', title: 'Munkalap információk' },
         { show: true, path: '/seasearch', icon: 'info', title: 'Dokumentációk' },
         { show: true, path: '/norma', icon: 'info', title: 'Mai teljesítmény %' },

@@ -3,20 +3,59 @@
     <v-layout justify-space-around wrap>
       <BaseCard>
         <v-card-text>
-          <LookupDolgozo v-model="kodol.dolgozokod" :readonly="user.role!=='kódoló'" @change="kodol.dolgozonev = $event.dolgozonev"/>
-          <v-text-field v-model="kodol.dolgozonev" label="Dolgozó" readonly/>
-          <LookupMunkalap v-model="kodol.munkalapazonosito"  @change="kodol.kartoninfo = $event.kartoninfo"/>
-          <v-text-field v-model="kodol.kartoninfo" label="Kartoninfo" readonly/>
-          <v-text-field v-model="kodol.gepkod" type="number" label="Gépkód"/>
-          <v-combobox v-model="kodol.muveletkodok" type="number" multiple chips deletable-chips clearable required label="Műveletkódok"/>
-          <v-text-field v-model="kodol.mennyiseg" type="number" label="Mennyiség"/>
+          <LookupDolgozo
+            v-model="kodol.dolgozokod"
+            @input="kodol.dolgozonev = ''"
+            @change="kodol.dolgozonev = $event.dolgozonev"
+            :readonly="user.role!=='kódoló'"
+          />
+          <v-text-field
+            v-model="kodol.dolgozonev"
+            label="Dolgozó"
+            readonly
+          />
+          <LookupMunkalap
+            v-model="kodol.munkalapazonosito"
+            @input="kodol.kartoninfo = ''"
+            @change="kodol.kartoninfo = $event.kartoninfo"
+          />
+          <v-text-field
+            v-model="kodol.kartoninfo"
+            label="Kartoninfo"
+            readonly
+          />
+          <v-text-field
+            v-model="kodol.gepkod"
+            type="number"
+            label="Gépkód"
+          />
+          <v-combobox
+            v-model="kodol.muveletkodok"
+            type="number"
+            multiple
+            chips
+            deletable-chips
+            clearable required
+            label="Műveletkódok"
+          />
+          <v-text-field
+            v-model="kodol.mennyiseg"
+            type="number"
+            label="Mennyiség"
+          />
           <v-card-actions>
-            <v-btn :disabled="!ervenyes || feldolgozas" color="primary" @click="pubKodolas">Adatok mentése</v-btn>
+            <v-btn
+              :disabled="!ervenyes || feldolgozas"
+              color="primary"
+              @click="pubKodolas"
+            >
+              Adatok mentése
+            </v-btn>
           </v-card-actions>
         </v-card-text>
       </BaseCard>
       <BaseCard>
-        <table class="q-table striped cell-separator bordered compact">
+        <table>
           <thead>
             <tr>
               <th>Műv.kód</th>
@@ -25,7 +64,11 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(row,index) in kodolasok" :key="index" v-bind:class="{ 'red--text': row.error }">
+            <tr
+              v-for="(row,index) in kodolasok"
+              :key="index"
+              v-bind:class="{ 'red--text': row.error }"
+            >
               <td>{{row.muveletkod}}</td>
               <td>{{row.mennyiseg}}</td>
               <td>{{row.eredmeny}}</td>
@@ -45,7 +88,7 @@ import LookupDolgozo from '@/components/LookupDolgozo.vue'
 import LookupMunkalap from '@/components/LookupMunkalap.vue'
 
 export default {
-  name: 'munkalap',
+  name: 'kodol',
   components: {
     BaseCard,
     LookupDolgozo,

@@ -17,6 +17,10 @@ export default new Router({
       component: () => import(/* webpackChunkName: "kodol" */ './views/Kodol.vue')
     },
     {
+      path: '/atad',
+      component: () => import(/* webpackChunkName: "atad" */ './views/Atad.vue')
+    },
+    {
       path: '/munkalap',
       component: () => import(/* webpackChunkName: "munkalap" */ './views/Munkalap.vue')
     },
