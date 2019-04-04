@@ -4,6 +4,8 @@
       ref="textfield"
       :value="value"
       :label="label"
+      :type="type"
+      :readonly="readonly"
       append-outer-icon="select_all"
       @input="$emit('input', $event)"
       @change="$emit('change', $event)"
@@ -30,14 +32,9 @@ export default {
   props: {
     value: String,
     label: String,
-    required: {
-      type: Boolean,
-      default: false
-    },
-    readonly: {
-      type: Boolean,
-      default: false
-    }
+    type: String,
+    readonly: Boolean,
+    required: Boolean
   },
 
   data () {

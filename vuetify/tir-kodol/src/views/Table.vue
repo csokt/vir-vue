@@ -117,19 +117,12 @@ export default {
   },
 
   mounted () {
-  //   if (this.view.refresh) {
-  //     this.myInterval = setInterval(() => {
-  //       this.requestData()
-  //     }, 1000 * this.view.refresh)
-  //   }
     this.requestData()
-  }
+  },
 
-  // beforeDestroy () {
-  //   if (this.myInterval) {
-  //     clearInterval(this.myInterval)
-  //   }
-  // }
+  destroyed () {
+    this.$store.set('showFilterIcon', false)
+  }
 }
 </script>
 

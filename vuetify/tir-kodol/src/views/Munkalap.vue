@@ -3,7 +3,7 @@
     <v-layout justify-space-around wrap>
       <BaseCard>
         <v-card-text>
-          <LookupMunkalap v-model="munkalapazonosito"  @change="onChange"/>
+          <LookupModel v-model="munkalapazonosito" model="munkalap" @change="onChange"/>
           <BaseMunkalapInfo :munkalap="munkalap"/>
         </v-card-text>
       </BaseCard>
@@ -14,14 +14,14 @@
 <script>
 import { get } from 'vuex-pathify'
 import BaseCard from '@/components/core/BaseCard.vue'
-import LookupMunkalap from '@/components/LookupMunkalap.vue'
+import LookupModel from '@/components/LookupModel.vue'
 import BaseMunkalapInfo from '@/components/BaseMunkalapInfo.vue'
 
 export default {
   name: 'munkalap',
   components: {
     BaseCard,
-    LookupMunkalap,
+    LookupModel,
     BaseMunkalapInfo
   },
 

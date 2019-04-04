@@ -3,8 +3,9 @@
     <v-layout justify-space-around wrap>
       <BaseCard>
         <v-card-text>
-          <LookupHely
+          <LookupModel
             v-model="kodol.hely"
+            model="hely"
             @input="kodol.helynev = ''"
             @change="kodol.helynev = $event.kodnev"
           />
@@ -13,9 +14,10 @@
             label="Helynév"
             readonly
           />
-          <LookupUzem
+          <LookupModel
             v-if="kodol.hely == '90026'"
             v-model="kodol.uzemkod"
+            model="uzem"
             @input="kodol.uzemnev = ''"
             @change="kodol.uzemnev = $event.uzemnev"
           />
@@ -25,8 +27,9 @@
             label="Uzemnév"
             readonly
           />
-          <LookupMunkalap
+          <LookupModel
             v-model="kodol.munkalapazonosito"
+            model="munkalap"
             @input="kodol.kartoninfo = ''"
             @change="onChangeMunkalap"
           />
@@ -76,17 +79,13 @@
 import { get } from 'vuex-pathify'
 import { API, EventBus } from '@/util'
 import BaseCard from '@/components/core/BaseCard.vue'
-import LookupHely from '@/components/LookupHely.vue'
-import LookupUzem from '@/components/LookupUzem.vue'
-import LookupMunkalap from '@/components/LookupMunkalap.vue'
+import LookupModel from '@/components/LookupModel.vue'
 
 export default {
   name: 'kodol',
   components: {
     BaseCard,
-    LookupHely,
-    LookupUzem,
-    LookupMunkalap
+    LookupModel
   },
 
   data () {

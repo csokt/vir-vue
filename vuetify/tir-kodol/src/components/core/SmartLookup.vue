@@ -5,6 +5,7 @@
       ref="textfield"
       :value="value"
       :label="label"
+      :type="type"
       :readonly="readonly"
       :clearable="!readonly"
       @input="$emit('input', $event)"
@@ -17,6 +18,8 @@
       ref="textfield"
       :value="value"
       :label="label"
+      :type="type"
+      :readonly="readonly"
       @input="$emit('input', $event)"
       @change="reload"
     />
@@ -44,6 +47,7 @@ export default {
   props: {
     value: String, // v-text-field BaseQfield
     label: String, // v-text-field BaseQfield
+    type: String, // v-text-field BaseQfield
     qrcode: { // v-text-field BaseQfield
       type: Boolean,
       default: false

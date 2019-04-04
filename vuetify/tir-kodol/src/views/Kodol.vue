@@ -3,8 +3,9 @@
     <v-layout justify-space-around wrap>
       <BaseCard>
         <v-card-text>
-          <LookupDolgozo
+          <LookupModel
             v-model="kodol.dolgozokod"
+            model="dolgozo"
             @input="kodol.dolgozonev = ''"
             @change="kodol.dolgozonev = $event.dolgozonev"
             :readonly="user.role!=='kódoló'"
@@ -14,8 +15,9 @@
             label="Dolgozó"
             readonly
           />
-          <LookupMunkalap
+          <LookupModel
             v-model="kodol.munkalapazonosito"
+            model="munkalap"
             @input="kodol.kartoninfo = ''"
             @change="onChangeMunkalap"
           />
@@ -84,15 +86,13 @@
 import { get } from 'vuex-pathify'
 import { API, EventBus } from '@/util'
 import BaseCard from '@/components/core/BaseCard.vue'
-import LookupDolgozo from '@/components/LookupDolgozo.vue'
-import LookupMunkalap from '@/components/LookupMunkalap.vue'
+import LookupModel from '@/components/LookupModel.vue'
 
 export default {
   name: 'kodol',
   components: {
     BaseCard,
-    LookupDolgozo,
-    LookupMunkalap
+    LookupModel
   },
 
   data () {
