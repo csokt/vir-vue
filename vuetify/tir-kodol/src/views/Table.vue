@@ -14,7 +14,7 @@
           <table class="table-striped" v-bind:style="{ 'font-size': view.tablefontsize }">
             <thead v-bind:style="{ 'font-size': view.headfontsize }">
               <tr>
-                <th v-for="field in view.fields" :key="'H' + field.name">{{field.label}}</th>
+                <th v-for="field in view.fields" :key="'H' + field.name">{{field.label}}&nbsp;</th>
               </tr>
             </thead>
             <tbody v-bind:style="{ 'font-size': view.bodyfontsize }">
@@ -26,7 +26,7 @@
                   <td v-for="field in view.fields" :key="'R' + field.name" @click="clickField(row, field)" v-bind:class="{ search: field.search }" v-bind:style="{ color: color(field, row[field.name]), 'font-size': field.fontsize }">{{row[field.name]}}</td>
                 </tr>
                 <tr :key="'I' + index" v-if="(index + 1) % view.head_after === 0" v-bind:style="{ 'font-size': view.headfontsize }">
-                  <th v-for="field in view.fields" :key="'I' + field.name">{{field.label}}</th>
+                  <th v-for="field in view.fields" :key="'I' + field.name">{{field.label}}&nbsp;</th>
                 </tr>
               </template>
             </tbody>

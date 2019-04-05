@@ -6,7 +6,9 @@ import { make } from 'vuex-pathify'
 Vue.use(Vuex)
 
 const state = {
-  version: '19.04.04',
+  version: '19.04.05',
+  publicIP: '',
+  privateIP: '',
   pageTitle: '',
   showFilterIcon: false,
   showFilter: false,

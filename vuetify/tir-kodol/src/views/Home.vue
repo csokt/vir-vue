@@ -31,7 +31,7 @@
 
 <script>
 import { get } from 'vuex-pathify'
-import { API, checkResponse } from '@/util'
+import { API, checkResponse, Log } from '@/util'
 import BaseCard from '@/components/core/BaseCard.vue'
 import BaseMenu from '@/components/core/BaseMenu.vue'
 import BaseQfield from '@/components/core/BaseQfield.vue'
@@ -95,6 +95,7 @@ export default {
         this.$store.set('kodol', response.data.kodol)
         this.$store.set('kodolasok', [])
         this.$store.set('atadasok', [])
+        Log('login', this.user)
 
         response = await API.get('config/views/tablet/' + this.user.role)
         if (checkResponse(response)) {
@@ -106,7 +107,7 @@ export default {
     },
 
     logout () {
-      // Log('logout', this.store.user)
+      Log('logout', this.user)
       this.$store.set('user', {})
     }
   },

@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import apisauce from 'apisauce'
+import router from './router'
+import Store from './store'
 
 const API = apisauce.create({
   baseURL: '/api/',
@@ -33,4 +35,31 @@ function checkResponse (response) {
   return response.ok
 }
 
-export { API, EventBus, groupId, utc2local, checkResponse }
+let lastPayload = null
+
+async function Log (event, data = {}) {
+  const user = Store.get('user')
+  const message = {
+    user: (user.name) || 'nincs',
+    privateip: Store.get('privateIP'),
+    program: 'tir-kodol',
+    event: event,
+    path: router.app._route.path,
+    role: (user.role) || '',
+    uzem: (user.uzemnev) || '',
+    version: Store.get('version'),
+    publicip: Store.get('publicIP'),
+    data: data
+  }
+  console.log('Log message:', message)
+  const topic = 'log/ui/' + message.program + '/' + message.event
+  const payload = JSON.stringify(message)
+  if (lastPayload !== payload) {
+    lastPayload = payload
+    // const response = await API.post('log/ui/' + message.program + '/' + message.event, payload)
+    const response = await API.post('tir/log', { topic: topic, payload: payload })
+    console.log('Log response:', response)
+  }
+}
+
+export { API, EventBus, groupId, utc2local, checkResponse, Log }
