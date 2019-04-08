@@ -46,7 +46,7 @@
 
 <script>
 import { get } from 'vuex-pathify'
-import { API, EventBus, checkResponse } from '@/util'
+import { API, EventBus, checkResponse, Log } from '@/util'
 import BaseCard from '@/components/core/BaseCard.vue'
 import VFormBase from 'vuetify-form-base'
 
@@ -82,7 +82,7 @@ export default {
       if (field.search) {
         let data = {}
         data[field.name] = row[field.name]
-        // Log('clickfield', data)
+        Log('clickfield', data)
         this.$store.set('defaults@' + field.search, row[field.name])
         this.$router.push('/seasearch')
       }
@@ -96,8 +96,6 @@ export default {
   },
 
   created () {
-    // if (!this.store.user) { this.$router.replace('/'); return }
-    // Log('navigate')
     this.view = this.views.find(o => o.id === this.$route.params.id) || {}
     if (!this.view.id) {
       EventBus.$emit('inform', { type: 'alert', variation: 'warning', message: 'A táblázat nem létezik!' })

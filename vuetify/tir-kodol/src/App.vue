@@ -33,7 +33,7 @@
 <script>
 import { get } from 'vuex-pathify'
 // import { API, checkResponse } from '@/util'
-import { API } from '@/util'
+import { API, Log } from '@/util'
 import SmartInform from '@/components/core/SmartInform.vue'
 import Home from '@/views/Home.vue'
 
@@ -91,11 +91,14 @@ export default {
   },
 
   created () {
+    this.$router.afterEach((to, from) => {
+      Log('navigate')
+    })
     this.getUser(this.$route.query.token_uid)
   },
 
   mounted () {
-    // console.log('NODE_ENV', process.env.NODE_ENV)
+    console.log('NODE_ENV', process.env.NODE_ENV)
     // console.log('breakpoint', this.$vuetify.breakpoint)
     window.oncontextmenu = function (event) {
       event.preventDefault()

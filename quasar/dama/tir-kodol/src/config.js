@@ -54,7 +54,7 @@ views:
   refresh:    60
   order:      '[Kódolás ideje] DESC'
   head_after: 15
-  limit:      100
+  limit:      200
 #  tablefontsize:  14px
 #  headfontsize:   10px
 #  bodyfontsize:   10px

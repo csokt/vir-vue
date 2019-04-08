@@ -6,7 +6,8 @@ import { make } from 'vuex-pathify'
 Vue.use(Vuex)
 
 const state = {
-  version: '19.04.05',
+  production: process.env.NODE_ENV === 'production',
+  version: '19.04.08',
   publicIP: '',
   privateIP: '',
   pageTitle: '',

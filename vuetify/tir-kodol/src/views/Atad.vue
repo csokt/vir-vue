@@ -77,7 +77,7 @@
 
 <script>
 import { get } from 'vuex-pathify'
-import { API, EventBus } from '@/util'
+import { API, EventBus, Log } from '@/util'
 import BaseCard from '@/components/core/BaseCard.vue'
 import LookupModel from '@/components/LookupModel.vue'
 
@@ -113,7 +113,7 @@ export default {
     },
 
     async pubKodolas () {
-      // Log('kodol', this.store.kodol)
+      Log('atad', this.kodol)
       let message = ''
       this.feldolgozas = true
       let doc = { ...this.kodol, funkcio: this.kodol.hely }
@@ -130,12 +130,11 @@ export default {
         message = 'Kódoló szerver hiba, értesítse a rendszergazdát!'
         doc.eredmeny = 'Kódoló szerver hiba!'
         doc.error = 1
-        // Log('message', {message: message})
-        // console.log(response.problem)
       }
       this.feldolgozas = false
       if (message) {
         EventBus.$emit('inform', { type: 'alert', variation: 'error', message: message })
+        Log('message', { message: message })
         return
       }
       EventBus.$emit('inform', { type: 'alert', variation: 'success', message: 'Átadva!' })

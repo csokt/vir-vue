@@ -13,6 +13,7 @@
 
 <script>
 import { get } from 'vuex-pathify'
+import { Log } from '@/util'
 import BaseCard from '@/components/core/BaseCard.vue'
 import LookupModel from '@/components/LookupModel.vue'
 import BaseMunkalapInfo from '@/components/BaseMunkalapInfo.vue'
@@ -38,6 +39,9 @@ export default {
     onChange (item) {
       this.munkalap = item
       this.$store.set('defaults@cikkszam', this.munkalap.cikkszam)
+      if (this.munkalapazonosito) {
+        Log('munkalap', { munkalap: this.munkalapazonosito })
+      }
     }
   },
 

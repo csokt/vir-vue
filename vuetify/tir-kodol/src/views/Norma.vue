@@ -37,7 +37,7 @@
 
 <script>
 import { get } from 'vuex-pathify'
-import { API, EventBus } from '@/util'
+import { API, EventBus, Log } from '@/util'
 import BaseCard from '@/components/core/BaseCard.vue'
 import BaseTime from '@/components/core/BaseTime.vue'
 
@@ -80,15 +80,14 @@ export default {
       if (response.ok) {
         this.osszesNormaperc = Math.round(response.data.sum)
       } else {
-        EventBus.$emit('inform', { type: 'alert', variation: 'error', message: response.data.error.data.message })
-        // Log('message', {message: this.message})
-        // console.log(response)
+        const message = 'Szerver hiba, értesítse a rendszergazdát!'
+        EventBus.$emit('inform', { type: 'alert', variation: 'error', message: message })
+        Log('message', { message: message })
       }
     }
   },
 
   created () {
-    // Log('navigate')
     this.$store.set('pageTitle', 'Mai teljesítmény százalék')
     this.sumNormaperc()
   }

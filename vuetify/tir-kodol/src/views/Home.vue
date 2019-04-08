@@ -18,6 +18,7 @@
           <BaseQfield
             v-model="qrcode"
             type="number"
+            :readonly="production"
             @change="gotUserQR"
           />
         </v-card-text>
@@ -52,7 +53,7 @@ export default {
   },
 
   computed: {
-    ...get(['user']),
+    ...get(['user', 'production']),
 
     kodolhat () {
       return this.user.role !== 'meo' && this.user.role !== 'kötő'

@@ -5,7 +5,7 @@ import Store from './store'
 
 const API = apisauce.create({
   baseURL: '/api/',
-  timeout: 5000
+  timeout: 15000
 })
 
 // #################################################################################################################################
@@ -37,7 +37,7 @@ function checkResponse (response) {
 
 let lastPayload = null
 
-async function Log (event, data = {}) {
+function Log (event, data = {}) {
   const user = Store.get('user')
   const message = {
     user: (user.name) || 'nincs',
@@ -51,14 +51,14 @@ async function Log (event, data = {}) {
     publicip: Store.get('publicIP'),
     data: data
   }
-  console.log('Log message:', message)
+  // console.log('Log message:', message)
   const topic = 'log/ui/' + message.program + '/' + message.event
   const payload = JSON.stringify(message)
   if (lastPayload !== payload) {
     lastPayload = payload
-    // const response = await API.post('log/ui/' + message.program + '/' + message.event, payload)
-    const response = await API.post('tir/log', { topic: topic, payload: payload })
-    console.log('Log response:', response)
+    // const response = await API.post('tir/log', { topic: topic, payload: payload })
+    API.post('tir/log', { topic: topic, payload: payload })
+    // console.log('Log response:', response)
   }
 }
 

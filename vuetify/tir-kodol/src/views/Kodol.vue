@@ -84,7 +84,7 @@
 
 <script>
 import { get } from 'vuex-pathify'
-import { API, EventBus } from '@/util'
+import { API, EventBus, Log } from '@/util'
 import BaseCard from '@/components/core/BaseCard.vue'
 import LookupModel from '@/components/LookupModel.vue'
 
@@ -135,7 +135,7 @@ export default {
         EventBus.$emit('inform', { type: 'alert', variation: 'warning', message: 'Érvénytelen mennyiség!' })
         return
       }
-      // Log('kodol', this.store.kodol)
+      Log('kodol', this.kodol)
       let message = ''
       this.feldolgozas = true
       for (const muveletkod of this.kodol.muveletkodok) {
@@ -154,14 +154,13 @@ export default {
           message = 'Kódoló szerver hiba, értesítse a rendszergazdát!'
           doc.eredmeny = 'Kódoló szerver hiba!'
           doc.error = 1
-          // Log('message', {message: message})
-          // console.log(response.problem)
           break
         }
       }
       this.feldolgozas = false
       if (message) {
         EventBus.$emit('inform', { type: 'alert', variation: 'error', message: message })
+        Log('message', { message: message })
         return
       }
       EventBus.$emit('inform', { type: 'alert', variation: 'success', message: 'Tételek bekódolva!' })
