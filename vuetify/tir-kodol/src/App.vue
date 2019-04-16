@@ -7,9 +7,9 @@
       <v-spacer></v-spacer>
       <v-toolbar-title v-text="this.pageTitle"></v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-icon v-if="showFilterIcon" @click.stop="$store.set('showFilter', !showFilter)">
-        filter_list
-      </v-icon>
+      <v-btn flat v-if="showFilterIcon" @click.stop="$store.set('showFilter', !showFilter)">
+        Szűrő
+      </v-btn>
     </v-toolbar>
 
     <v-content>
@@ -98,7 +98,7 @@ export default {
   },
 
   mounted () {
-    console.log('NODE_ENV', process.env.NODE_ENV)
+    // console.log('NODE_ENV', process.env.NODE_ENV)
     // console.log('breakpoint', this.$vuetify.breakpoint)
     window.oncontextmenu = function (event) {
       event.preventDefault()
