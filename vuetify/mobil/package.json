@@ -11,13 +11,13 @@
     "apisauce": "^0.15.2",
     "axios": "^0.18.0",
     "vue": "^2.6.10",
-    "vue-router": "^3.0.2",
-    "vuetify": "^1.5.9"
+    "vue-router": "^3.0.6",
+    "vuetify": "^1.5.12"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^3.5.5",
-    "@vue/cli-plugin-eslint": "^3.5.1",
-    "@vue/cli-service": "^3.5.3",
+    "@vue/cli-plugin-babel": "^3.6.0",
+    "@vue/cli-plugin-eslint": "^3.6.0",
+    "@vue/cli-service": "^3.6.0",
     "@vue/eslint-config-standard": "^3.0.5",
     "babel-plugin-transform-imports": "^1.5.1",
     "material-design-icons-iconfont": "^3.0.3",

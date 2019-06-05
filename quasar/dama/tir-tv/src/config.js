@@ -333,6 +333,94 @@ views:
     label:    Hibák
 
 -
+  id:         oroshazavarrodaleadas_tv
+  database:   SzefoModulKeszlet
+  name:       monitor_oroshazavarrodaleadas
+  label:      Orosháza varroda napi leadás
+  device:     tv
+  refresh:    70
+  where:
+  order:      '[Cikk/IT]'
+  head_after: 100
+  limit:      50
+  sum:
+  - Rendelt db
+  - Előzőleg leadott db
+  - Tervezett db
+  - Leadott db
+  - Eltérés a tervtől
+  - Hibák száma
+  - Hátralék
+  fields:
+  - name:     Cikk/IT
+  - name:     Megnevezés
+  - name:     Megrendelő
+  - name:     Rendelt db
+    label:    Rendelt
+  - name:     Előzőleg leadott db
+    label:    Előzőleg leadott
+  - name:     Hátralék
+    label:    Gyártandó
+    positive: red
+    zero:     green
+    negative: green
+  - name:     Tervezett db
+    label:    Mai terv
+  - name:     Leadott db
+    label:    Ma leadott
+  - name:     Eltérés a tervtől
+    label:    Eltérés
+    positive: green
+    zero:     green
+    negative: red
+  - name:     Hibák száma
+    label:    Hibák
+
+-
+  id:         sarretudvarivarrodaleadas_tv
+  database:   SzefoModulKeszlet
+  name:       monitor_sarretudvarivarrodaleadas
+  label:      Sárrétudvari varroda napi leadás
+  device:     tv
+  refresh:    70
+  where:
+  order:      '[Cikk/IT]'
+  head_after: 100
+  limit:      50
+  sum:
+  - Rendelt db
+  - Előzőleg leadott db
+  - Tervezett db
+  - Leadott db
+  - Eltérés a tervtől
+  - Hibák száma
+  - Hátralék
+  fields:
+  - name:     Cikk/IT
+  - name:     Megnevezés
+  - name:     Megrendelő
+  - name:     Rendelt db
+    label:    Rendelt
+  - name:     Előzőleg leadott db
+    label:    Előzőleg leadott
+  - name:     Hátralék
+    label:    Gyártandó
+    positive: red
+    zero:     green
+    negative: green
+  - name:     Tervezett db
+    label:    Mai terv
+  - name:     Leadott db
+    label:    Ma leadott
+  - name:     Eltérés a tervtől
+    label:    Eltérés
+    positive: green
+    zero:     green
+    negative: red
+  - name:     Hibák száma
+    label:    Hibák
+
+-
   id:         kotodeleadas_tv
   database:   SzefoModulKeszlet
   name:       monitor_szegedkotodeleadas
