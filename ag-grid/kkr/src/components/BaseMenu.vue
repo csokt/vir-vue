@@ -1,6 +1,5 @@
 <template>
 <div>
-  <button @click="buttonClicked">Button</button>
   <ag-grid-vue
     style="width: 600px; height: 200px;"
     class="ag-theme-balham"
@@ -34,16 +33,9 @@ export default {
 
   methods: {
     cellClicked (params) {
-      // console.log('params', params)
       if (params.value) {
         this.$emit('select', params.column.colId + params.value)
       }
-      console.log('colId', params.column.colId)
-      console.log('value', params.value)
-    },
-
-    buttonClicked () {
-      console.log('button', this.gridApi)
     }
   }
 }
