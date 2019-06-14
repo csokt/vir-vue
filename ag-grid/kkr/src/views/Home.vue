@@ -1,17 +1,15 @@
 <template>
-  <div>
-    <BaseMenu msg="Welcome to Your Vue.js App"/>
-  </div>
+  <KkrMenu/>
 </template>
 
 <script>
 // @ is an alias to /src
-import BaseMenu from '@/components/BaseMenu.vue'
+import KkrMenu from '@/views/KkrMenu.vue'
 
 export default {
   name: 'home',
   components: {
-    BaseMenu
+    KkrMenu
   }
 }
 </script>

@@ -2,12 +2,11 @@
 <div>
   <button @click="buttonClicked">Button</button>
   <ag-grid-vue
-    style="width: 500px; height: 500px;"
+    style="width: 600px; height: 200px;"
     class="ag-theme-balham"
     :columnDefs="columnDefs"
     :rowData="rowData"
-    @grid-ready="onGridReady"
-    @cell-clicked="buttonClicked"
+    @cell-clicked="cellClicked"
   >
   </ag-grid-vue>
 </div>
@@ -18,48 +17,34 @@ import { AgGridVue } from 'ag-grid-vue'
 
 export default {
   name: 'App',
-  data () {
-    return {
-      columnDefs: null,
-      rowData: null
-    }
-  },
-
   components: {
     AgGridVue
   },
 
-  methods: {
-    onGridReady (params) {
-      console.log('params', params)
-      this.gridApi = params.api
-      this.columnApi = params.columnApi
+  props: {
+    columnDefs: {
+      type: Array,
+      required: true
     },
-
-    buttonClicked () {
-      // console.log('gridApi', this.gridApi)
-      const params = this.gridApi.getFocusedCell()
-      console.log('params', params)
+    rowData: {
+      type: Array,
+      required: true
     }
   },
 
-  beforeMount () {
-    this.columnDefs = [
-      { headerName: 'Logisztika', field: 'logisztika' },
-      { headerName: 'Kötöde', field: 'kotode' },
-      { headerName: 'Varroda', field: 'varroda' }
-    ]
-
-    this.rowData = [
-      {
-        logisztika: 'napi leadás',
-        kotode: 'napi leadás',
-        varroda: 'napi leadás'
-      },
-      {
-        logisztika: 'RAM'
+  methods: {
+    cellClicked (params) {
+      // console.log('params', params)
+      if (params.value) {
+        this.$emit('select', params.column.colId + params.value)
       }
-    ]
+      console.log('colId', params.column.colId)
+      console.log('value', params.value)
+    },
+
+    buttonClicked () {
+      console.log('button', this.gridApi)
+    }
   }
 }
 </script>
