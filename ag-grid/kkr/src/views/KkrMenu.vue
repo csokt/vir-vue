@@ -11,6 +11,7 @@
 
 <script>
 // @ is an alias to /src
+import Config from '@/config.js'
 import BaseMenu from '@/components/BaseMenu.vue'
 
 export default {
@@ -21,25 +22,11 @@ export default {
 
   computed: {
     columnDefs () {
-      return [
-        { headerName: 'Logisztika', field: 'logisztika' },
-        { headerName: 'Kötöde', field: 'kotode' },
-        { headerName: 'Varroda', field: 'varroda' }
-      ]
+      return Config.kkrmenu.columnDefs
     },
 
     menu () {
-      return [
-        [
-          { field: 'logisztika', value: 'Napi leadás', path: 'logisztika_leadas' },
-          { field: 'kotode', value: 'Napi leadás', path: 'kotode_leadas' },
-          { field: 'varroda', value: 'Napi leadás', path: 'varroda_leadas' }
-        ],
-        [
-          { field: 'logisztika', value: 'RAM', path: 'logisztika_ram' },
-          { field: 'varroda', value: 'RAM', path: 'varroda_ram' }
-        ]
-      ]
+      return Config.kkrmenu.menu
     },
 
     menuItems () {
@@ -67,7 +54,7 @@ export default {
 
   methods: {
     onSelect (content) {
-      console.log('content', content)
+      // console.log('Config', Config)
       console.log('menuItem', this.menuItems[content])
     }
   }
