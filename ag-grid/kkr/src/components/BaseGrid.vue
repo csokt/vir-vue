@@ -1,15 +1,15 @@
 <template>
-<div>
-  {{ title }}
-  <ag-grid-vue
-    style="width: 800px; height: 200px;"
-    class="ag-theme-balham"
-    :columnDefs="columnDefs"
-    :rowData="rowData"
-    @cell-clicked="cellClicked"
-  >
-  </ag-grid-vue>
-</div>
+  <div>
+    {{ grid.title }}
+    <ag-grid-vue
+      style="width: 800px; height: 200px;"
+      class="ag-theme-balham"
+      :columnDefs="grid.columnDefs"
+      :rowData="rowData"
+      @cell-clicked="cellClicked"
+    >
+    </ag-grid-vue>
+  </div>
 </template>
 
 <script>
@@ -22,12 +22,8 @@ export default {
   },
 
   props: {
-    title: {
-      type: String,
-      required: true
-    },
-    columnDefs: {
-      type: Array,
+    grid: {
+      type: Object,
       required: true
     },
     rowData: {

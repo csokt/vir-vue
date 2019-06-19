@@ -1,12 +1,10 @@
 <template>
-  <div>
-    Kötöttáru kontrolling rendszer
-    <BaseMenu
-      :columnDefs="columnDefs"
-      :rowData="rowData"
-      @select="onSelect"
-    />
-  </div>
+  <BaseMenu
+    :title="title"
+    :columnDefs="columnDefs"
+    :rowData="rowData"
+    @select="onSelect"
+  />
 </template>
 
 <script>
@@ -21,6 +19,10 @@ export default {
   },
 
   computed: {
+    title () {
+      return Config.kkrmenu.title
+    },
+
     columnDefs () {
       return Config.kkrmenu.columnDefs
     },
@@ -52,6 +54,7 @@ export default {
     onSelect (content) {
       // console.log('Config', Config)
       console.log('menuItem', this.menuItems[content])
+      this.$router.push('/grid/' + this.menuItems[content].path)
     }
   }
 }
