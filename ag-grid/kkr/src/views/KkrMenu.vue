@@ -25,13 +25,9 @@ export default {
       return Config.kkrmenu.columnDefs
     },
 
-    menu () {
-      return Config.kkrmenu.menu
-    },
-
     menuItems () {
       let items = {}
-      for (const menurow of this.menu) {
+      for (const menurow of Config.kkrmenu.menu) {
         for (const item of menurow) {
           items[item.field + item.value] = item
         }
@@ -41,7 +37,7 @@ export default {
 
     rowData () {
       let data = []
-      for (const menurow of this.menu) {
+      for (const menurow of Config.kkrmenu.menu) {
         let row = {}
         for (const item of menurow) {
           row[item.field] = item.value
