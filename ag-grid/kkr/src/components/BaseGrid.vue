@@ -1,8 +1,8 @@
 <template>
-  <div>
+  <div style="height: 100%">
     {{ grid.title }}
     <ag-grid-vue
-      style="width: 800px; height: 200px;"
+      style="height: 100%"
       class="ag-theme-balham"
       :columnDefs="grid.columnDefs"
       :rowData="rowData"
@@ -28,7 +28,7 @@ export default {
     },
     rowData: {
       type: Array,
-      required: true
+      required: false
     }
   },
 

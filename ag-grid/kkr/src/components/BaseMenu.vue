@@ -2,10 +2,10 @@
 <div>
   {{ title }}
   <ag-grid-vue
-    style="width: 800px; height: 200px;"
     class="ag-theme-balham"
     :columnDefs="columnDefs"
     :rowData="rowData"
+    domLayout="autoHeight"
     @cell-clicked="cellClicked"
   >
   </ag-grid-vue>

@@ -19,7 +19,7 @@ export default {
   data () {
     return {
       grid: {},
-      rowData: []
+      rowData: null
     }
   },
 
@@ -31,11 +31,15 @@ export default {
   },
 
   created () {
-    this.grid = Config[this.$route.params.id] || {}
+    this.grid = Config[this.$route.params.id] || { title: 'Nincs ilyen táblázat!' }
+    if (this.grid.sql) {
+      this.requestData()
+    } else {
+      this.rowData = []
+    }
   },
 
   mounted () {
-    this.requestData()
   }
 }
 </script>

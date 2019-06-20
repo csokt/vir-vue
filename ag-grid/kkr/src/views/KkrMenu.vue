@@ -52,8 +52,6 @@ export default {
 
   methods: {
     onSelect (content) {
-      // console.log('Config', Config)
-      console.log('menuItem', this.menuItems[content])
       this.$router.push('/grid/' + this.menuItems[content].path)
     }
   }
