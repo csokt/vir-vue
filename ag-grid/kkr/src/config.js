@@ -13,26 +13,44 @@ kkrmenu:
   - field: varroda
     headerName: Varroda
   menu:
-  -
-    - field:  logisztika
-      value:  Napi leadás
-      path:   logisztika_leadas
-    - field:  kotode
-      value:  Napi leadás
-      path:   kotode_leadas
-    - field:  varroda
-      value:  Napi leadás
-      path:   varroda_leadas
-  -
-    - field:  szefo
-      value:  Üzemek
+    szefo:
+    - value:  Üzemek
       path:   uzemek
-    - field:  logisztika
-      value:  RAM
+    logisztika:
+    - value:  Napi leadás
+      path:   logisztika_leadas
+    - value:  RAM
       path:   logisztika_ram
-    - field:  varroda
-      value:  NORAM
-      path:   varroda_ram
+    kotode:
+    - value:  Napi leadás
+      path:   kotode_leadas
+    varroda:
+    - value:  Napi leadás
+      path:   varroda_leadas
+    - value:  NORAM
+      path:   varroda_noram
+
+  # menu:
+  # -
+  #   - field:  logisztika
+  #     value:  Napi leadás
+  #     path:   logisztika_leadas
+  #   - field:  kotode
+  #     value:  Napi leadás
+  #     path:   kotode_leadas
+  #   - field:  varroda
+  #     value:  Napi leadás
+  #     path:   varroda_leadas
+  # -
+  #   - field:  szefo
+  #     value:  Üzemek
+  #     path:   uzemek
+  #   - field:  logisztika
+  #     value:  RAM
+  #     path:   logisztika_ram
+  #   - field:  varroda
+  #     value:  NORAM
+  #     path:   varroda_ram
 
 uzemek:
   title: Üzemek
@@ -54,6 +72,24 @@ uzemek:
 let Config = null
 try {
   Config = yaml.safeLoad(configYaml)
+  let arr = []
+  for (const iterator of Config.kkrmenu.columnDefs) {
+    const column = Config.kkrmenu.menu[iterator.field]
+    arr.push(column.length)
+  }
+  const maxlength = Math.max(...arr)
+
+  arr = []
+  let row
+  for (let index = 0; index < maxlength; index++) {
+    row = []
+    for (const iterator of Config.kkrmenu.columnDefs) {
+      const column = Config.kkrmenu.menu[iterator.field]
+      row.push({ field: iterator.field, ...column[index] })
+    }
+    arr.push(row)
+  }
+  Config.kkrmenu.menu = arr
 } catch (err) {
   console.log(err)
 }

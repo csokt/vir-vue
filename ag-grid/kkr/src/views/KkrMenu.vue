@@ -50,6 +50,11 @@ export default {
     }
   },
 
+  created () {
+    // console.log('protomenu', Config.kkrmenu.protomenu)
+    // console.log('menu', Config.kkrmenu.menu)
+  },
+
   methods: {
     onSelect (content) {
       this.$router.push('/grid/' + this.menuItems[content].path)
