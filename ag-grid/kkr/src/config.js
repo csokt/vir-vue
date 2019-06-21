@@ -65,7 +65,7 @@ uzemek:
     headerName: Üzemtípus
   - field: statusz
     headerName: Státusz
-  sql: SELECT uzemkod, uzemnev, vonalkod, uzemtipus, statusz FROM uzemek
+  mssql: SELECT uzemkod, uzemnev, vonalkod, uzemtipus, statusz FROM uzemek
 
 `
 
@@ -79,17 +79,16 @@ try {
   }
   const maxlength = Math.max(...arr)
 
-  arr = []
-  let row
+  let menu = []
   for (let index = 0; index < maxlength; index++) {
-    row = []
+    let row = []
     for (const iterator of Config.kkrmenu.columnDefs) {
       const column = Config.kkrmenu.menu[iterator.field]
       row.push({ field: iterator.field, ...column[index] })
     }
-    arr.push(row)
+    menu.push(row)
   }
-  Config.kkrmenu.menu = arr
+  Config.kkrmenu.menu = menu
 } catch (err) {
   console.log(err)
 }
