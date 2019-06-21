@@ -30,15 +30,21 @@ kkrmenu:
 
 uzemek:
   title: Üzemek
+  defaultColDef:
+    filter: true
   columnDefs:
   - field: uzemkod
     headerName: Üzemkód
+    filter: agNumberColumnFilter
+    type: numericColumn
   - field: uzemnev
     headerName: Üzemnév
   - field: vonalkod
     headerName: Vonalkód
+    type: numericColumn
   - field: telephelykod
     headerName: Telephelykód
+    type: numericColumn
   - field: telephely
     headerName: Telephely
   - field: uzemtipus
@@ -52,12 +58,15 @@ telephelyek:
   columnDefs:
   - field: telephelykod
     headerName: Telephelykód
+    type: numericColumn
   - field: telephely
     headerName: Telephely
   - field: minmunkakod
     headerName: Munkakód min
+    type: numericColumn
   - field: maxmunkakod
     headerName: Munkakód max
+    type: numericColumn
   mssql: SELECT * FROM telephelyek
 
 `

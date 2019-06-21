@@ -4,6 +4,7 @@
     <ag-grid-vue
       style="height: 100%"
       class="ag-theme-balham"
+      :defaultColDef="grid.defaultColDef"
       :columnDefs="grid.columnDefs"
       :rowData="rowData"
       @grid-ready="onGridReady"
