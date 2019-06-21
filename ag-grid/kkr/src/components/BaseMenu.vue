@@ -6,6 +6,7 @@
     :columnDefs="columnDefs"
     :rowData="rowData"
     domLayout="autoHeight"
+    @grid-ready="onGridReady"
     @cell-clicked="cellClicked"
   >
   </ag-grid-vue>
@@ -37,6 +38,11 @@ export default {
   },
 
   methods: {
+    onGridReady (params) {
+      params.api.sizeColumnsToFit()
+      // params.columnApi.autoSizeColumns(params.columnApi.getAllColumns())
+    },
+
     cellClicked (params) {
       if (params.value) {
         this.$emit('select', params.column.colId + params.value)

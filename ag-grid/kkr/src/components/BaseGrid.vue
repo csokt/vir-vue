@@ -6,6 +6,7 @@
       class="ag-theme-balham"
       :columnDefs="grid.columnDefs"
       :rowData="rowData"
+      @grid-ready="onGridReady"
       @cell-clicked="cellClicked"
     >
     </ag-grid-vue>
@@ -26,13 +27,33 @@ export default {
       type: Object,
       required: true
     },
-    rowData: {
-      type: Array,
-      required: false
+    rowData: Array,
+    dataReady: Boolean
+  },
+
+  watch: {
+    dataReady: async function () {
+      await this.$nextTick()
+      if (this.dataReady) {
+        this.columnApi.autoSizeColumns(this.columnApi.getAllColumns())
+      }
+    }
+  },
+
+  data () {
+    return {
+      api: null,
+      columnApi: null
     }
   },
 
   methods: {
+    onGridReady (params) {
+      this.api = params.api
+      this.columnApi = params.columnApi
+      // params.columnApi.autoSizeColumns(params.columnApi.getAllColumns())
+    },
+
     cellClicked (params) {
       if (params.value) {
         this.$emit('select', params.column.colId + params.value)

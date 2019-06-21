@@ -16,41 +16,17 @@ kkrmenu:
     szefo:
     - value:  Üzemek
       path:   uzemek
+    - value:  Telephelyek
+      path:   telephelyek
     logisztika:
     - value:  Napi leadás
       path:   logisztika_leadas
-    - value:  RAM
-      path:   logisztika_ram
     kotode:
     - value:  Napi leadás
       path:   kotode_leadas
     varroda:
     - value:  Napi leadás
       path:   varroda_leadas
-    - value:  NORAM
-      path:   varroda_noram
-
-  # menu:
-  # -
-  #   - field:  logisztika
-  #     value:  Napi leadás
-  #     path:   logisztika_leadas
-  #   - field:  kotode
-  #     value:  Napi leadás
-  #     path:   kotode_leadas
-  #   - field:  varroda
-  #     value:  Napi leadás
-  #     path:   varroda_leadas
-  # -
-  #   - field:  szefo
-  #     value:  Üzemek
-  #     path:   uzemek
-  #   - field:  logisztika
-  #     value:  RAM
-  #     path:   logisztika_ram
-  #   - field:  varroda
-  #     value:  NORAM
-  #     path:   varroda_ram
 
 uzemek:
   title: Üzemek
@@ -61,11 +37,28 @@ uzemek:
     headerName: Üzemnév
   - field: vonalkod
     headerName: Vonalkód
+  - field: telephelykod
+    headerName: Telephelykód
+  - field: telephely
+    headerName: Telephely
   - field: uzemtipus
     headerName: Üzemtípus
   - field: statusz
     headerName: Státusz
-  mssql: SELECT uzemkod, uzemnev, vonalkod, uzemtipus, statusz FROM uzemek
+  mssql: SELECT uzemek.*, telephely FROM uzemek JOIN telephelyek on uzemek.telephelykod = telephelyek.telephelykod
+
+telephelyek:
+  title: Telephelyek
+  columnDefs:
+  - field: telephelykod
+    headerName: Telephelykód
+  - field: telephely
+    headerName: Telephely
+  - field: minmunkakod
+    headerName: Munkakód min
+  - field: maxmunkakod
+    headerName: Munkakód max
+  mssql: SELECT * FROM telephelyek
 
 `
 

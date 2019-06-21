@@ -2,6 +2,7 @@
   <BaseGrid
     :grid="grid"
     :rowData="rowData"
+    :dataReady="dataReady"
   />
 </template>
 
@@ -19,7 +20,8 @@ export default {
   data () {
     return {
       grid: {},
-      rowData: null
+      rowData: null,
+      dataReady: false
     }
   },
 
@@ -27,6 +29,7 @@ export default {
     async requestData () {
       const response = await API.post('tir/call', { sql: this.grid.mssql })
       this.rowData = response.data
+      this.dataReady = true
     }
   },
 
