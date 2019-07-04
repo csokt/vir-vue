@@ -83,81 +83,109 @@ telephelyek:
 
 kellekkeszlet:
   title: Kellék készlet
-  pivotMode: true
+  #pivotMode: true
   sideBar: true
+  defaultColDef:
+    filter: true
   columnDefs:
-  - field: rendelesszam
-    headerName: Rendelésszám
-    rowGroup: true
-    enableRowGroup: true
   - field: cikkszam
     headerName: Cikk
+    enableRowGroup: true
   - field: itszam
     headerName: IT
-  - field: szinkod
-    headerName: Szín
-    rowGroup: true
     enableRowGroup: true
+  - field: partnerrendelesszam
+    headerName: Rendelésszám
+    enableRowGroup: true
+  - field: munkalapazonosito
+    headerName: Munkalap
   - field: helynev
     headerName: Hely
-    pivot: true
+    enableRowGroup: true
     enablePivot: true
+    pivot: true
+  - field: kellektipusnev
+    headerName: Kelléktípus
+    enableRowGroup: true
+  - field: szinkod
+    headerName: Szín
+    enableRowGroup: true
   - field: db
     headerName: db
     type: numericColumn
     aggFunc: sum
+  - field: ugyfelnev
+    headerName: Megrendelő
+    enableRowGroup: true
+  - field: utem
+    headerName: Ütem
+    enableRowGroup: true
   mssql: >-
-    WITH mlap (rendelesszam, szinkod, hely, db) AS (
-    SELECT rendelesszam, szinkod, hely, SUM(db) AS db FROM rendelesmunkalap
-    WHERE munkalapazonosito LIKE '4%'
-    GROUP BY rendelesszam, szinkod, hely
-    )
-    SELECT fej.cikkszam, fej.itszam, mlap.*, helyek.rhely AS helynev FROM mlap
+    SELECT
+      fej.cikkszam, fej.itszam, fej.partnerrendelesszam,
+      ugyfel.nev AS ugyfelnev,
+      helyek.rhely AS helynev,
+      szotar.nev AS kellektipusnev,
+      mlap.utem, mlap.szinkod, mlap.hely, mlap.munkalapazonosito, mlap.kellektipus, mlap.db
+    FROM rendelesmunkalap AS mlap
     JOIN rendelesfej AS fej ON fej.rendelesszam = mlap.rendelesszam
+    JOIN ugyfel  ON ugyfel.ugyfelkod = fej.partnerkod AND ugyfel.aktiv = 'A'
     LEFT JOIN helyek ON helyek.azon = mlap.hely
-    WHERE fej.rendelesdatum > '2018-11-01'
+    LEFT JOIN SzefoModulParam.dbo.kodszotar AS szotar ON szotar.kod = mlap.kellektipus AND szotar.tipus = 'KELTIP'
+    WHERE mlap.munkalapazonosito LIKE '4%' AND fej.statusz = 'N'
     ORDER BY mlap.rendelesszam, mlap.szinkod, mlap.hely
 
 ehukeszlet:
   title: Termék készlet
-  pivotMode: true
+  #pivotMode: true
   sideBar: true
+  defaultColDef:
+    filter: true
   columnDefs:
-  - field: rendelesszam
-    headerName: Rendelésszám
-    rowGroup: true
-    enableRowGroup: true
   - field: cikkszam
     headerName: Cikk
+    enableRowGroup: true
   - field: itszam
     headerName: IT
+    enableRowGroup: true
+  - field: partnerrendelesszam
+    headerName: Rendelésszám
+    enableRowGroup: true
+  - field: munkalapazonosito
+    headerName: Munkalap
+  - field: helynev
+    headerName: Hely
+    enableRowGroup: true
+    enablePivot: true
+    pivot: true
   - field: szinkod
     headerName: Szín
-    rowGroup: true
     enableRowGroup: true
   - field: meret
     headerName: Méret
-    rowGroup: true
     enableRowGroup: true
-  - field: helynev
-    headerName: Hely
-    pivot: true
-    enablePivot: true
   - field: db
     headerName: db
     type: numericColumn
     aggFunc: sum
+  - field: ugyfelnev
+    headerName: Megrendelő
+    enableRowGroup: true
+  - field: utem
+    headerName: Ütem
+    enableRowGroup: true
   mssql: >-
-    WITH mlap (rendelesszam, szinkod, meret, hely, db) AS (
-    SELECT rendelesszam, szinkod, meret, hely, SUM(db) AS db FROM rendelesmunkalap
-    WHERE munkalapazonosito LIKE '2%'
-    GROUP BY rendelesszam, szinkod, meret, hely
-    )
-    SELECT fej.cikkszam, fej.itszam, mlap.*, helyek.rhely AS helynev FROM mlap
+    SELECT
+      fej.cikkszam, fej.itszam, fej.partnerrendelesszam,
+      ugyfel.nev AS ugyfelnev,
+      helyek.rhely AS helynev,
+      mlap.utem, mlap.szinkod, mlap.hely, mlap.meret, mlap.munkalapazonosito, mlap.kellektipus, mlap.db
+    FROM rendelesmunkalap AS mlap
     JOIN rendelesfej AS fej ON fej.rendelesszam = mlap.rendelesszam
+    JOIN ugyfel  ON ugyfel.ugyfelkod = fej.partnerkod AND ugyfel.aktiv = 'A'
     LEFT JOIN helyek ON helyek.azon = mlap.hely
-    WHERE fej.rendelesdatum > '2018-11-01'
-    ORDER BY mlap.rendelesszam, mlap.szinkod, mlap.meret, mlap.hely
+    WHERE mlap.munkalapazonosito LIKE '2%' AND fej.statusz = 'N'
+    ORDER BY mlap.rendelesszam, mlap.szinkod, mlap.hely
 
 `
 

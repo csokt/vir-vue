@@ -1,6 +1,6 @@
 <template>
   <div style="height: 100%">
-    <button v-on:click="autoSizeColumns()">Átméretez</button> {{ grid.title }}
+    <!-- <button v-on:click="autoSizeColumns()">Átméretez</button> {{ grid.title }} -->
     <ag-grid-vue
       style="height: 100%"
       class="ag-theme-balham"
