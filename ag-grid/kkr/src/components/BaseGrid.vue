@@ -1,11 +1,13 @@
 <template>
   <div style="height: 100%">
-    {{ grid.title }}
+    <button v-on:click="autoSizeColumns()">Átméretez</button> {{ grid.title }}
     <ag-grid-vue
       style="height: 100%"
       class="ag-theme-balham"
       :defaultColDef="grid.defaultColDef"
       :columnDefs="grid.columnDefs"
+      :pivotMode="grid.pivotMode"
+      :sideBar="grid.sideBar"
       :rowData="rowData"
       @grid-ready="onGridReady"
       @cell-clicked="cellClicked"
@@ -52,7 +54,11 @@ export default {
     onGridReady (params) {
       this.api = params.api
       this.columnApi = params.columnApi
-      // params.columnApi.autoSizeColumns(params.columnApi.getAllColumns())
+    },
+
+    autoSizeColumns () {
+      console.log('autoSizeColumns', this.columnApi.getAllColumns())
+      this.columnApi.autoSizeColumns(this.columnApi.getAllColumns())
     },
 
     cellClicked (params) {
