@@ -132,7 +132,7 @@ kellekkeszlet:
     JOIN ugyfel  ON ugyfel.ugyfelkod = fej.partnerkod AND ugyfel.aktiv = 'A'
     LEFT JOIN helyek ON helyek.azon = mlap.hely
     LEFT JOIN SzefoModulParam.dbo.kodszotar AS szotar ON szotar.kod = mlap.kellektipus AND szotar.tipus = 'KELTIP'
-    WHERE mlap.munkalapazonosito LIKE '4%' AND fej.statusz = 'N'
+    WHERE mlap.munkalapazonosito LIKE '4%' AND mlap.db > 0 AND fej.statusz = 'N'
     ORDER BY mlap.rendelesszam, mlap.szinkod, mlap.hely
 
 ehukeszlet:
@@ -184,7 +184,7 @@ ehukeszlet:
     JOIN rendelesfej AS fej ON fej.rendelesszam = mlap.rendelesszam
     JOIN ugyfel  ON ugyfel.ugyfelkod = fej.partnerkod AND ugyfel.aktiv = 'A'
     LEFT JOIN helyek ON helyek.azon = mlap.hely
-    WHERE mlap.munkalapazonosito LIKE '2%' AND fej.statusz = 'N'
+    WHERE mlap.munkalapazonosito LIKE '2%' AND mlap.db > 0 AND fej.statusz = 'N'
     ORDER BY mlap.rendelesszam, mlap.szinkod, mlap.hely
 
 `
