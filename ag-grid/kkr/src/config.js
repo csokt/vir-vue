@@ -6,10 +6,10 @@ kkrmenu:
   columnDefs:
   - field: torzs
     headerName: Törzsadatok
-  - field: forgalom
-    headerName: Forgalom
   - field: keszlet
     headerName: Készlet
+  - field: mozgas
+    headerName: Mozgás
   - field: logisztika
     headerName: Logisztika
   - field: kotode
@@ -22,22 +22,22 @@ kkrmenu:
       path:   uzemek
     - value:  Telephelyek
       path:   telephelyek
-    forgalom:
-    - value:  "-"
-      path:   nincs
     keszlet:
     - value:  Kellék
       path:   kellekkeszlet
     - value:  E-H-U
       path:   ehukeszlet
+    mozgas:
+    - value:  "Munkalap"
+      path:   munkalap_mozgas
     logisztika:
-    - value:  Napi leadás
+    - value:  "-"
       path:   logisztika_leadas
     kotode:
-    - value:  Napi leadás
+    - value:  "-"
       path:   kotode_leadas
     varroda:
-    - value:  Napi leadás
+    - value:  "-"
       path:   varroda_leadas
 
 uzemek:
@@ -85,8 +85,11 @@ kellekkeszlet:
   title: Kellék készlet
   #pivotMode: true
   sideBar: true
+  rowSelection: multiple
   defaultColDef:
     filter: true
+    sortable: true
+    resizable: true
   columnDefs:
   - field: cikkszam
     headerName: Cikk
@@ -139,8 +142,11 @@ ehukeszlet:
   title: Termék készlet
   #pivotMode: true
   sideBar: true
+  rowSelection: multiple
   defaultColDef:
     filter: true
+    sortable: true
+    resizable: true
   columnDefs:
   - field: cikkszam
     headerName: Cikk
@@ -186,6 +192,67 @@ ehukeszlet:
     LEFT JOIN helyek ON helyek.azon = mlap.hely
     WHERE mlap.munkalapazonosito LIKE '2%' AND mlap.db > 0 AND fej.statusz = 'N'
     ORDER BY mlap.rendelesszam, mlap.szinkod, mlap.hely
+
+munkalap_mozgas:
+  title: Munkalap mozgás
+  #pivotMode: true
+  sideBar: true
+  #rowSelection: multiple
+  defaultColDef:
+    filter: true
+    sortable: true
+    resizable: true
+  columnDefs:
+  - field: cikkszam
+    headerName: Cikk
+    enableRowGroup: true
+  - field: itszam
+    headerName: IT
+    enableRowGroup: true
+  - field: partnerrendelesszam
+    headerName: Rendelésszám
+    enableRowGroup: true
+  - field: munkalapazonosito
+    headerName: Munkalap
+    enableRowGroup: true
+    #rowGroup: true
+  - field: helynev
+    headerName: Hely
+    enableRowGroup: true
+    #enablePivot: true
+    #pivot: true
+  - field: datum
+    headerName: Dátum
+  - field: szinkod
+    headerName: Szín
+    enableRowGroup: true
+  - field: meret
+    headerName: Méret
+    enableRowGroup: true
+  - field: db
+    headerName: db
+    type: numericColumn
+    #aggFunc: sum
+  - field: ugyfelnev
+    headerName: Megrendelő
+    enableRowGroup: true
+  - field: utem
+    headerName: Ütem
+    enableRowGroup: true
+  mssql: >-
+    SELECT
+      fej.cikkszam, fej.itszam, fej.partnerrendelesszam,
+      ugyfel.nev AS ugyfelnev,
+      helyek.rhely AS helynev,
+      mlap.utem, mlap.szinkod, mlap.meret, mlap.munkalapazonosito, mlap.kellektipus, mlap.db,
+      mozgas.datum, mozgas.hely
+    FROM rendelesmunkalap AS mlap
+    JOIN rendelesfej AS fej ON fej.rendelesszam = mlap.rendelesszam
+    JOIN ugyfel  ON ugyfel.ugyfelkod = fej.partnerkod AND ugyfel.aktiv = 'A'
+    LEFT JOIN rendeleskartonmozgas AS mozgas ON mozgas.munkalapazonosito = mlap.munkalapazonosito
+    LEFT JOIN helyek ON helyek.azon = mozgas.hely
+    WHERE mlap.db > 0 AND fej.statusz = 'N'
+    ORDER BY mlap.munkalapazonosito, mozgas.datum
 
 `
 

@@ -3,6 +3,7 @@
     :grid="grid"
     :rowData="rowData"
     :dataReady="dataReady"
+    :errorMessage="errorMessage"
   />
 </template>
 
@@ -21,14 +22,21 @@ export default {
     return {
       grid: {},
       rowData: null,
-      dataReady: false
+      dataReady: false,
+      errorMessage: ''
     }
   },
 
   methods: {
     async requestData () {
       const response = await API.post('tir/call', { sql: this.grid.mssql })
-      this.rowData = response.data
+      if (response.ok) {
+        response.data.forEach(Object.freeze)
+        this.rowData = Object.freeze(response.data)
+      } else {
+        this.rowData = []
+        this.errorMessage = response.data.error.message
+      }
       this.dataReady = true
     }
   },

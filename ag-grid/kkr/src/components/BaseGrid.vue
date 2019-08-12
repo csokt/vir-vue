@@ -1,6 +1,8 @@
 <template>
   <div style="height: 100%">
     <!-- <button v-on:click="autoSizeColumns()">Átméretez</button> {{ grid.title }} -->
+    {{ grid.title }} {{ errorMessage }}
+    <button v-on:click="onBtExport()">Export Excelbe</button>
     <ag-grid-vue
       style="height: 100%"
       class="ag-theme-balham"
@@ -8,6 +10,7 @@
       :columnDefs="grid.columnDefs"
       :pivotMode="grid.pivotMode"
       :sideBar="grid.sideBar"
+      :rowSelection="grid.rowSelection"
       :rowData="rowData"
       @grid-ready="onGridReady"
       @cell-clicked="cellClicked"
@@ -20,7 +23,6 @@
 import { AgGridVue } from 'ag-grid-vue'
 
 export default {
-  name: 'App',
   components: {
     AgGridVue
   },
@@ -31,7 +33,8 @@ export default {
       required: true
     },
     rowData: Array,
-    dataReady: Boolean
+    dataReady: Boolean,
+    errorMessage: String
   },
 
   watch: {
@@ -54,6 +57,10 @@ export default {
     onGridReady (params) {
       this.api = params.api
       this.columnApi = params.columnApi
+    },
+
+    onBtExport () {
+      this.api.exportDataAsExcel()
     },
 
     autoSizeColumns () {
