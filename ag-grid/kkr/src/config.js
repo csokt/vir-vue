@@ -28,8 +28,10 @@ kkrmenu:
     - value:  Kellék
       path:   kellekkeszlet
     mozgas:
-    - value:  "Munkalap"
-      path:   munkalap_mozgas
+    - value:  "E-H-U"
+      path:   ehumozgas
+    - value:  "Kellék"
+      path:   kellekmozgas
     logisztika:
     - value:  "-"
       path:   logisztika_leadas
@@ -99,7 +101,7 @@ telephelyek:
   mssql: SELECT * FROM telephelyek
 
 ehukeszlet:
-  title: Termék készlet
+  title: E-H-U készlet
   #pivotMode: true
   sideBar: true
   rowSelection: multiple
@@ -151,7 +153,7 @@ ehukeszlet:
     JOIN ugyfel  ON ugyfel.ugyfelkod = fej.partnerkod AND ugyfel.aktiv = 'A'
     LEFT JOIN helyek ON helyek.azon = mlap.hely
     WHERE mlap.munkalapazonosito LIKE '2%' AND mlap.db > 0 AND fej.statusz = 'N'
-    ORDER BY mlap.rendelesszam, mlap.szinkod, mlap.hely
+    ORDER BY mlap.rendelesszam, mlap.munkalapazonosito
 
 kellekkeszlet:
   title: Kellék készlet
@@ -179,11 +181,11 @@ kellekkeszlet:
     enableRowGroup: true
     enablePivot: true
     pivot: true
-  - field: kellektipusnev
-    headerName: Kelléktípus
-    enableRowGroup: true
   - field: szinkod
     headerName: Szín
+    enableRowGroup: true
+  - field: kellektipusnev
+    headerName: Kelléktípus
     enableRowGroup: true
   - field: db
     headerName: db
@@ -208,11 +210,10 @@ kellekkeszlet:
     LEFT JOIN helyek ON helyek.azon = mlap.hely
     LEFT JOIN SzefoModulParam.dbo.kodszotar AS szotar ON szotar.kod = mlap.kellektipus AND szotar.tipus = 'KELTIP'
     WHERE mlap.munkalapazonosito LIKE '4%' AND mlap.db > 0 AND fej.statusz = 'N'
-    ORDER BY mlap.rendelesszam, mlap.szinkod, mlap.hely
+    ORDER BY mlap.rendelesszam, mlap.munkalapazonosito
 
-munkalap_mozgas:
-  title: Munkalap mozgás
-  #pivotMode: true
+ehumozgas:
+  title: E-H-U mozgás
   sideBar: true
   #rowSelection: multiple
   defaultColDef:
@@ -232,12 +233,9 @@ munkalap_mozgas:
   - field: munkalapazonosito
     headerName: Munkalap
     enableRowGroup: true
-    #rowGroup: true
   - field: helynev
     headerName: Hely
     enableRowGroup: true
-    #enablePivot: true
-    #pivot: true
   - field: datum
     headerName: Dátum
   - field: szinkod
@@ -249,7 +247,6 @@ munkalap_mozgas:
   - field: db
     headerName: db
     type: numericColumn
-    #aggFunc: sum
   - field: ugyfelnev
     headerName: Megrendelő
     enableRowGroup: true
@@ -268,7 +265,65 @@ munkalap_mozgas:
     JOIN ugyfel  ON ugyfel.ugyfelkod = fej.partnerkod AND ugyfel.aktiv = 'A'
     LEFT JOIN rendeleskartonmozgas AS mozgas ON mozgas.munkalapazonosito = mlap.munkalapazonosito
     LEFT JOIN helyek ON helyek.azon = mozgas.hely
-    WHERE mlap.db > 0 AND fej.statusz = 'N'
+    WHERE mlap.munkalapazonosito LIKE '2%' AND mlap.db > 0 AND fej.statusz = 'N'
+    ORDER BY mlap.munkalapazonosito, mozgas.datum
+
+kellekmozgas:
+  title: Kellék mozgás
+  sideBar: true
+  #rowSelection: multiple
+  defaultColDef:
+    filter: true
+    sortable: true
+    resizable: true
+  columnDefs:
+  - field: cikkszam
+    headerName: Cikk
+    enableRowGroup: true
+  - field: itszam
+    headerName: IT
+    enableRowGroup: true
+  - field: partnerrendelesszam
+    headerName: Rendelésszám
+    enableRowGroup: true
+  - field: munkalapazonosito
+    headerName: Munkalap
+    enableRowGroup: true
+  - field: helynev
+    headerName: Hely
+    enableRowGroup: true
+  - field: datum
+    headerName: Dátum
+  - field: szinkod
+    headerName: Szín
+    enableRowGroup: true
+  - field: kellektipusnev
+    headerName: Kelléktípus
+    enableRowGroup: true
+  - field: db
+    headerName: db
+    type: numericColumn
+  - field: ugyfelnev
+    headerName: Megrendelő
+    enableRowGroup: true
+  - field: utem
+    headerName: Ütem
+    enableRowGroup: true
+  mssql: >-
+    SELECT
+      fej.cikkszam, fej.itszam, fej.partnerrendelesszam,
+      ugyfel.nev AS ugyfelnev,
+      helyek.rhely AS helynev,
+      szotar.nev AS kellektipusnev,
+      mlap.utem, mlap.szinkod, mlap.meret, mlap.munkalapazonosito, mlap.kellektipus, mlap.db,
+      mozgas.datum, mozgas.hely
+    FROM rendelesmunkalap AS mlap
+    JOIN rendelesfej AS fej ON fej.rendelesszam = mlap.rendelesszam
+    JOIN ugyfel  ON ugyfel.ugyfelkod = fej.partnerkod AND ugyfel.aktiv = 'A'
+    LEFT JOIN rendeleskartonmozgas AS mozgas ON mozgas.munkalapazonosito = mlap.munkalapazonosito
+    LEFT JOIN helyek ON helyek.azon = mozgas.hely
+    LEFT JOIN SzefoModulParam.dbo.kodszotar AS szotar ON szotar.kod = mlap.kellektipus AND szotar.tipus = 'KELTIP'
+    WHERE mlap.munkalapazonosito LIKE '4%' AND mlap.db > 0 AND fej.statusz = 'N'
     ORDER BY mlap.munkalapazonosito, mozgas.datum
 
 `
