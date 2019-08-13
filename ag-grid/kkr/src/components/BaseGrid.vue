@@ -6,6 +6,7 @@
     <ag-grid-vue
       style="height: 100%"
       class="ag-theme-balham"
+      :localeText="localeText"
       :defaultColDef="grid.defaultColDef"
       :columnDefs="grid.columnDefs"
       :pivotMode="grid.pivotMode"
@@ -20,6 +21,7 @@
 </template>
 
 <script>
+import Config from '@/config.js'
 import { AgGridVue } from 'ag-grid-vue'
 
 export default {
@@ -43,6 +45,12 @@ export default {
       if (this.dataReady) {
         this.columnApi.autoSizeColumns(this.columnApi.getAllColumns())
       }
+    }
+  },
+
+  computed: {
+    localeText () {
+      return Config.localeText
     }
   },
 
