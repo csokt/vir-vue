@@ -121,6 +121,8 @@ ehukeszlet:
     enableRowGroup: true
   - field: munkalapazonosito
     headerName: Munkalap
+  - field: kartonszam
+    headerName: Kartonszám
   - field: helynev
     headerName: Hely
     enableRowGroup: true
@@ -147,7 +149,7 @@ ehukeszlet:
       fej.cikkszam, fej.itszam, fej.partnerrendelesszam,
       ugyfel.nev AS ugyfelnev,
       helyek.rhely AS helynev,
-      mlap.utem, mlap.szinkod, mlap.hely, mlap.meret, mlap.munkalapazonosito, mlap.kellektipus, mlap.db
+      mlap.munkalapazonosito, mlap.kartonszam, mlap.utem, mlap.szinkod, mlap.hely, mlap.meret, mlap.kellektipus, mlap.db
     FROM rendelesmunkalap AS mlap
     JOIN rendelesfej AS fej ON fej.rendelesszam = mlap.rendelesszam
     JOIN ugyfel  ON ugyfel.ugyfelkod = fej.partnerkod AND ugyfel.aktiv = 'A'
@@ -176,6 +178,8 @@ kellekkeszlet:
     enableRowGroup: true
   - field: munkalapazonosito
     headerName: Munkalap
+  - field: kartonszam
+    headerName: Kartonszám
   - field: helynev
     headerName: Hely
     enableRowGroup: true
@@ -203,7 +207,7 @@ kellekkeszlet:
       ugyfel.nev AS ugyfelnev,
       helyek.rhely AS helynev,
       szotar.nev AS kellektipusnev,
-      mlap.utem, mlap.szinkod, mlap.hely, mlap.munkalapazonosito, mlap.kellektipus, mlap.db
+      mlap.munkalapazonosito, mlap.kartonszam, mlap.utem, mlap.szinkod, mlap.hely, mlap.meret, mlap.kellektipus, mlap.db
     FROM rendelesmunkalap AS mlap
     JOIN rendelesfej AS fej ON fej.rendelesszam = mlap.rendelesszam
     JOIN ugyfel  ON ugyfel.ugyfelkod = fej.partnerkod AND ugyfel.aktiv = 'A'
@@ -233,6 +237,9 @@ ehumozgas:
   - field: munkalapazonosito
     headerName: Munkalap
     enableRowGroup: true
+  - field: kartonszam
+    headerName: Kartonszám
+    enableRowGroup: true
   - field: helynev
     headerName: Hely
     enableRowGroup: true
@@ -258,7 +265,7 @@ ehumozgas:
       fej.cikkszam, fej.itszam, fej.partnerrendelesszam,
       ugyfel.nev AS ugyfelnev,
       helyek.rhely AS helynev,
-      mlap.utem, mlap.szinkod, mlap.meret, mlap.munkalapazonosito, mlap.kellektipus, mlap.db,
+      mlap.munkalapazonosito, mlap.kartonszam, mlap.utem, mlap.szinkod, mlap.meret, mlap.kellektipus, mlap.db,
       mozgas.datum, mozgas.hely
     FROM rendelesmunkalap AS mlap
     JOIN rendelesfej AS fej ON fej.rendelesszam = mlap.rendelesszam
@@ -289,6 +296,9 @@ kellekmozgas:
   - field: munkalapazonosito
     headerName: Munkalap
     enableRowGroup: true
+  - field: kartonszam
+    headerName: Kartonszám
+    enableRowGroup: true
   - field: helynev
     headerName: Hely
     enableRowGroup: true
@@ -315,7 +325,7 @@ kellekmozgas:
       ugyfel.nev AS ugyfelnev,
       helyek.rhely AS helynev,
       szotar.nev AS kellektipusnev,
-      mlap.utem, mlap.szinkod, mlap.meret, mlap.munkalapazonosito, mlap.kellektipus, mlap.db,
+      mlap.munkalapazonosito, mlap.kartonszam, mlap.utem, mlap.szinkod, mlap.meret, mlap.kellektipus, mlap.db,
       mozgas.datum, mozgas.hely
     FROM rendelesmunkalap AS mlap
     JOIN rendelesfej AS fej ON fej.rendelesszam = mlap.rendelesszam
