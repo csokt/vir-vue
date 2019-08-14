@@ -6,10 +6,8 @@ kkrmenu:
   columnDefs:
   - field: torzs
     headerName: Törzsadatok
-  - field: keszlet
-    headerName: Készlet
-  - field: mozgas
-    headerName: Mozgás
+  - field: munkalap
+    headerName: Munkalap
   - field: logisztika
     headerName: Logisztika
   - field: kotode
@@ -22,19 +20,16 @@ kkrmenu:
       path:   uzemek
     - value:  Telephelyek
       path:   telephelyek
-    keszlet:
+    munkalap:
     - value:  E-H-U
-      path:   ehukeszlet
+      path:   ehu_munkalap
     - value:  Kellék
-      path:   kellekkeszlet
-    mozgas:
-    - value:  "E-H-U"
-      path:   ehumozgas
-    - value:  "Kellék"
-      path:   kellekmozgas
+      path:   kellek_munkalap
+    - value:  "E-H-U mozgás"
+      path:   ehu_munkalap_mozgas
+    - value:  "Kellék mozgás"
+      path:   kellek_munkalap_mozgas
     logisztika:
-    - value:  "-"
-      path:   logisztika_leadas
     - value:  "Update"
       path:   mssql_update
     kotode:
@@ -100,8 +95,8 @@ telephelyek:
     type: numericColumn
   mssql: SELECT * FROM telephelyek
 
-ehukeszlet:
-  title: E-H-U készlet
+ehu_munkalap:
+  title: E-H-U munkalapok
   #pivotMode: true
   sideBar: true
   rowSelection: multiple
@@ -157,8 +152,8 @@ ehukeszlet:
     WHERE mlap.munkalapazonosito LIKE '2%' AND mlap.db > 0 AND fej.statusz = 'N'
     ORDER BY mlap.rendelesszam, mlap.munkalapazonosito
 
-kellekkeszlet:
-  title: Kellék készlet
+kellek_munkalap:
+  title: Kellék munkalapok
   #pivotMode: true
   sideBar: true
   rowSelection: multiple
@@ -216,8 +211,8 @@ kellekkeszlet:
     WHERE mlap.munkalapazonosito LIKE '4%' AND mlap.db > 0 AND fej.statusz = 'N'
     ORDER BY mlap.rendelesszam, mlap.munkalapazonosito
 
-ehumozgas:
-  title: E-H-U mozgás
+ehu_munkalap_mozgas:
+  title: E-H-U munkalap mozgás
   sideBar: true
   #rowSelection: multiple
   defaultColDef:
@@ -275,8 +270,8 @@ ehumozgas:
     WHERE mlap.munkalapazonosito LIKE '2%' AND mlap.db > 0 AND fej.statusz = 'N'
     ORDER BY mlap.munkalapazonosito, mozgas.datum
 
-kellekmozgas:
-  title: Kellék mozgás
+kellek_munkalap_mozgas:
+  title: Kellék munkalap mozgás
   sideBar: true
   #rowSelection: multiple
   defaultColDef:
