@@ -21,7 +21,7 @@ export default {
           API.setHeader('Authorization', response.data.id)
         }
       }
-      this.$router.replace('/')
+      // this.$router.replace('/')
     }
   },
 

@@ -6,6 +6,8 @@ kkrmenu:
   columnDefs:
   - field: torzs
     headerName: Törzsadatok
+  - field: tervezes
+    headerName: Tervezés
   - field: munkalap
     headerName: Munkalap
   - field: logisztika
@@ -20,6 +22,9 @@ kkrmenu:
       path:   uzemek
     - value:  Telephelyek
       path:   telephelyek
+    tervezes:
+    - value:  "Gépkapacitás"
+      path:   gepkapacitas
     munkalap:
     - value:  E-H-U
       path:   ehu_munkalap
@@ -94,6 +99,55 @@ telephelyek:
     headerName: Munkakód max
     type: numericColumn
   mssql: SELECT * FROM telephelyek
+
+gepkapacitas:
+  title: Gépkapacitás
+  columnDefs:
+  - field: gepkod
+    headerName: Gépkódkód
+    type: numericColumn
+  - field: gepnev
+    headerName: Gépnév
+  - field: rendelt
+    headerName: Rendelt perc
+    type: numericColumn
+  - field: kesz
+    headerName: Kész perc
+    type: numericColumn
+  - field: hatralek
+    headerName: Hátralék perc
+    type: numericColumn
+  mssql: >-
+    WITH rendelt (gepkod, perc) AS (
+        SELECT
+            normak.gepkod,
+            ROUND(SUM(fej.mennyiseg * normak.normaperc),0) AS perc
+        FROM rendelesfej AS fej
+        JOIN normak ON normak.cikkszam = fej.cikkszam
+        WHERE fej.statusz = 'N'
+        GROUP BY normak.gepkod
+    ),
+        kesz (gepkod, perc) AS (
+        SELECT
+            normak.gepkod,
+            ROUND(SUM(kodol.darab * kodol.normaperdb),0) AS perc
+        FROM rendelesmatrica AS kodol
+        JOIN rendelesmunkalap AS mlap ON mlap.munkalapazonosito = kodol.vonalkod
+        JOIN rendelesfej AS fej ON fej.rendelesszam = mlap.rendelesszam
+        JOIN normak ON normak.cikkszam = kodol.cikkszam AND normak.muveletkod = kodol.muveletkod
+        WHERE mlap.db > 0 AND fej.statusz = 'N'
+        GROUP BY normak.gepkod
+    )
+    SELECT
+        gep.gepkod, gep.gepnev,
+        ISNULL(rendelt.perc,0) AS rendelt,
+        ISNULL(kesz.perc,0) AS kesz,
+        ISNULL(rendelt.perc,0) - ISNULL(kesz.perc,0) AS hatralek
+    FROM gep
+    LEFT JOIN rendelt ON rendelt.gepkod = gep.gepkod
+    LEFT JOIN kesz ON kesz.gepkod = gep.gepkod
+    WHERE gep.statusz = 'A'
+    ORDER BY gep.gepkod
 
 ehu_munkalap:
   title: E-H-U munkalapok
