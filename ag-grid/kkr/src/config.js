@@ -18,6 +18,8 @@ kkrmenu:
     headerName: Varroda
   menu:
     torzs:
+    - value:  Ügyfelek
+      path:   ugyfelek
     - value:  Üzemek
       path:   uzemek
     - value:  Telephelyek
@@ -58,6 +60,48 @@ mssql_update:
     )
     UPDATE rendelesmunkalap SET hely = lasthely.hely FROM lasthely WHERE lasthely.munkalapazonosito = rendelesmunkalap.munkalapazonosito AND
         ( rendelesmunkalap.hely IS NULL OR lasthely.hely != rendelesmunkalap.hely )
+
+ugyfelek:
+  title: Ügyfelek
+  columnDefs:
+  - field: ugyfelkod
+    headerName: Ügyfélkód
+  - field: ugyfelnev
+    headerName: Ügyfélnév
+  - field: rendelt
+    headerName: Rendelt db
+    type: numericColumn
+  - field: kiszallitott
+    headerName: Kiszállított db
+    type: numericColumn
+  - field: hatralek
+    headerName: Hátralék db
+    type: numericColumn
+  mssql: >-
+    WITH ugyfel_ids (partnerkod) AS (
+        SELECT DISTINCT partnerkod FROM rendelesfej
+        WHERE statusz = 'N'
+    ),
+        rendelt (partnerkod, mennyiseg) AS (
+        SELECT partnerkod, SUM(mennyiseg) AS mennyiseg
+        FROM rendelesfej AS fej
+        WHERE fej.statusz = 'N'
+        GROUP BY partnerkod
+    ),
+        kiszall (partnerkod, mennyiseg) AS (
+        SELECT kiszall.partnerkod, SUM(kiszall.osszdb) AS mennyiseg
+        FROM rendeleskiszallitas AS kiszall
+        JOIN rendelesfej AS fej ON fej.rendelesszam = kiszall.rendelesszam
+        WHERE kiszall.osszdb IS NOT NULL AND fej.statusz = 'N'
+        GROUP BY kiszall.partnerkod
+    )
+    SELECT ugyfel.ugyfelkod, ugyfel.nev AS ugyfelnev, rendelt.mennyiseg AS rendelt,
+        ISNULL(kiszall.mennyiseg,0) AS kiszallitott, rendelt.mennyiseg - ISNULL(kiszall.mennyiseg,0) AS hatralek
+    FROM ugyfel
+    JOIN ugyfel_ids ON ugyfel_ids.partnerkod = ugyfel.ugyfelkod AND ugyfel.aktiv = 'A'
+    LEFT JOIN rendelt ON rendelt.partnerkod = ugyfel.ugyfelkod
+    LEFT JOIN kiszall ON kiszall.partnerkod = ugyfel.ugyfelkod
+    ORDER BY ugyfel.ugyfelkod
 
 uzemek:
   title: Üzemek
