@@ -77,6 +77,10 @@ ugyfelek:
   - field: hatralek
     headerName: Hátralék db
     type: numericColumn
+  onClick:
+    ugyfelkod:
+      path: uzemek
+      where: statusz='A'
   mssql: >-
     WITH ugyfel_ids (partnerkod) AS (
         SELECT DISTINCT partnerkod FROM rendelesfej
@@ -101,6 +105,7 @@ ugyfelek:
     JOIN ugyfel_ids ON ugyfel_ids.partnerkod = ugyfel.ugyfelkod AND ugyfel.aktiv = 'A'
     LEFT JOIN rendelt ON rendelt.partnerkod = ugyfel.ugyfelkod
     LEFT JOIN kiszall ON kiszall.partnerkod = ugyfel.ugyfelkod
+    WHERE {where}
     ORDER BY ugyfel.ugyfelkod
 
 telephelyek:
@@ -117,7 +122,7 @@ telephelyek:
   - field: maxmunkakod
     headerName: Munkakód max
     type: numericColumn
-  mssql: SELECT * FROM telephelyek
+  mssql: SELECT * FROM telephelyek WHERE {where}
 
 uzemek:
   title: Üzemek
@@ -148,7 +153,7 @@ gepkapacitas:
   title: Gépkapacitás
   columnDefs:
   - field: gepkod
-    headerName: Gépkódkód
+    headerName: Gépkód
     type: numericColumn
   - field: gepnev
     headerName: Gépnév
@@ -190,7 +195,7 @@ gepkapacitas:
     FROM gep
     LEFT JOIN rendelt ON rendelt.gepkod = gep.gepkod
     LEFT JOIN kesz ON kesz.gepkod = gep.gepkod
-    WHERE gep.statusz = 'A'
+    WHERE (gep.statusz = 'A') AND {where}
     ORDER BY gep.gepkod
 
 ehu_munkalap:
@@ -247,7 +252,7 @@ ehu_munkalap:
     JOIN rendelesfej AS fej ON fej.rendelesszam = mlap.rendelesszam
     JOIN ugyfel  ON ugyfel.ugyfelkod = fej.partnerkod AND ugyfel.aktiv = 'A'
     LEFT JOIN helyek ON helyek.azon = mlap.hely
-    WHERE mlap.munkalapazonosito LIKE '2%' AND mlap.db > 0 AND fej.statusz = 'N'
+    WHERE (mlap.munkalapazonosito LIKE '2%' AND mlap.db > 0 AND fej.statusz = 'N') AND {where}
     ORDER BY mlap.rendelesszam, mlap.munkalapazonosito
 
 kellek_munkalap:
@@ -306,7 +311,7 @@ kellek_munkalap:
     JOIN ugyfel  ON ugyfel.ugyfelkod = fej.partnerkod AND ugyfel.aktiv = 'A'
     LEFT JOIN helyek ON helyek.azon = mlap.hely
     LEFT JOIN SzefoModulParam.dbo.kodszotar AS szotar ON szotar.kod = mlap.kellektipus AND szotar.tipus = 'KELTIP'
-    WHERE mlap.munkalapazonosito LIKE '4%' AND mlap.db > 0 AND fej.statusz = 'N'
+    WHERE (mlap.munkalapazonosito LIKE '4%' AND mlap.db > 0 AND fej.statusz = 'N') AND {where}
     ORDER BY mlap.rendelesszam, mlap.munkalapazonosito
 
 ehu_munkalap_mozgas:
@@ -365,7 +370,7 @@ ehu_munkalap_mozgas:
     JOIN ugyfel  ON ugyfel.ugyfelkod = fej.partnerkod AND ugyfel.aktiv = 'A'
     LEFT JOIN rendeleskartonmozgas AS mozgas ON mozgas.munkalapazonosito = mlap.munkalapazonosito
     LEFT JOIN helyek ON helyek.azon = mozgas.hely
-    WHERE mlap.munkalapazonosito LIKE '2%' AND mlap.db > 0 AND fej.statusz = 'N'
+    WHERE (mlap.munkalapazonosito LIKE '2%' AND mlap.db > 0 AND fej.statusz = 'N') AND {where}
     ORDER BY mlap.munkalapazonosito, mozgas.datum
 
 kellek_munkalap_mozgas:
@@ -426,7 +431,7 @@ kellek_munkalap_mozgas:
     LEFT JOIN rendeleskartonmozgas AS mozgas ON mozgas.munkalapazonosito = mlap.munkalapazonosito
     LEFT JOIN helyek ON helyek.azon = mozgas.hely
     LEFT JOIN SzefoModulParam.dbo.kodszotar AS szotar ON szotar.kod = mlap.kellektipus AND szotar.tipus = 'KELTIP'
-    WHERE mlap.munkalapazonosito LIKE '4%' AND mlap.db > 0 AND fej.statusz = 'N'
+    WHERE (mlap.munkalapazonosito LIKE '4%' AND mlap.db > 0 AND fej.statusz = 'N') AND {where}
     ORDER BY mlap.munkalapazonosito, mozgas.datum
 
 `

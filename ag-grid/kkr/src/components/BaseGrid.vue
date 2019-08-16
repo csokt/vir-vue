@@ -1,6 +1,5 @@
 <template>
   <div style="height: 100%">
-    <!-- <button v-on:click="autoSizeColumns()">Átméretez</button> {{ grid.title }} -->
     {{ grid.title }} {{ errorMessage }}
     <button v-on:click="onBtExport()">Export Excelbe</button>
     <ag-grid-vue
@@ -71,16 +70,9 @@ export default {
       this.api.exportDataAsExcel()
     },
 
-    autoSizeColumns () {
-      console.log('autoSizeColumns', this.columnApi.getAllColumns())
-      this.columnApi.autoSizeColumns(this.columnApi.getAllColumns())
-    },
-
     cellClicked (params) {
-      console.log('cellClicked', params)
-      if (params.value) {
-        this.$emit('select', params.column.colId + params.value)
-      }
+      // console.log('cellClicked', params)
+      this.$emit('select', { column: params.column.colId, data: params.data })
     }
   }
 }

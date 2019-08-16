@@ -4,6 +4,7 @@
     :rowData="rowData"
     :dataReady="dataReady"
     :errorMessage="errorMessage"
+    @select="onSelect"
   />
 </template>
 
@@ -52,6 +53,19 @@ export default {
       } else {
         this.rowData = []
       }
+    },
+
+    onSelect (content) {
+      // console.log('item', item)
+      if (!this.grid.onClick || !this.grid.onClick[content.column]) return
+      const item = this.grid.onClick[content.column]
+      const url = window.location.origin + '/grid/' + item.path
+      let win = window.open(url + '?where=' + item.where, '_blank')
+      if (win) {
+        win.focus()
+      } else {
+        alert('Engedélyezze a felugró ablakokat ezen az oldalon!')
+      }
     }
   },
 
@@ -59,7 +73,6 @@ export default {
     this.grid = Config[this.$route.params.id] || { title: 'Nincs ilyen táblázat!' }
     if (this.$route.query.where) this.sqlWhere = this.$route.query.where
     if (this.store.loggedIn) this.requestData()
-    console.log('route', this.$route)
   },
 
   mounted () {
