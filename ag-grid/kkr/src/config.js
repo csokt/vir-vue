@@ -20,10 +20,10 @@ kkrmenu:
     torzs:
     - value:  Ügyfelek
       path:   ugyfelek
-    - value:  Üzemek
-      path:   uzemek
     - value:  Telephelyek
       path:   telephelyek
+    - value:  Üzemek
+      path:   uzemek
     tervezes:
     - value:  "Gépkapacitás"
       path:   gepkapacitas
@@ -89,10 +89,10 @@ ugyfelek:
         GROUP BY partnerkod
     ),
         kiszall (partnerkod, mennyiseg) AS (
-        SELECT kiszall.partnerkod, SUM(kiszall.osszdb) AS mennyiseg
-        FROM rendeleskiszallitas AS kiszall
+        SELECT kiszall.partnerkod, SUM(kiszall.sumkiszallitva) AS mennyiseg
+        FROM rendelessorok AS kiszall
         JOIN rendelesfej AS fej ON fej.rendelesszam = kiszall.rendelesszam
-        WHERE kiszall.osszdb IS NOT NULL AND fej.statusz = 'N'
+        WHERE fej.statusz = 'N'
         GROUP BY kiszall.partnerkod
     )
     SELECT ugyfel.ugyfelkod, ugyfel.nev AS ugyfelnev, rendelt.mennyiseg AS rendelt,
@@ -102,6 +102,22 @@ ugyfelek:
     LEFT JOIN rendelt ON rendelt.partnerkod = ugyfel.ugyfelkod
     LEFT JOIN kiszall ON kiszall.partnerkod = ugyfel.ugyfelkod
     ORDER BY ugyfel.ugyfelkod
+
+telephelyek:
+  title: Telephelyek
+  columnDefs:
+  - field: telephelykod
+    headerName: Telephelykód
+    type: numericColumn
+  - field: telephely
+    headerName: Telephely
+  - field: minmunkakod
+    headerName: Munkakód min
+    type: numericColumn
+  - field: maxmunkakod
+    headerName: Munkakód max
+    type: numericColumn
+  mssql: SELECT * FROM telephelyek
 
 uzemek:
   title: Üzemek
@@ -127,22 +143,6 @@ uzemek:
   - field: statusz
     headerName: Státusz
   mssql: SELECT uzemek.*, telephely FROM uzemek JOIN telephelyek on uzemek.telephelykod = telephelyek.telephelykod
-
-telephelyek:
-  title: Telephelyek
-  columnDefs:
-  - field: telephelykod
-    headerName: Telephelykód
-    type: numericColumn
-  - field: telephely
-    headerName: Telephely
-  - field: minmunkakod
-    headerName: Munkakód min
-    type: numericColumn
-  - field: maxmunkakod
-    headerName: Munkakód max
-    type: numericColumn
-  mssql: SELECT * FROM telephelyek
 
 gepkapacitas:
   title: Gépkapacitás
