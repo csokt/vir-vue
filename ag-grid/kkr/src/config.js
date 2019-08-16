@@ -142,7 +142,7 @@ uzemek:
     headerName: Üzemtípus
   - field: statusz
     headerName: Státusz
-  mssql: SELECT uzemek.*, telephely FROM uzemek JOIN telephelyek on uzemek.telephelykod = telephelyek.telephelykod
+  mssql: SELECT uzemek.*, telephely FROM uzemek JOIN telephelyek on uzemek.telephelykod = telephelyek.telephelykod WHERE {where}
 
 gepkapacitas:
   title: Gépkapacitás

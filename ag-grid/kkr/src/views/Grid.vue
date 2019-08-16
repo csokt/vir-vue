@@ -8,7 +8,8 @@
 </template>
 
 <script>
-import Config from '@/config.js'
+import Store from '@/store'
+import Config from '@/config'
 import { API } from '@/util'
 import BaseGrid from '@/components/BaseGrid.vue'
 
@@ -20,6 +21,8 @@ export default {
 
   data () {
     return {
+      store: Store,
+      sqlWhere: '1=1',
       grid: {},
       rowData: null,
       dataReady: false,
@@ -27,27 +30,36 @@ export default {
     }
   },
 
+  watch: {
+    'store.loggedIn': function () {
+      if (this.store.loggedIn) this.requestData()
+    }
+  },
+
   methods: {
     async requestData () {
-      const response = await API.post('tir/call', { sql: this.grid.mssql })
-      if (response.ok) {
-        response.data.forEach(Object.freeze)
-        this.rowData = Object.freeze(response.data)
+      if (this.grid.mssql) {
+        const sql = this.grid.mssql.replace('{where}', this.sqlWhere)
+        const response = await API.post('tir/call', { sql: sql })
+        if (response.ok) {
+          response.data.forEach(Object.freeze)
+          this.rowData = Object.freeze(response.data)
+        } else {
+          this.rowData = []
+          this.errorMessage = response.data.error.message
+        }
+        this.dataReady = true
       } else {
         this.rowData = []
-        this.errorMessage = response.data.error.message
       }
-      this.dataReady = true
     }
   },
 
   created () {
     this.grid = Config[this.$route.params.id] || { title: 'Nincs ilyen táblázat!' }
-    if (this.grid.mssql) {
-      this.requestData()
-    } else {
-      this.rowData = []
-    }
+    if (this.$route.query.where) this.sqlWhere = this.$route.query.where
+    if (this.store.loggedIn) this.requestData()
+    console.log('route', this.$route)
   },
 
   mounted () {

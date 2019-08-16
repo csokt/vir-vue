@@ -77,6 +77,7 @@ export default {
     },
 
     cellClicked (params) {
+      console.log('cellClicked', params)
       if (params.value) {
         this.$emit('select', params.column.colId + params.value)
       }

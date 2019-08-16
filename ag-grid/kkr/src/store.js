@@ -1,8 +1,9 @@
 const Store = {
-  version: '19.03.01',
+  version: '19.08.16',
   pageTitle: 'Home',
   teszt: false,
-  user: null
+  user: null,
+  loggedIn: false
 }
 
 export default Store

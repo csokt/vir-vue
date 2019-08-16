@@ -3,10 +3,17 @@
 </template>
 
 <script>
+import Store from '@/store'
 import { API } from '@/util'
 
 export default {
   name: 'App',
+
+  data () {
+    return {
+      store: Store
+    }
+  },
 
   methods: {
     async getUser (token) {
@@ -14,11 +21,13 @@ export default {
         const response = await API.post('accounts/pulltoken/' + token)
         if (response.ok) {
           API.setHeader('Authorization', response.data.loopback_token)
+          this.store.loggedIn = true
         }
       } else {
         const response = await API.post('tir/login')
         if (response.ok) {
           API.setHeader('Authorization', response.data.id)
+          this.store.loggedIn = true
         }
       }
       // this.$router.replace('/')
