@@ -9,6 +9,7 @@
 </template>
 
 <script>
+import str2template from 'string-to-template'
 import Store from '@/store'
 import Config from '@/config'
 import { API } from '@/util'
@@ -56,11 +57,13 @@ export default {
     },
 
     onSelect (content) {
-      // console.log('item', item)
+      // console.log('content', content)
       if (!this.grid.onClick || !this.grid.onClick[content.column]) return
       const item = this.grid.onClick[content.column]
-      const url = window.location.origin + '/grid/' + item.path
-      let win = window.open(url + '?where=' + item.where, '_blank')
+      if (!item.path) return
+      const where = item.where ? str2template(item.where, { ...content.data }) : '1=1'
+      const url = window.location.origin + '/grid/' + item.path + '?where=' + where
+      let win = window.open(url, '_blank')
       if (win) {
         win.focus()
       } else {

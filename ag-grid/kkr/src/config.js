@@ -6,10 +6,12 @@ kkrmenu:
   columnDefs:
   - field: torzs
     headerName: Törzsadatok
-  - field: tervezes
-    headerName: Tervezés
+  - field: rendeles
+    headerName: Rendelések
   - field: munkalap
     headerName: Munkalap
+  - field: tervezes
+    headerName: Tervezés
   - field: logisztika
     headerName: Logisztika
   - field: kotode
@@ -24,9 +26,9 @@ kkrmenu:
       path:   telephelyek
     - value:  Üzemek
       path:   uzemek
-    tervezes:
-    - value:  "Gépkapacitás"
-      path:   gepkapacitas
+    rendeles:
+    - value:  "Rendelések"
+      path:   rendelesek
     munkalap:
     - value:  E-H-U
       path:   ehu_munkalap
@@ -36,9 +38,14 @@ kkrmenu:
       path:   ehu_munkalap_mozgas
     - value:  "Kellék mozgás"
       path:   kellek_munkalap_mozgas
+    - value:  "Adatok frissítése"
+      path:   mssql_munkalap_update
+    tervezes:
+    - value:  "Gépkapacitás"
+      path:   gepkapacitas
     logisztika:
-    - value:  "Update"
-      path:   mssql_update
+    - value:  "-"
+      path:   logisztika_leadas
     kotode:
     - value:  "-"
       path:   kotode_leadas
@@ -46,8 +53,8 @@ kkrmenu:
     - value:  "-"
       path:   varroda_leadas
 
-mssql_update:
-  title: Update
+mssql_munkalap_update:
+  title: Munkalap adatok frissítése
   columnDefs:
   - field: result
     headerName: Végrehajtva
@@ -66,6 +73,7 @@ ugyfelek:
   columnDefs:
   - field: ugyfelkod
     headerName: Ügyfélkód
+    cellStyle: {'background-color': 'azure'}
   - field: ugyfelnev
     headerName: Ügyfélnév
   - field: rendelt
@@ -80,7 +88,7 @@ ugyfelek:
   onClick:
     ugyfelkod:
       path: uzemek
-      where: statusz='A'
+      where: statusz>='\${ugyfelnev}'
   mssql: >-
     WITH ugyfel_ids (partnerkod) AS (
         SELECT DISTINCT partnerkod FROM rendelesfej
