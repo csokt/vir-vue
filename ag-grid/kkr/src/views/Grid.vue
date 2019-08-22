@@ -24,7 +24,7 @@ export default {
   data () {
     return {
       store: Store,
-      sqlWhere: '1=1',
+      sqlWhere: '',
       grid: {},
       rowData: null,
       dataReady: false,
@@ -74,7 +74,8 @@ export default {
 
   created () {
     this.grid = Config[this.$route.params.id] || { title: 'Nincs ilyen táblázat!' }
-    if (this.$route.query.where) this.sqlWhere = this.$route.query.where
+    this.sqlWhere = this.$route.query.where ? this.$route.query.where : this.grid.where ? this.grid.where : '1=1'
+    // if (this.$route.query.where) this.sqlWhere = this.$route.query.where
     if (this.store.loggedIn) this.requestData()
   },
 

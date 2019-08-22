@@ -27,8 +27,10 @@ kkrmenu:
     - value:  Üzemek
       path:   uzemek
     rendeles:
-    - value:  "Rendelések"
-      path:   rendelesek
+    - value:  "Rendelésfej"
+      path:   rendelesfej
+    - value:  "Rendeléssor"
+      path:   rendelessor
     munkalap:
     - value:  E-H-U
       path:   ehu_munkalap
@@ -60,59 +62,66 @@ mssql_munkalap_update:
     headerName: Végrehajtva
   mssql: >-
     WITH maxhsz (munkalapazonosito, hsz) AS (
-        SELECT munkalapazonosito, MAX(hsz) FROM rendeleskartonmozgas GROUP BY munkalapazonosito
+      SELECT munkalapazonosito, MAX(hsz) FROM rendeleskartonmozgas GROUP BY munkalapazonosito
     ),
     lasthely (munkalapazonosito, hely) AS (
-        SELECT mozgas.munkalapazonosito, mozgas.hely FROM rendeleskartonmozgas AS mozgas JOIN maxhsz ON maxhsz.hsz = mozgas.hsz
+      SELECT mozgas.munkalapazonosito, mozgas.hely FROM rendeleskartonmozgas AS mozgas JOIN maxhsz ON maxhsz.hsz = mozgas.hsz
     )
     UPDATE rendelesmunkalap SET hely = lasthely.hely FROM lasthely WHERE lasthely.munkalapazonosito = rendelesmunkalap.munkalapazonosito AND
-        ( rendelesmunkalap.hely IS NULL OR lasthely.hely != rendelesmunkalap.hely )
+      ( rendelesmunkalap.hely IS NULL OR lasthely.hely != rendelesmunkalap.hely )
 
 ugyfelek:
   title: Ügyfelek
   columnDefs:
   - field: ugyfelkod
     headerName: Ügyfélkód
-    cellStyle: {'background-color': 'azure'}
+    cellStyle: {'background-color': 'beige'}
   - field: ugyfelnev
     headerName: Ügyfélnév
-  - field: rendelt
-    headerName: Rendelt db
+  - field: mennyiseg
+    headerName: Rendelt
     type: numericColumn
-  - field: kiszallitott
-    headerName: Kiszállított db
+  - field: nemgyarthatodb
+    headerName: Nem gyártható
+    filter: agNumberColumnFilter
     type: numericColumn
-  - field: hatralek
-    headerName: Hátralék db
+  - field: sumkotesrevar
+    headerName: Kötésre vár
+    filter: agNumberColumnFilter
+    type: numericColumn
+  - field: sumlekotve
+    headerName: Lekötve
+    filter: agNumberColumnFilter
+    type: numericColumn
+  - field: sumkiszallitva
+    headerName: Kiszállítva
+    filter: agNumberColumnFilter
+    type: numericColumn
+  - field: sumszamlazva
+    headerName: Számlázva
+    filter: agNumberColumnFilter
     type: numericColumn
   onClick:
     ugyfelkod:
-      path: uzemek
-      where: statusz>='\${ugyfelnev}'
+      path: rendelesfej
+      where: partnerkod='\${ugyfelkod}'
   mssql: >-
     WITH ugyfel_ids (partnerkod) AS (
-        SELECT DISTINCT partnerkod FROM rendelesfej
-        WHERE statusz = 'N'
+      SELECT DISTINCT partnerkod FROM rendelesfej
+      WHERE statusz = 'N'
     ),
-        rendelt (partnerkod, mennyiseg) AS (
-        SELECT partnerkod, SUM(mennyiseg) AS mennyiseg
-        FROM rendelesfej AS fej
-        WHERE fej.statusz = 'N'
-        GROUP BY partnerkod
-    ),
-        kiszall (partnerkod, mennyiseg) AS (
-        SELECT kiszall.partnerkod, SUM(kiszall.sumkiszallitva) AS mennyiseg
-        FROM rendelessorok AS kiszall
-        JOIN rendelesfej AS fej ON fej.rendelesszam = kiszall.rendelesszam
-        WHERE fej.statusz = 'N'
-        GROUP BY kiszall.partnerkod
+      fej (partnerkod, mennyiseg, nemgyarthatodb, sumkotesrevar, sumlekotve, sumkiszallitva, sumszamlazva) AS (
+      SELECT partnerkod, SUM(mennyiseg) AS mennyiseg, SUM(nemgyarthatodb) AS nemgyarthatodb, SUM(sumkotesrevar) AS sumkotesrevar,
+        SUM(sumlekotve) AS sumlekotve, SUM(sumkiszallitva) AS sumkiszallitva, SUM(sumszamlazva) AS sumszamlazva
+      FROM rendelesfej AS fej
+      WHERE fej.statusz = 'N'
+      GROUP BY partnerkod
     )
-    SELECT ugyfel.ugyfelkod, ugyfel.nev AS ugyfelnev, rendelt.mennyiseg AS rendelt,
-        ISNULL(kiszall.mennyiseg,0) AS kiszallitott, rendelt.mennyiseg - ISNULL(kiszall.mennyiseg,0) AS hatralek
+    SELECT ugyfel.ugyfelkod, ugyfel.nev AS ugyfelnev,
+      fej.mennyiseg, fej.nemgyarthatodb, fej.sumkotesrevar, fej.sumlekotve, fej.sumkiszallitva, fej.sumszamlazva
     FROM ugyfel
     JOIN ugyfel_ids ON ugyfel_ids.partnerkod = ugyfel.ugyfelkod AND ugyfel.aktiv = 'A'
-    LEFT JOIN rendelt ON rendelt.partnerkod = ugyfel.ugyfelkod
-    LEFT JOIN kiszall ON kiszall.partnerkod = ugyfel.ugyfelkod
+    JOIN fej ON fej.partnerkod = ugyfel.ugyfelkod
     WHERE {where}
     ORDER BY ugyfel.ugyfelkod
 
@@ -156,6 +165,117 @@ uzemek:
   - field: statusz
     headerName: Státusz
   mssql: SELECT uzemek.*, telephely FROM uzemek JOIN telephelyek on uzemek.telephelykod = telephelyek.telephelykod WHERE {where}
+
+rendelesfej:
+  title: Rendelésfej
+  defaultColDef:
+    filter: true
+  columnDefs:
+  - field: partnerkod
+    headerName: Ügyfélkód
+  - field: partnerrendelesszam
+    headerName: Rendelésszám
+    cellStyle: {'background-color': 'beige'}
+  - field: itszam
+    headerName: IT
+  - field: utem
+    headerName: Ütem
+  - field: cikkszam
+    headerName: Cikkszám
+  - field: cikkmegnevezes
+    headerName: Cikknév
+  - field: rendelesdatum
+    headerName: Rendelés ideje
+  - field: hatarido
+    headerName: Határidő
+  - field: mennyiseg
+    headerName: Rendelt
+    filter: agNumberColumnFilter
+    type: numericColumn
+  - field: nemgyarthatodb
+    headerName: Nem gyártható
+    filter: agNumberColumnFilter
+    type: numericColumn
+  - field: sumkotesrevar
+    headerName: Kötésre vár
+    filter: agNumberColumnFilter
+    type: numericColumn
+  - field: sumlekotve
+    headerName: Lekötve
+    filter: agNumberColumnFilter
+    type: numericColumn
+  - field: sumkiszallitva
+    headerName: Kiszállítva
+    filter: agNumberColumnFilter
+    type: numericColumn
+  - field: sumszamlazva
+    headerName: Számlázva
+    filter: agNumberColumnFilter
+    type: numericColumn
+  - field: ehu
+    headerName: E-H-U
+    cellStyle: {'background-color': 'beige'}
+  - field: kellek
+    headerName: Kellék
+    cellStyle: {'background-color': 'beige'}
+  onClick:
+    partnerrendelesszam:
+      path: rendelessor
+      where: sor.rendelesszam='\${rendelesszam}'
+    ehu:
+      path: ehu_munkalap
+      where: mlap.rendelesszam='\${rendelesszam}'
+    kellek:
+      path: kellek_munkalap
+      where: mlap.rendelesszam='\${rendelesszam}'
+  mssql: SELECT *, partnerrendelesszam AS ehu, partnerrendelesszam AS kellek FROM rendelesfej AS fej WHERE fej.statusz = 'N' AND {where}
+
+rendelessor:
+  title: Rendeléssor
+  defaultColDef:
+    filter: true
+  columnDefs:
+  - field: partnerkod
+    headerName: Ügyfélkód
+  - field: partnerrendelesszam
+    headerName: Rendelésszám
+  - field: itszam
+    headerName: IT
+  - field: utem
+    headerName: Ütem
+  - field: cikkszam
+    headerName: Cikkszám
+  - field: rendelesdatum
+    headerName: Rendelés ideje
+  - field: hatarido
+    headerName: Határidő
+  - field: szinkod
+    headerName: Színkód
+  - field: db
+    headerName: Rendelt
+    filter: agNumberColumnFilter
+    type: numericColumn
+  - field: nemgyarthatodb
+    headerName: Nem gyártható
+    filter: agNumberColumnFilter
+    type: numericColumn
+  - field: sumkotesrevar
+    headerName: Kötésre vár
+    filter: agNumberColumnFilter
+    type: numericColumn
+  - field: sumlekotve
+    headerName: Lekötve
+    filter: agNumberColumnFilter
+    type: numericColumn
+  - field: sumkiszallitva
+    headerName: Kiszállítva
+    filter: agNumberColumnFilter
+    type: numericColumn
+  - field: sumszamlazva
+    headerName: Számlázva
+    filter: agNumberColumnFilter
+    type: numericColumn
+  mssql: SELECT sor.* FROM rendelessorok AS sor JOIN rendelesfej AS fej ON fej.rendelesszam = sor.rendelesszam WHERE fej.statusz = 'N' AND {where}
 
 gepkapacitas:
   title: Gépkapacitás
@@ -227,6 +347,7 @@ ehu_munkalap:
     enableRowGroup: true
   - field: munkalapazonosito
     headerName: Munkalap
+    cellStyle: {'background-color': 'beige'}
   - field: kartonszam
     headerName: Kartonszám
   - field: helynev
@@ -250,6 +371,10 @@ ehu_munkalap:
   - field: utem
     headerName: Ütem
     enableRowGroup: true
+  onClick:
+    munkalapazonosito:
+      path: ehu_munkalap_mozgas
+      where: mlap.munkalapazonosito='\${munkalapazonosito}'
   mssql: >-
     SELECT
       fej.cikkszam, fej.itszam, fej.partnerrendelesszam,
@@ -284,6 +409,7 @@ kellek_munkalap:
     enableRowGroup: true
   - field: munkalapazonosito
     headerName: Munkalap
+    cellStyle: {'background-color': 'beige'}
   - field: kartonszam
     headerName: Kartonszám
   - field: helynev
@@ -307,6 +433,10 @@ kellek_munkalap:
   - field: utem
     headerName: Ütem
     enableRowGroup: true
+  onClick:
+    munkalapazonosito:
+      path: kellek_munkalap_mozgas
+      where: mlap.munkalapazonosito='\${munkalapazonosito}'
   mssql: >-
     SELECT
       fej.cikkszam, fej.itszam, fej.partnerrendelesszam,
