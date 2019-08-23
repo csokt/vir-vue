@@ -26,6 +26,10 @@ kkrmenu:
       path:   telephelyek
     - value:  Üzemek
       path:   uzemek
+    - value:  Gépek
+      path:   gepek
+    - value:  Helyek
+      path:   helyek
     rendeles:
     - value:  "Rendelésfej"
       path:   rendelesfej
@@ -43,8 +47,10 @@ kkrmenu:
     - value:  "Adatok frissítése"
       path:   mssql_munkalap_update
     tervezes:
-    - value:  "Gépkapacitás"
-      path:   gepkapacitas
+    - value:  "Gépkapacitás1"
+      path:   gepkapacitas1
+    - value:  "Gépkapacitás2"
+      path:   gepkapacitas2
     logisztika:
     - value:  "-"
       path:   logisztika_leadas
@@ -164,7 +170,40 @@ uzemek:
     headerName: Üzemtípus
   - field: statusz
     headerName: Státusz
-  mssql: SELECT uzemek.*, telephely FROM uzemek JOIN telephelyek on uzemek.telephelykod = telephelyek.telephelykod WHERE {where}
+  mssql: SELECT uzemek.*, telephely FROM uzemek JOIN telephelyek on uzemek.telephelykod = telephelyek.telephelykod WHERE statusz = 'A' AND {where}
+
+gepek:
+  title: Gépek
+  defaultColDef:
+    filter: true
+  columnDefs:
+  - field: gepkod
+    headerName: Gépkód
+    filter: agNumberColumnFilter
+    type: numericColumn
+  - field: gepnev
+    headerName: Gépnév
+  - field: statusz
+    headerName: Státusz
+  mssql: SELECT * FROM gep WHERE statusz = 'A' AND {where} ORDER BY gepkod
+
+helyek:
+  title: Helyek
+  defaultColDef:
+    filter: true
+  columnDefs:
+  - field: azon
+    headerName: Helykód
+    filter: agNumberColumnFilter
+    type: numericColumn
+  - field: hely
+    headerName: Helynév
+  - field: rhely
+    headerName: Rövid név
+  - field: sorrend
+    headerName: Sorrend
+    type: numericColumn
+  mssql: SELECT * FROM helyek WHERE {where} ORDER BY sorrend, azon
 
 rendelesfej:
   title: Rendelésfej
@@ -277,8 +316,8 @@ rendelessor:
     type: numericColumn
   mssql: SELECT sor.* FROM rendelessorok AS sor JOIN rendelesfej AS fej ON fej.rendelesszam = sor.rendelesszam WHERE fej.statusz = 'N' AND {where}
 
-gepkapacitas:
-  title: Gépkapacitás
+gepkapacitas1:
+  title: Gépkapacitás1
   columnDefs:
   - field: gepkod
     headerName: Gépkód
@@ -324,6 +363,61 @@ gepkapacitas:
     LEFT JOIN rendelt ON rendelt.gepkod = gep.gepkod
     LEFT JOIN kesz ON kesz.gepkod = gep.gepkod
     WHERE (gep.statusz = 'A') AND {where}
+    ORDER BY gep.gepkod
+
+gepkapacitas2:
+  title: Gépkapacitás2
+  columnDefs:
+  - field: gepkod
+    headerName: Gépkód
+    type: numericColumn
+  - field: gepnev
+    headerName: Gépnév
+  - field: hely
+    headerName: Helykód
+    type: numericColumn
+  - field: helynev
+    headerName: Helynév
+  - field: rendelt
+    headerName: Rendelt perc
+    type: numericColumn
+  - field: kesz
+    headerName: Kész perc
+    type: numericColumn
+  - field: hatralek
+    headerName: Hátralék perc
+    type: numericColumn
+  mssql: >-
+    WITH
+      rendelt (hely, gepkod, perc) AS (
+        SELECT
+            mlap.hely, normak.gepkod, ROUND(SUM(mlap.db * normak.normaperc),0) AS perc
+        FROM rendelesmunkalap AS mlap
+        JOIN rendelesfej AS fej ON fej.rendelesszam = mlap.rendelesszam
+        JOIN normak ON normak.cikkszam = mlap.cikkszam
+        WHERE mlap.db > 0 AND fej.statusz = 'N'
+        GROUP BY mlap.hely, normak.gepkod
+      ),
+      kesz (hely, gepkod, perc) AS (
+        SELECT
+            mlap.hely, normak.gepkod, ROUND(SUM(kodol.darab * kodol.normaperdb),0) AS perc
+        FROM rendelesmatrica AS kodol
+        JOIN rendelesmunkalap AS mlap ON mlap.munkalapazonosito = kodol.vonalkod
+        JOIN rendelesfej AS fej ON fej.rendelesszam = mlap.rendelesszam
+        JOIN normak ON normak.cikkszam = kodol.cikkszam AND normak.muveletkod = kodol.muveletkod
+        WHERE mlap.db > 0 AND fej.statusz = 'N'
+        GROUP BY mlap.hely, normak.gepkod
+      )
+    SELECT
+      rendelt.hely, helyek.hely AS helynev, rendelt.gepkod, gep.gepnev,
+      rendelt.perc AS rendelt,
+      ISNULL(kesz.perc,0) AS kesz,
+      ISNULL(rendelt.perc,0) - ISNULL(kesz.perc,0) AS hatralek
+    FROM rendelt
+    JOIN gep ON rendelt.gepkod = gep.gepkod
+    LEFT JOIN kesz ON kesz.hely = rendelt.hely AND kesz.gepkod = rendelt.gepkod
+    LEFT JOIN helyek ON helyek.azon = rendelt.hely
+    WHERE {where}
     ORDER BY gep.gepkod
 
 ehu_munkalap:
