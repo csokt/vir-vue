@@ -26,10 +26,12 @@ kkrmenu:
       path:   telephelyek
     - value:  Üzemek
       path:   uzemek
-    - value:  Gépek
-      path:   gepek
     - value:  Helyek
       path:   helyek
+    - value:  Gépek
+      path:   gepek
+    - value:  Hely-gép kapcsolat
+      path:   helyek_gep_rel
     rendeles:
     - value:  "Rendelésfej"
       path:   rendelesfej
@@ -204,6 +206,38 @@ helyek:
     headerName: Sorrend
     type: numericColumn
   mssql: SELECT * FROM helyek WHERE {where} ORDER BY sorrend, azon
+
+helyek_gep_rel:
+  title: Hely-gép kapcsolat
+  defaultColDef:
+    filter: true
+  columnDefs:
+  - field: azon
+    headerName: Helykód
+    filter: agNumberColumnFilter
+    type: numericColumn
+  - field: hely
+    headerName: Helynév
+  - field: rhely
+    headerName: Rövid név
+  - field: sorrend
+    headerName: Sorrend
+    type: numericColumn
+  - field: gepkod
+    headerName: Gépkód
+    filter: agNumberColumnFilter
+    type: numericColumn
+  - field: gepnev
+    headerName: Gépnév
+  - field: statusz
+    headerName: Státusz
+  mssql: >-
+    DECLARE @helyek_gep_rel TABLE (gepkod int, azon int);
+    INSERT INTO @helyek_gep_rel (gepkod, azon) VALUES
+      (1,23),(1,30),(1,37),(1,33),(1,20),(1,22),(1,24),(1,26),(1,28),(1,21),(1,39),(1,35),(1,38),(1,25),(2,38),(2,25),(2,35),(2,24),(3,25),(3,35),(3,38),(3,24),(4,25),(4,24),(5,24),(7,21),(7,26),(8,37),(9,37),(10,26),(11,21),(12,22),(13,22),(14,22),(15,22),(16,24),(16,25),(17,24),(18,24),(18,35),(18,25),(19,35),(19,25),(19,24),(20,21),(20,26),(21,24),(22,38),(22,24),(22,35),(24,24),(24,35),(25,22),(26,22),(26,23),(27,25),(27,24),(30,33),(31,22),(34,33),(36,30),(38,26)
+      ;
+    SELECT helyek.*, gep.* FROM @helyek_gep_rel AS rel JOIN gep ON gep.gepkod = rel.gepkod JOIN helyek ON helyek.azon = rel.azon
+    ORDER BY helyek.sorrend, gep.gepkod
 
 rendelesfej:
   title: Rendelésfej
