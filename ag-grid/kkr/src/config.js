@@ -357,17 +357,13 @@ kapacitasigeny:
     sortable: true
     resizable: true
   columnDefs:
-  - field: ugyfelnev
-    headerName: Megrendelő
+  - field: munkalap_tipus
+    headerName: Munkalap
+    cellStyle: {'background-color': 'beige'}
     enableRowGroup: true
     enablePivot: true
   - field: cikkszam
     headerName: Cikkszám
-    enableRowGroup: true
-    enablePivot: true
-  - field: munkalap_tipus
-    headerName: Munkalap
-    cellStyle: {'background-color': 'beige'}
     enableRowGroup: true
     enablePivot: true
   - field: helynev
@@ -376,6 +372,10 @@ kapacitasigeny:
     enablePivot: true
   - field: gepnev
     headerName: Gépnév
+    enableRowGroup: true
+    enablePivot: true
+  - field: ugyfelnev
+    headerName: Megrendelő
     enableRowGroup: true
     enablePivot: true
   - field: rendelt
@@ -387,12 +387,12 @@ kapacitasigeny:
     type: numericColumn
     aggFunc: sum
   - field: hatralek
-    headerName: Hátralék perc
+    headerName: Fennmaradó perc
     type: numericColumn
     aggFunc: sum
   onClick:
     munkalap_tipus:
-      path: ehu_munkalap
+      path: \${elokeszito?'kellek_munkalap':'ehu_munkalap'}
       where: ugyfel.ugyfelkod='\${partnerkod}' AND mlap.cikkszam='\${cikkszam}' AND mlap.hely='\${hely}'
   mssql: >-
     DECLARE @helyek_gep_rel TABLE (gepkod int, azon int);
@@ -446,7 +446,7 @@ kapacitasigeny:
                       kesz.hely = rendelt.hely AND kesz.gepkod = rendelt.gepkod
     LEFT JOIN helyek ON helyek.azon = rendelt.hely
     WHERE {where}
-    ORDER BY gep.gepkod
+    ORDER BY helyek.hely, gep.gepnev, ugyfel.nev, rendelt.cikkszam
 
 ehu_munkalap:
   title: E-H-U munkalapok

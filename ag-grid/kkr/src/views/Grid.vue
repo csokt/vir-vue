@@ -61,8 +61,9 @@ export default {
       if (!this.grid.onClick || !this.grid.onClick[content.column]) return
       const item = this.grid.onClick[content.column]
       if (!item.path) return
+      const path = str2template(item.path, { ...content.data })
       const where = item.where ? str2template(item.where, { ...content.data }) : '1=1'
-      const url = window.location.origin + '/grid/' + item.path + '?where=' + where
+      const url = window.location.origin + '/grid/' + path + '?where=' + where
       let win = window.open(url, '_blank')
       if (win) {
         win.focus()
