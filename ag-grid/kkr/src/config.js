@@ -357,31 +357,21 @@ kapacitasigeny:
     sortable: true
     resizable: true
   columnDefs:
-  - field: partnerkod
-    headerName: Ügyfélkód
+  - field: ugyfelnev
+    headerName: Megrendelő
     enableRowGroup: true
     enablePivot: true
   - field: cikkszam
     headerName: Cikkszám
     enableRowGroup: true
     enablePivot: true
-  - field: elokeszito
-    headerName: Előkészítő
-    type: numericColumn
-    enableRowGroup: true
-    enablePivot: true
-  - field: hely
-    headerName: Helykód
-    type: numericColumn
+  - field: munkalap_tipus
+    headerName: Munkalap
+    cellStyle: {'background-color': 'beige'}
     enableRowGroup: true
     enablePivot: true
   - field: helynev
     headerName: Helynév
-    enableRowGroup: true
-    enablePivot: true
-  - field: gepkod
-    headerName: Gépkód
-    type: numericColumn
     enableRowGroup: true
     enablePivot: true
   - field: gepnev
@@ -400,6 +390,10 @@ kapacitasigeny:
     headerName: Hátralék perc
     type: numericColumn
     aggFunc: sum
+  onClick:
+    munkalap_tipus:
+      path: ehu_munkalap
+      where: ugyfel.ugyfelkod='\${partnerkod}' AND mlap.cikkszam='\${cikkszam}' AND mlap.hely='\${hely}'
   mssql: >-
     DECLARE @helyek_gep_rel TABLE (gepkod int, azon int);
     INSERT INTO @helyek_gep_rel (gepkod, azon) VALUES
@@ -440,12 +434,14 @@ kapacitasigeny:
         GROUP BY fej.partnerkod, mlap.cikkszam, normak.elokeszito, mlap.hely, normak.gepkod
       )
     SELECT
-      rendelt.partnerkod, rendelt.cikkszam, rendelt.elokeszito, rendelt.hely, helyek.hely AS helynev, rendelt.gepkod, gep.gepnev,
+      CASE rendelt.elokeszito WHEN 0 THEN 'E-H-U' WHEN 1 THEN 'Kellék' END AS munkalap_tipus,
+      ugyfel.nev AS ugyfelnev, rendelt.partnerkod, rendelt.cikkszam, rendelt.elokeszito, rendelt.hely, helyek.hely AS helynev, rendelt.gepkod, gep.gepnev,
       rendelt.perc AS rendelt,
       ISNULL(kesz.perc,0) AS kesz,
       ISNULL(rendelt.perc,0) - ISNULL(kesz.perc,0) AS hatralek
     FROM rendelt
     JOIN gep ON rendelt.gepkod = gep.gepkod
+    JOIN ugyfel ON ugyfel.ugyfelkod = rendelt.partnerkod AND ugyfel.aktiv = 'A'
     LEFT JOIN kesz ON kesz.partnerkod = rendelt.partnerkod AND kesz.cikkszam = rendelt.cikkszam AND kesz.elokeszito = rendelt.elokeszito AND
                       kesz.hely = rendelt.hely AND kesz.gepkod = rendelt.gepkod
     LEFT JOIN helyek ON helyek.azon = rendelt.hely
