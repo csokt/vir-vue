@@ -437,6 +437,7 @@ kapacitasigeny:
   - field: rendelt
     headerName: Rendelt perc
     type: numericColumn
+    cellStyle: {'background-color': 'beige'}
     aggFunc: sum
   - field: kesz
     headerName: Kész perc
@@ -447,6 +448,9 @@ kapacitasigeny:
     type: numericColumn
     aggFunc: sum
   onClick:
+    rendelt:
+      path: normak
+      where: normak.cikkszam='\${cikkszam}' AND normak.gepkod='\${gepkod}' AND normak.elokeszito='\${elokeszito}'
     munkalap_tipus:
       path: \${elokeszito?'kellek_munkalap':'ehu_munkalap'}
       where: ugyfel.ugyfelkod='\${partnerkod}' AND mlap.cikkszam='\${cikkszam}' AND mlap.rendelesszam='\${rendelesszam}' AND mlap.hely='\${hely}'
