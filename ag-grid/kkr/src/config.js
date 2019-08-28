@@ -32,6 +32,8 @@ kkrmenu:
       path:   gepek
     - value:  Hely-gép kapcsolat
       path:   helyek_gep_rel
+    - value:  Normák
+      path:   normak
     rendeles:
     - value:  "Rendelésfej"
       path:   rendelesfej
@@ -237,6 +239,41 @@ helyek_gep_rel:
     SELECT helyek.*, gep.* FROM @helyek_gep_rel AS rel JOIN gep ON gep.gepkod = rel.gepkod JOIN helyek ON helyek.azon = rel.azon
     ORDER BY helyek.sorrend, gep.gepkod
 
+normak:
+  title: Normák
+  defaultColDef:
+    filter: true
+  columnDefs:
+  - field: cikkszam
+    headerName: Cikkszám
+  - field: muveletkod
+    headerName: Műveletkód
+    type: numericColumn
+  - field: muveletnev
+    headerName: Műveletnév
+  - field: elokeszito
+    headerName: Előkészítő
+    type: numericColumn
+  - field: normaperc
+    headerName: Normaperc
+    type: numericColumn
+  - field: gepkod
+    headerName: Gépkód
+    type: numericColumn
+  - field: gepnev
+    headerName: Gépnév
+  mssql: >-
+    WITH cikkszam_ids (cikkszam) AS (
+      SELECT DISTINCT cikkszam FROM rendelesfej
+      WHERE statusz = 'N'
+    )
+    SELECT normak.cikkszam, normak.muveletkod, normak.muveletnev, normak.elokeszito, normak.normaperc, normak.gepkod, gep.gepnev
+    FROM normak
+    JOIN cikkszam_ids ON cikkszam_ids.cikkszam = normak.cikkszam
+    JOIN gep ON gep.gepkod = normak.gepkod
+    WHERE {where}
+    ORDER BY normak.cikkszam, CAST(normak.muveletkod AS int)
+
 rendelesfej:
   title: Rendelésfej
   defaultColDef:
@@ -370,6 +407,10 @@ kapacitasigeny:
     headerName: IT
     enableRowGroup: true
     enablePivot: true
+  - field: partnerrendelesszam
+    headerName: Rendelésszám
+    enableRowGroup: true
+    enablePivot: true
   - field: helynev
     headerName: Helynév
     enableRowGroup: true
@@ -384,10 +425,15 @@ kapacitasigeny:
     enablePivot: true
   - field: hatarido
     headerName: Határidő
-  - field: rendelt_db
-    headerName: Rendelt db
+  - field: ossz_rendelt_db
+    headerName: Össz rendelt db
     type: numericColumn
-    aggFunc: sum
+  - field: kiszallitasra_var
+    headerName: Kiszállításra vár
+    type: numericColumn
+  - field: rendelt_db
+    headerName: Területen db
+    type: numericColumn
   - field: rendelt
     headerName: Rendelt perc
     type: numericColumn
@@ -403,16 +449,16 @@ kapacitasigeny:
   onClick:
     munkalap_tipus:
       path: \${elokeszito?'kellek_munkalap':'ehu_munkalap'}
-      where: ugyfel.ugyfelkod='\${partnerkod}' AND mlap.cikkszam='\${cikkszam}' AND mlap.hely='\${hely}'
+      where: ugyfel.ugyfelkod='\${partnerkod}' AND mlap.cikkszam='\${cikkszam}' AND mlap.rendelesszam='\${rendelesszam}' AND mlap.hely='\${hely}'
   mssql: >-
     DECLARE @helyek_gep_rel TABLE (gepkod int, azon int);
     INSERT INTO @helyek_gep_rel (gepkod, azon) VALUES
       (2,38),(2,25),(2,35),(2,24),(3,25),(3,35),(3,38),(3,24),(4,25),(4,35),(4,24),(5,24),(5,25),(5,35),(5,38),(7,21),(7,26),(8,37),(9,37),(10,26),(11,21),(12,38),(13,38),(14,38),(15,38),(12,22),(13,22),(14,22),(15,22),(16,24),(16,25),(16,38),(16,35),(17,24),(18,24),(18,35),(17,38),(18,25),(19,35),(19,38),(19,25),(19,24),(20,25),(20,38),(20,21),(20,35),(20,26),(21,24),(22,38),(22,24),(22,25),(22,35),(24,25),(24,38),(24,24),(24,35),(25,38),(25,22),(26,22),(26,38),(26,23),(27,25),(27,38),(27,24),(30,33),(31,38),(31,22),(34,33),(36,30),(38,26)
       ;
     WITH
-      rendelt (partnerkod, cikkszam, rendelesszam, elokeszito, hely, gepkod, perc, db) AS (
+      rendelt (partnerkod, cikkszam, rendelesszam, elokeszito, hely, gepkod, perc) AS (
         SELECT
-          fej.partnerkod, mlap.cikkszam, mlap.rendelesszam, normak.elokeszito, mlap.hely, normak.gepkod, ROUND(SUM(mlap.db * normak.normaperc),0) AS perc, SUM(mlap.db)
+          fej.partnerkod, mlap.cikkszam, mlap.rendelesszam, normak.elokeszito, mlap.hely, normak.gepkod, ROUND(SUM(mlap.db * normak.normaperc),0) AS perc
         FROM rendelesmunkalap AS mlap
         JOIN rendelesfej AS fej ON fej.rendelesszam = mlap.rendelesszam
         JOIN normak ON normak.cikkszam = mlap.cikkszam AND normak.elokeszito = CASE LEFT(mlap.munkalapazonosito, 1) WHEN '2' THEN 0 WHEN '4' THEN 1 END
@@ -429,18 +475,41 @@ kapacitasigeny:
         JOIN normak ON normak.cikkszam = kodol.cikkszam AND normak.muveletkod = kodol.muveletkod
         WHERE mlap.db > 0 AND fej.statusz = 'N'
         GROUP BY fej.partnerkod, mlap.cikkszam, mlap.rendelesszam, normak.elokeszito, mlap.hely, normak.gepkod
+      ),
+      mlap_db (partnerkod, cikkszam, rendelesszam, elokeszito, hely, db) AS (
+        SELECT
+          fej.partnerkod, mlap.cikkszam, mlap.rendelesszam, CASE LEFT(mlap.munkalapazonosito, 1) WHEN '2' THEN 0 WHEN '4' THEN 1 END AS elokeszito, mlap.hely, SUM(mlap.db) AS db
+        FROM rendelesmunkalap AS mlap
+        JOIN rendelesfej AS fej ON fej.rendelesszam = mlap.rendelesszam
+        WHERE mlap.db > 0 AND fej.statusz = 'N'
+        GROUP BY fej.partnerkod, mlap.cikkszam, mlap.rendelesszam, CASE LEFT(mlap.munkalapazonosito, 1) WHEN '2' THEN 0 WHEN '4' THEN 1 END, mlap.hely
       )
     SELECT
-      fej.itszam, CONVERT(VARCHAR, fej.hatarido, 23) AS hatarido,
+      fej.itszam,
+      CONVERT(VARCHAR, fej.hatarido, 23) AS hatarido,
       CASE rendelt.elokeszito WHEN 0 THEN 'E-H-U' WHEN 1 THEN 'Kellék' END AS munkalap_tipus,
-      ugyfel.nev AS ugyfelnev, rendelt.partnerkod, rendelt.cikkszam, rendelt.elokeszito, rendelt.hely, helyek.hely AS helynev, rendelt.gepkod, gep.gepnev,
-      rendelt.db AS rendelt_db, rendelt.perc AS rendelt,
+      ugyfel.nev AS ugyfelnev,
+      rendelt.partnerkod,
+      rendelt.cikkszam,
+      rendelt.rendelesszam,
+      fej.partnerrendelesszam,
+      rendelt.elokeszito,
+      rendelt.hely,
+      helyek.hely AS helynev,
+      rendelt.gepkod,
+      gep.gepnev,
+      fej.mennyiseg AS ossz_rendelt_db,
+      fej.mennyiseg - fej.sumkiszallitva AS kiszallitasra_var,
+      mlap_db.db AS rendelt_db,
+      rendelt.perc AS rendelt,
       ISNULL(kesz.perc,0) AS kesz,
       ISNULL(rendelt.perc,0) - ISNULL(kesz.perc,0) AS hatralek
     FROM rendelt
     JOIN rendelesfej AS fej ON fej.rendelesszam = rendelt.rendelesszam
     JOIN gep ON rendelt.gepkod = gep.gepkod
     JOIN ugyfel ON ugyfel.ugyfelkod = rendelt.partnerkod AND ugyfel.aktiv = 'A'
+    JOIN mlap_db ON mlap_db.partnerkod = rendelt.partnerkod AND mlap_db.cikkszam = rendelt.cikkszam AND mlap_db.rendelesszam = rendelt.rendelesszam AND
+                      mlap_db.elokeszito = rendelt.elokeszito AND mlap_db.hely = rendelt.hely
     LEFT JOIN kesz ON kesz.partnerkod = rendelt.partnerkod AND kesz.cikkszam = rendelt.cikkszam AND kesz.rendelesszam = rendelt.rendelesszam AND
                       kesz.elokeszito = rendelt.elokeszito AND kesz.hely = rendelt.hely AND kesz.gepkod = rendelt.gepkod
     LEFT JOIN helyek ON helyek.azon = rendelt.hely
