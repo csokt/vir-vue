@@ -1,9 +1,10 @@
 <template>
   <BaseGrid
+    :gridId="gridId"
     :grid="grid"
     :rowData="rowData"
-    :dataReady="dataReady"
     :errorMessage="errorMessage"
+    @grid-ready="onGridReady"
     @select="onSelect"
   />
 </template>
@@ -24,10 +25,12 @@ export default {
   data () {
     return {
       store: Store,
-      sqlWhere: '',
+      gridId: null,
       grid: {},
+      sqlWhere: '',
       rowData: null,
-      dataReady: false,
+      gridApi: null,
+      columnApi: null,
       errorMessage: ''
     }
   },
@@ -39,6 +42,11 @@ export default {
   },
 
   methods: {
+    onGridReady (params) {
+      this.gridApi = params.api
+      this.columnApi = params.columnApi
+    },
+
     async requestData () {
       if (this.grid.mssql) {
         const sql = this.grid.mssql.replace('{where}', this.sqlWhere)
@@ -50,7 +58,8 @@ export default {
           this.rowData = []
           this.errorMessage = response.data.error.message
         }
-        this.dataReady = true
+        await this.$nextTick()
+        this.columnApi.autoSizeColumns(this.columnApi.getAllColumns())
       } else {
         this.rowData = []
       }
@@ -74,7 +83,8 @@ export default {
   },
 
   created () {
-    this.grid = Config[this.$route.params.id] || { title: 'Nincs ilyen táblázat!' }
+    this.gridId = this.$route.params.id
+    this.grid = Config[this.gridId] || { title: 'Nincs ilyen táblázat!' }
     this.sqlWhere = this.$route.query.where ? this.$route.query.where : this.grid.where ? this.grid.where : '1=1'
     // if (this.$route.query.where) this.sqlWhere = this.$route.query.where
     if (this.store.loggedIn) this.requestData()

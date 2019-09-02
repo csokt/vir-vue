@@ -2,6 +2,17 @@
   <div style="height: 100%">
     {{ grid.title }} {{ errorMessage }}
     <button v-on:click="onBtExport()">Export Excelbe</button>
+    <select v-model="stateName">
+      <option v-for="(value, name) in gridStates" v-bind:value="name" v-bind:key="name">
+        {{ name }}
+      </option>
+    </select>
+    <button v-on:click="restoreState()">Visszaállít</button>
+    <input v-model="stateName">
+    <button v-on:click="saveState()">{{saveButton}}</button>
+    <button v-on:click="resetState()">Alapállapot</button>
+    <button v-on:click="deleteState()">Töröl</button>
+
     <ag-grid-vue
       style="height: 100%"
       class="ag-theme-balham"
@@ -17,6 +28,7 @@
     >
     </ag-grid-vue>
   </div>
+    <!-- <span>Elrendezés:</span> -->
 </template>
 
 <script>
@@ -29,22 +41,16 @@ export default {
   },
 
   props: {
+    gridId: {
+      type: String,
+      required: true
+    },
     grid: {
       type: Object,
       required: true
     },
     rowData: Array,
-    dataReady: Boolean,
     errorMessage: String
-  },
-
-  watch: {
-    dataReady: async function () {
-      await this.$nextTick()
-      if (this.dataReady) {
-        this.columnApi.autoSizeColumns(this.columnApi.getAllColumns())
-      }
-    }
   },
 
   computed: {
@@ -55,14 +61,18 @@ export default {
 
   data () {
     return {
-      api: null,
+      stateName: '',
+      gridStates: {},
+      saveButton: 'Ment',
+      gridApi: null,
       columnApi: null
     }
   },
 
   methods: {
     onGridReady (params) {
-      this.api = params.api
+      this.$emit('grid-ready', params)
+      this.gridApi = params.api
       this.columnApi = params.columnApi
     },
 
@@ -70,10 +80,78 @@ export default {
       this.api.exportDataAsExcel()
     },
 
+    getState () {
+      let state = {}
+      state.colState = this.columnApi.getColumnState()
+      state.groupState = this.columnApi.getColumnGroupState()
+      state.sortState = this.gridApi.getSortModel()
+      state.filterState = this.gridApi.getFilterModel()
+      return state
+    },
+
+    deleteState () {
+      if (!this.stateName) return
+      delete this.gridStates[this.stateName]
+      const jsonString = JSON.stringify(this.gridStates)
+      localStorage.setItem(this.gridId, jsonString)
+      this.stateName = ''
+    },
+
+    saveState () {
+      if (!this.stateName) return
+      const state = this.getState()
+      this.gridStates[this.stateName] = state
+      const jsonString = JSON.stringify(this.gridStates)
+      localStorage.setItem(this.gridId, jsonString)
+      this.saveButton = 'Elmentve!'
+      setTimeout(() => { this.saveButton = 'Ment' }, 2000)
+    },
+
+    restoreState () {
+      const jsonString = localStorage.getItem(this.gridId)
+      if (jsonString) {
+        try {
+          this.gridStates = JSON.parse(jsonString)
+        } catch (e) {
+          localStorage.removeItem(this.gridId)
+        }
+      }
+      const state = this.gridStates[this.stateName]
+      if (!state || !state.colState) {
+        console.log('no columns state to restore by, you must save state first')
+        return
+      }
+      this.columnApi.setColumnState(state.colState)
+      this.columnApi.setColumnGroupState(state.groupState)
+      this.gridApi.setSortModel(state.sortState)
+      this.gridApi.setFilterModel(state.filterState)
+    },
+
+    async resetState () {
+      this.stateName = ''
+      this.columnApi.resetColumnState()
+      this.columnApi.resetColumnGroupState()
+      this.gridApi.setSortModel(null)
+      this.gridApi.setFilterModel(null)
+      await this.$nextTick()
+      this.columnApi.autoSizeColumns(this.columnApi.getAllColumns())
+    },
+
     cellClicked (params) {
       // console.log('cellClicked', params)
       this.$emit('select', { column: params.column.colId, data: params.data })
     }
+  },
+
+  created () {
+    this.restoreState()
   }
 }
 </script>
+
+<style scoped>
+button, input, select, span {
+  margin-bottom: 4px;
+  margin-left: 20px;
+}
+</style>
