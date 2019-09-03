@@ -77,37 +77,15 @@ export default {
     },
 
     onBtExport () {
-      this.api.exportDataAsExcel()
+      this.gridApi.exportDataAsExcel()
     },
 
-    getState () {
-      let state = {}
-      state.colState = this.columnApi.getColumnState()
-      state.groupState = this.columnApi.getColumnGroupState()
-      state.sortState = this.gridApi.getSortModel()
-      state.filterState = this.gridApi.getFilterModel()
-      return state
-    },
-
-    deleteState () {
-      if (!this.stateName) return
-      delete this.gridStates[this.stateName]
+    saveGridStates () {
       const jsonString = JSON.stringify(this.gridStates)
       localStorage.setItem(this.gridId, jsonString)
-      this.stateName = ''
     },
 
-    saveState () {
-      if (!this.stateName) return
-      const state = this.getState()
-      this.gridStates[this.stateName] = state
-      const jsonString = JSON.stringify(this.gridStates)
-      localStorage.setItem(this.gridId, jsonString)
-      this.saveButton = 'Elmentve!'
-      setTimeout(() => { this.saveButton = 'Ment' }, 2000)
-    },
-
-    restoreState () {
+    loadGridStates () {
       const jsonString = localStorage.getItem(this.gridId)
       if (jsonString) {
         try {
@@ -116,11 +94,31 @@ export default {
           localStorage.removeItem(this.gridId)
         }
       }
+    },
+
+    deleteState () {
+      if (!this.stateName) return
+      delete this.gridStates[this.stateName]
+      this.saveGridStates()
+      this.stateName = ''
+    },
+
+    saveState () {
+      if (!this.stateName) return
+      let state = {}
+      state.colState = this.columnApi.getColumnState()
+      state.groupState = this.columnApi.getColumnGroupState()
+      state.sortState = this.gridApi.getSortModel()
+      state.filterState = this.gridApi.getFilterModel()
+      this.gridStates[this.stateName] = state
+      this.saveGridStates()
+      this.saveButton = 'Elmentve!'
+      setTimeout(() => { this.saveButton = 'Ment' }, 2000)
+    },
+
+    restoreState () {
       const state = this.gridStates[this.stateName]
-      if (!state || !state.colState) {
-        console.log('no columns state to restore by, you must save state first')
-        return
-      }
+      if (!state || !state.colState) return
       this.columnApi.setColumnState(state.colState)
       this.columnApi.setColumnGroupState(state.groupState)
       this.gridApi.setSortModel(state.sortState)
@@ -144,7 +142,7 @@ export default {
   },
 
   created () {
-    this.restoreState()
+    this.loadGridStates()
   }
 }
 </script>
