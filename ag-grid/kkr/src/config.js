@@ -10,70 +10,48 @@ var configYaml = `
 kkrmenu:
   title: Kötöttáru kontrolling rendszer
   columnDefs:
-  - field: torzs
-    headerName: Törzsadatok
-  - field: rendeles
-    headerName: Rendelések
-  - field: munkalap
-    headerName: Munkalap
-  - field: tervezes
-    headerName: Tervezés
-  - field: logisztika
-    headerName: Logisztika
-  - field: kotode
-    headerName: Kötöde
-  - field: varroda
-    headerName: Varroda
+    - { headerName: Törzsadatok,     field: torzs }
+    - { headerName: Rendelések,      field: rendeles }
+    - { headerName: Munkalap,        field: munkalap }
+    - { headerName: Tervezés,        field: tervezes }
+    - { headerName: Logisztika,      field: logisztika }
+    - { headerName: Kötöde,          field: kotode }
+    - { headerName: Varroda,         field: varroda }
+
   menu:
     torzs:
-    - value:  Ügyfelek
-      path:   ugyfelek
-    - value:  Telephelyek
-      path:   telephelyek
-    - value:  Üzemek
-      path:   uzemek
-    - value:  Helyek
-      path:   helyek
-    - value:  Gépek
-      path:   gepek
-    - value:  Hely-gép kapcsolat
-      path:   helyek_gep_rel
-    - value:  Normák
-      path:   normak
+      - { value: Ügyfelek,           path: ugyfelek }
+      - { value: Telephelyek,        path: telephelyek }
+      - { value: Üzemek,             path: uzemek }
+      - { value: Helyek,             path: helyek }
+      - { value: Gépek,              path: gepek }
+      - { value: Hely-gép kapcsolat, path: helyek_gep_rel }
+      - { value: Normák,             path: normak }
     rendeles:
-    - value:  "Rendelésfej"
-      path:   rendelesfej
-    - value:  "Rendeléssor"
-      path:   rendelessor
+      - { value: Rendelésfej,        path: rendelesfej }
+      - { value: Rendeléssor,        path: rendelessor }
     munkalap:
-    - value:  E-H-U
-      path:   ehu_munkalap
-    - value:  Kellék
-      path:   kellek_munkalap
-    - value:  "E-H-U mozgás"
-      path:   ehu_munkalap_mozgas
-    - value:  "Kellék mozgás"
-      path:   kellek_munkalap_mozgas
-    - value:  "Adatok frissítése"
-      path:   mssql_munkalap_update
+      - { value: E-H-U,              path: ehu_munkalap }
+      - { value: Kellék,             path: kellek_munkalap }
+      - { value: E-H-U mozgás,       path: ehu_munkalap_mozgas }
+      - { value: Kellék mozgás,      path: kellek_munkalap_mozgas }
+      - { value: Adatok frissítése,  path: mssql_munkalap_update }
     tervezes:
-    - value:  "Kapacitásigény"
-      path:   kapacitasigeny
+      - { value: Kapacitásigény,     path: kapacitasigeny }
     logisztika:
-    - value:  "-"
-      path:   logisztika_leadas
+      - { value: '-',                path: logisztika_leadas }
     kotode:
-    - value:  "-"
-      path:   kotode_leadas
+      - { value: '-',                path: kotode_leadas }
     varroda:
-    - value:  "-"
-      path:   varroda_leadas
+      - { value: '-',                path: varroda_leadas }
+
+
 
 mssql_munkalap_update:
   title: Munkalap adatok frissítése
   columnDefs:
-  - field: result
-    headerName: Végrehajtva
+    - field: result
+      headerName: Végrehajtva
   mssql: >-
     WITH maxhsz (munkalapazonosito, hsz) AS (
       SELECT munkalapazonosito, MAX(hsz) FROM rendeleskartonmozgas GROUP BY munkalapazonosito
@@ -87,34 +65,34 @@ mssql_munkalap_update:
 ugyfelek:
   title: Ügyfelek
   columnDefs:
-  - field: ugyfelkod
-    headerName: Ügyfélkód
-    cellStyle: {'background-color': 'beige'}
-  - field: ugyfelnev
-    headerName: Ügyfélnév
-  - field: mennyiseg
-    headerName: Rendelt
-    type: numericColumn
-  - field: nemgyarthatodb
-    headerName: Nem gyártható
-    filter: agNumberColumnFilter
-    type: numericColumn
-  - field: sumkotesrevar
-    headerName: Kötésre vár
-    filter: agNumberColumnFilter
-    type: numericColumn
-  - field: sumlekotve
-    headerName: Lekötve
-    filter: agNumberColumnFilter
-    type: numericColumn
-  - field: sumkiszallitva
-    headerName: Kiszállítva
-    filter: agNumberColumnFilter
-    type: numericColumn
-  - field: sumszamlazva
-    headerName: Számlázva
-    filter: agNumberColumnFilter
-    type: numericColumn
+    - field: ugyfelkod
+      headerName: Ügyfélkód
+      cellStyle: {'background-color': 'beige'}
+    - field: ugyfelnev
+      headerName: Ügyfélnév
+    - field: mennyiseg
+      headerName: Rendelt
+      type: numericColumn
+    - field: nemgyarthatodb
+      headerName: Nem gyártható
+      filter: agNumberColumnFilter
+      type: numericColumn
+    - field: sumkotesrevar
+      headerName: Kötésre vár
+      filter: agNumberColumnFilter
+      type: numericColumn
+    - field: sumlekotve
+      headerName: Lekötve
+      filter: agNumberColumnFilter
+      type: numericColumn
+    - field: sumkiszallitva
+      headerName: Kiszállítva
+      filter: agNumberColumnFilter
+      type: numericColumn
+    - field: sumszamlazva
+      headerName: Számlázva
+      filter: agNumberColumnFilter
+      type: numericColumn
   onClick:
     ugyfelkod:
       path: rendelesfej
@@ -142,17 +120,17 @@ ugyfelek:
 telephelyek:
   title: Telephelyek
   columnDefs:
-  - field: telephelykod
-    headerName: Telephelykód
-    type: numericColumn
-  - field: telephely
-    headerName: Telephely
-  - field: minmunkakod
-    headerName: Munkakód min
-    type: numericColumn
-  - field: maxmunkakod
-    headerName: Munkakód max
-    type: numericColumn
+    - field: telephelykod
+      headerName: Telephelykód
+      type: numericColumn
+    - field: telephely
+      headerName: Telephely
+    - field: minmunkakod
+      headerName: Munkakód min
+      type: numericColumn
+    - field: maxmunkakod
+      headerName: Munkakód max
+      type: numericColumn
   mssql: SELECT * FROM telephelyek WHERE {where}
 
 uzemek:
@@ -160,24 +138,24 @@ uzemek:
   defaultColDef:
     filter: true
   columnDefs:
-  - field: uzemkod
-    headerName: Üzemkód
-    filter: agNumberColumnFilter
-    type: numericColumn
-  - field: uzemnev
-    headerName: Üzemnév
-  - field: vonalkod
-    headerName: Vonalkód
-    type: numericColumn
-  - field: telephelykod
-    headerName: Telephelykód
-    type: numericColumn
-  - field: telephely
-    headerName: Telephely
-  - field: uzemtipus
-    headerName: Üzemtípus
-  - field: statusz
-    headerName: Státusz
+    - field: uzemkod
+      headerName: Üzemkód
+      filter: agNumberColumnFilter
+      type: numericColumn
+    - field: uzemnev
+      headerName: Üzemnév
+    - field: vonalkod
+      headerName: Vonalkód
+      type: numericColumn
+    - field: telephelykod
+      headerName: Telephelykód
+      type: numericColumn
+    - field: telephely
+      headerName: Telephely
+    - field: uzemtipus
+      headerName: Üzemtípus
+    - field: statusz
+      headerName: Státusz
   mssql: SELECT uzemek.*, telephely FROM uzemek JOIN telephelyek on uzemek.telephelykod = telephelyek.telephelykod WHERE statusz = 'A' AND {where}
 
 gepek:
@@ -185,14 +163,14 @@ gepek:
   defaultColDef:
     filter: true
   columnDefs:
-  - field: gepkod
-    headerName: Gépkód
-    filter: agNumberColumnFilter
-    type: numericColumn
-  - field: gepnev
-    headerName: Gépnév
-  - field: statusz
-    headerName: Státusz
+    - field: gepkod
+      headerName: Gépkód
+      filter: agNumberColumnFilter
+      type: numericColumn
+    - field: gepnev
+      headerName: Gépnév
+    - field: statusz
+      headerName: Státusz
   mssql: SELECT * FROM gep WHERE statusz = 'A' AND {where} ORDER BY gepkod
 
 helyek:
@@ -200,17 +178,17 @@ helyek:
   defaultColDef:
     filter: true
   columnDefs:
-  - field: azon
-    headerName: Helykód
-    filter: agNumberColumnFilter
-    type: numericColumn
-  - field: hely
-    headerName: Helynév
-  - field: rhely
-    headerName: Rövid név
-  - field: sorrend
-    headerName: Sorrend
-    type: numericColumn
+    - field: azon
+      headerName: Helykód
+      filter: agNumberColumnFilter
+      type: numericColumn
+    - field: hely
+      headerName: Helynév
+    - field: rhely
+      headerName: Rövid név
+    - field: sorrend
+      headerName: Sorrend
+      type: numericColumn
   mssql: SELECT * FROM helyek WHERE {where} ORDER BY sorrend, azon
 
 helyek_gep_rel:
@@ -218,25 +196,25 @@ helyek_gep_rel:
   defaultColDef:
     filter: true
   columnDefs:
-  - field: azon
-    headerName: Helykód
-    filter: agNumberColumnFilter
-    type: numericColumn
-  - field: hely
-    headerName: Helynév
-  - field: rhely
-    headerName: Rövid név
-  - field: sorrend
-    headerName: Sorrend
-    type: numericColumn
-  - field: gepkod
-    headerName: Gépkód
-    filter: agNumberColumnFilter
-    type: numericColumn
-  - field: gepnev
-    headerName: Gépnév
-  - field: statusz
-    headerName: Státusz
+    - field: azon
+      headerName: Helykód
+      filter: agNumberColumnFilter
+      type: numericColumn
+    - field: hely
+      headerName: Helynév
+    - field: rhely
+      headerName: Rövid név
+    - field: sorrend
+      headerName: Sorrend
+      type: numericColumn
+    - field: gepkod
+      headerName: Gépkód
+      filter: agNumberColumnFilter
+      type: numericColumn
+    - field: gepnev
+      headerName: Gépnév
+    - field: statusz
+      headerName: Státusz
   mssql: >-
     ${HelyekGepRelTable}
     SELECT helyek.*, gep.* FROM @helyek_gep_rel AS rel JOIN gep ON gep.gepkod = rel.gepkod JOIN helyek ON helyek.azon = rel.azon
@@ -247,24 +225,24 @@ normak:
   defaultColDef:
     filter: true
   columnDefs:
-  - field: cikkszam
-    headerName: Cikkszám
-  - field: muveletkod
-    headerName: Műveletkód
-    type: numericColumn
-  - field: muveletnev
-    headerName: Műveletnév
-  - field: elokeszito
-    headerName: Előkészítő
-    type: numericColumn
-  - field: normaperc
-    headerName: Normaperc
-    type: numericColumn
-  - field: gepkod
-    headerName: Gépkód
-    type: numericColumn
-  - field: gepnev
-    headerName: Gépnév
+    - field: cikkszam
+      headerName: Cikkszám
+    - field: muveletkod
+      headerName: Műveletkód
+      type: numericColumn
+    - field: muveletnev
+      headerName: Műveletnév
+    - field: elokeszito
+      headerName: Előkészítő
+      type: numericColumn
+    - field: normaperc
+      headerName: Normaperc
+      type: numericColumn
+    - field: gepkod
+      headerName: Gépkód
+      type: numericColumn
+    - field: gepnev
+      headerName: Gépnév
   mssql: >-
     WITH cikkszam_ids (cikkszam) AS (
       SELECT DISTINCT cikkszam FROM rendelesfej
@@ -282,53 +260,53 @@ rendelesfej:
   defaultColDef:
     filter: true
   columnDefs:
-  - field: partnerkod
-    headerName: Ügyfélkód
-  - field: partnerrendelesszam
-    headerName: Rendelésszám
-    cellStyle: {'background-color': 'beige'}
-  - field: itszam
-    headerName: IT
-  - field: utem
-    headerName: Ütem
-  - field: cikkszam
-    headerName: Cikkszám
-  - field: cikkmegnevezes
-    headerName: Cikknév
-  - field: rendelesdatum
-    headerName: Rendelés ideje
-  - field: hatarido
-    headerName: Határidő
-  - field: mennyiseg
-    headerName: Rendelt
-    filter: agNumberColumnFilter
-    type: numericColumn
-  - field: nemgyarthatodb
-    headerName: Nem gyártható
-    filter: agNumberColumnFilter
-    type: numericColumn
-  - field: sumkotesrevar
-    headerName: Kötésre vár
-    filter: agNumberColumnFilter
-    type: numericColumn
-  - field: sumlekotve
-    headerName: Lekötve
-    filter: agNumberColumnFilter
-    type: numericColumn
-  - field: sumkiszallitva
-    headerName: Kiszállítva
-    filter: agNumberColumnFilter
-    type: numericColumn
-  - field: sumszamlazva
-    headerName: Számlázva
-    filter: agNumberColumnFilter
-    type: numericColumn
-  - field: ehu
-    headerName: E-H-U
-    cellStyle: {'background-color': 'beige'}
-  - field: kellek
-    headerName: Kellék
-    cellStyle: {'background-color': 'beige'}
+    - field: partnerkod
+      headerName: Ügyfélkód
+    - field: partnerrendelesszam
+      headerName: Rendelésszám
+      cellStyle: {'background-color': 'beige'}
+    - field: itszam
+      headerName: IT
+    - field: utem
+      headerName: Ütem
+    - field: cikkszam
+      headerName: Cikkszám
+    - field: cikkmegnevezes
+      headerName: Cikknév
+    - field: rendelesdatum
+      headerName: Rendelés ideje
+    - field: hatarido
+      headerName: Határidő
+    - field: mennyiseg
+      headerName: Rendelt
+      filter: agNumberColumnFilter
+      type: numericColumn
+    - field: nemgyarthatodb
+      headerName: Nem gyártható
+      filter: agNumberColumnFilter
+      type: numericColumn
+    - field: sumkotesrevar
+      headerName: Kötésre vár
+      filter: agNumberColumnFilter
+      type: numericColumn
+    - field: sumlekotve
+      headerName: Lekötve
+      filter: agNumberColumnFilter
+      type: numericColumn
+    - field: sumkiszallitva
+      headerName: Kiszállítva
+      filter: agNumberColumnFilter
+      type: numericColumn
+    - field: sumszamlazva
+      headerName: Számlázva
+      filter: agNumberColumnFilter
+      type: numericColumn
+    - field: ehu
+      headerName: E-H-U
+      cellStyle: {'background-color': 'beige'}
+    - field: kellek
+      headerName: Kellék
+      cellStyle: {'background-color': 'beige'}
   onClick:
     partnerrendelesszam:
       path: rendelessor
@@ -346,46 +324,46 @@ rendelessor:
   defaultColDef:
     filter: true
   columnDefs:
-  - field: partnerkod
-    headerName: Ügyfélkód
-  - field: partnerrendelesszam
-    headerName: Rendelésszám
-  - field: itszam
-    headerName: IT
-  - field: utem
-    headerName: Ütem
-  - field: cikkszam
-    headerName: Cikkszám
-  - field: rendelesdatum
-    headerName: Rendelés ideje
-  - field: hatarido
-    headerName: Határidő
-  - field: szinkod
-    headerName: Színkód
-  - field: db
-    headerName: Rendelt
-    filter: agNumberColumnFilter
-    type: numericColumn
-  - field: nemgyarthatodb
-    headerName: Nem gyártható
-    filter: agNumberColumnFilter
-    type: numericColumn
-  - field: sumkotesrevar
-    headerName: Kötésre vár
-    filter: agNumberColumnFilter
-    type: numericColumn
-  - field: sumlekotve
-    headerName: Lekötve
-    filter: agNumberColumnFilter
-    type: numericColumn
-  - field: sumkiszallitva
-    headerName: Kiszállítva
-    filter: agNumberColumnFilter
-    type: numericColumn
-  - field: sumszamlazva
-    headerName: Számlázva
-    filter: agNumberColumnFilter
-    type: numericColumn
+    - field: partnerkod
+      headerName: Ügyfélkód
+    - field: partnerrendelesszam
+      headerName: Rendelésszám
+    - field: itszam
+      headerName: IT
+    - field: utem
+      headerName: Ütem
+    - field: cikkszam
+      headerName: Cikkszám
+    - field: rendelesdatum
+      headerName: Rendelés ideje
+    - field: hatarido
+      headerName: Határidő
+    - field: szinkod
+      headerName: Színkód
+    - field: db
+      headerName: Rendelt
+      filter: agNumberColumnFilter
+      type: numericColumn
+    - field: nemgyarthatodb
+      headerName: Nem gyártható
+      filter: agNumberColumnFilter
+      type: numericColumn
+    - field: sumkotesrevar
+      headerName: Kötésre vár
+      filter: agNumberColumnFilter
+      type: numericColumn
+    - field: sumlekotve
+      headerName: Lekötve
+      filter: agNumberColumnFilter
+      type: numericColumn
+    - field: sumkiszallitva
+      headerName: Kiszállítva
+      filter: agNumberColumnFilter
+      type: numericColumn
+    - field: sumszamlazva
+      headerName: Számlázva
+      filter: agNumberColumnFilter
+      type: numericColumn
   mssql: SELECT sor.* FROM rendelessorok AS sor JOIN rendelesfej AS fej ON fej.rendelesszam = sor.rendelesszam WHERE fej.statusz = 'N' AND {where}
 
 kapacitasigeny:
@@ -397,59 +375,59 @@ kapacitasigeny:
     sortable: true
     resizable: true
   columnDefs:
-  - field: munkalap_tipus
-    headerName: Munkalap
-    cellStyle: {'background-color': 'beige'}
-    enableRowGroup: true
-    enablePivot: true
-  - field: cikkszam
-    headerName: Cikkszám
-    enableRowGroup: true
-    enablePivot: true
-  - field: itszam
-    headerName: IT
-    enableRowGroup: true
-    enablePivot: true
-  - field: partnerrendelesszam
-    headerName: Rendelésszám
-    enableRowGroup: true
-    enablePivot: true
-  - field: helynev
-    headerName: Helynév
-    enableRowGroup: true
-    enablePivot: true
-  - field: gepnev
-    headerName: Gépnév
-    enableRowGroup: true
-    enablePivot: true
-  - field: ugyfelnev
-    headerName: Megrendelő
-    enableRowGroup: true
-    enablePivot: true
-  - field: hatarido
-    headerName: Határidő
-  - field: ossz_rendelt_db
-    headerName: Össz rendelt db
-    type: numericColumn
-  - field: kiszallitasra_var
-    headerName: Kiszállításra vár
-    type: numericColumn
-  - field: rendelt_db
-    headerName: Területen db
-    type: numericColumn
-  - field: rendelt
-    headerName: Rendelt perc
-    type: numericColumn
-    cellStyle: {'background-color': 'beige'}
-    aggFunc: sum
-  - field: kesz
-    headerName: Kész perc
-    type: numericColumn
-    aggFunc: sum
-  - field: hatralek
-    headerName: Fennmaradó perc
-    type: numericColumn
-    aggFunc: sum
+    - field: munkalap_tipus
+      headerName: Munkalap
+      cellStyle: {'background-color': 'beige'}
+      enableRowGroup: true
+      enablePivot: true
+    - field: cikkszam
+      headerName: Cikkszám
+      enableRowGroup: true
+      enablePivot: true
+    - field: itszam
+      headerName: IT
+      enableRowGroup: true
+      enablePivot: true
+    - field: partnerrendelesszam
+      headerName: Rendelésszám
+      enableRowGroup: true
+      enablePivot: true
+    - field: helynev
+      headerName: Helynév
+      enableRowGroup: true
+      enablePivot: true
+    - field: gepnev
+      headerName: Gépnév
+      enableRowGroup: true
+      enablePivot: true
+    - field: ugyfelnev
+      headerName: Megrendelő
+      enableRowGroup: true
+      enablePivot: true
+    - field: hatarido
+      headerName: Határidő
+    - field: ossz_rendelt_db
+      headerName: Össz rendelt db
+      type: numericColumn
+    - field: kiszallitasra_var
+      headerName: Kiszállításra vár
+      type: numericColumn
+    - field: rendelt_db
+      headerName: Területen db
+      type: numericColumn
+    - field: rendelt
+      headerName: Rendelt perc
+      type: numericColumn
+      cellStyle: {'background-color': 'beige'}
+      aggFunc: sum
+    - field: kesz
+      headerName: Kész perc
+      type: numericColumn
+      aggFunc: sum
+    - field: hatralek
+      headerName: Fennmaradó perc
+      type: numericColumn
+      aggFunc: sum
   onClick:
     rendelt:
       path: normak
@@ -530,41 +508,41 @@ ehu_munkalap:
     sortable: true
     resizable: true
   columnDefs:
-  - field: cikkszam
-    headerName: Cikk
-    enableRowGroup: true
-  - field: itszam
-    headerName: IT
-    enableRowGroup: true
-  - field: partnerrendelesszam
-    headerName: Rendelésszám
-    enableRowGroup: true
-  - field: munkalapazonosito
-    headerName: Munkalap
-    cellStyle: {'background-color': 'beige'}
-  - field: kartonszam
-    headerName: Kartonszám
-  - field: helynev
-    headerName: Hely
-    enableRowGroup: true
-    enablePivot: true
-    pivot: true
-  - field: szinkod
-    headerName: Szín
-    enableRowGroup: true
-  - field: meret
-    headerName: Méret
-    enableRowGroup: true
-  - field: db
-    headerName: db
-    type: numericColumn
-    aggFunc: sum
-  - field: ugyfelnev
-    headerName: Megrendelő
-    enableRowGroup: true
-  - field: utem
-    headerName: Ütem
-    enableRowGroup: true
+    - field: cikkszam
+      headerName: Cikk
+      enableRowGroup: true
+    - field: itszam
+      headerName: IT
+      enableRowGroup: true
+    - field: partnerrendelesszam
+      headerName: Rendelésszám
+      enableRowGroup: true
+    - field: munkalapazonosito
+      headerName: Munkalap
+      cellStyle: {'background-color': 'beige'}
+    - field: kartonszam
+      headerName: Kartonszám
+    - field: helynev
+      headerName: Hely
+      enableRowGroup: true
+      enablePivot: true
+      pivot: true
+    - field: szinkod
+      headerName: Szín
+      enableRowGroup: true
+    - field: meret
+      headerName: Méret
+      enableRowGroup: true
+    - field: db
+      headerName: db
+      type: numericColumn
+      aggFunc: sum
+    - field: ugyfelnev
+      headerName: Megrendelő
+      enableRowGroup: true
+    - field: utem
+      headerName: Ütem
+      enableRowGroup: true
   onClick:
     munkalapazonosito:
       path: ehu_munkalap_mozgas
@@ -592,41 +570,41 @@ kellek_munkalap:
     sortable: true
     resizable: true
   columnDefs:
-  - field: cikkszam
-    headerName: Cikk
-    enableRowGroup: true
-  - field: itszam
-    headerName: IT
-    enableRowGroup: true
-  - field: partnerrendelesszam
-    headerName: Rendelésszám
-    enableRowGroup: true
-  - field: munkalapazonosito
-    headerName: Munkalap
-    cellStyle: {'background-color': 'beige'}
-  - field: kartonszam
-    headerName: Kartonszám
-  - field: helynev
-    headerName: Hely
-    enableRowGroup: true
-    enablePivot: true
-    pivot: true
-  - field: szinkod
-    headerName: Szín
-    enableRowGroup: true
-  - field: kellektipusnev
-    headerName: Kelléktípus
-    enableRowGroup: true
-  - field: db
-    headerName: db
-    type: numericColumn
-    aggFunc: sum
-  - field: ugyfelnev
-    headerName: Megrendelő
-    enableRowGroup: true
-  - field: utem
-    headerName: Ütem
-    enableRowGroup: true
+    - field: cikkszam
+      headerName: Cikk
+      enableRowGroup: true
+    - field: itszam
+      headerName: IT
+      enableRowGroup: true
+    - field: partnerrendelesszam
+      headerName: Rendelésszám
+      enableRowGroup: true
+    - field: munkalapazonosito
+      headerName: Munkalap
+      cellStyle: {'background-color': 'beige'}
+    - field: kartonszam
+      headerName: Kartonszám
+    - field: helynev
+      headerName: Hely
+      enableRowGroup: true
+      enablePivot: true
+      pivot: true
+    - field: szinkod
+      headerName: Szín
+      enableRowGroup: true
+    - field: kellektipusnev
+      headerName: Kelléktípus
+      enableRowGroup: true
+    - field: db
+      headerName: db
+      type: numericColumn
+      aggFunc: sum
+    - field: ugyfelnev
+      headerName: Megrendelő
+      enableRowGroup: true
+    - field: utem
+      headerName: Ütem
+      enableRowGroup: true
   onClick:
     munkalapazonosito:
       path: kellek_munkalap_mozgas
@@ -655,41 +633,41 @@ ehu_munkalap_mozgas:
     sortable: true
     resizable: true
   columnDefs:
-  - field: cikkszam
-    headerName: Cikk
-    enableRowGroup: true
-  - field: itszam
-    headerName: IT
-    enableRowGroup: true
-  - field: partnerrendelesszam
-    headerName: Rendelésszám
-    enableRowGroup: true
-  - field: munkalapazonosito
-    headerName: Munkalap
-    enableRowGroup: true
-  - field: kartonszam
-    headerName: Kartonszám
-    enableRowGroup: true
-  - field: helynev
-    headerName: Hely
-    enableRowGroup: true
-  - field: datum
-    headerName: Dátum
-  - field: szinkod
-    headerName: Szín
-    enableRowGroup: true
-  - field: meret
-    headerName: Méret
-    enableRowGroup: true
-  - field: db
-    headerName: db
-    type: numericColumn
-  - field: ugyfelnev
-    headerName: Megrendelő
-    enableRowGroup: true
-  - field: utem
-    headerName: Ütem
-    enableRowGroup: true
+    - field: cikkszam
+      headerName: Cikk
+      enableRowGroup: true
+    - field: itszam
+      headerName: IT
+      enableRowGroup: true
+    - field: partnerrendelesszam
+      headerName: Rendelésszám
+      enableRowGroup: true
+    - field: munkalapazonosito
+      headerName: Munkalap
+      enableRowGroup: true
+    - field: kartonszam
+      headerName: Kartonszám
+      enableRowGroup: true
+    - field: helynev
+      headerName: Hely
+      enableRowGroup: true
+    - field: datum
+      headerName: Dátum
+    - field: szinkod
+      headerName: Szín
+      enableRowGroup: true
+    - field: meret
+      headerName: Méret
+      enableRowGroup: true
+    - field: db
+      headerName: db
+      type: numericColumn
+    - field: ugyfelnev
+      headerName: Megrendelő
+      enableRowGroup: true
+    - field: utem
+      headerName: Ütem
+      enableRowGroup: true
   mssql: >-
     SELECT
       fej.cikkszam, fej.itszam, fej.partnerrendelesszam,
@@ -714,41 +692,41 @@ kellek_munkalap_mozgas:
     sortable: true
     resizable: true
   columnDefs:
-  - field: cikkszam
-    headerName: Cikk
-    enableRowGroup: true
-  - field: itszam
-    headerName: IT
-    enableRowGroup: true
-  - field: partnerrendelesszam
-    headerName: Rendelésszám
-    enableRowGroup: true
-  - field: munkalapazonosito
-    headerName: Munkalap
-    enableRowGroup: true
-  - field: kartonszam
-    headerName: Kartonszám
-    enableRowGroup: true
-  - field: helynev
-    headerName: Hely
-    enableRowGroup: true
-  - field: datum
-    headerName: Dátum
-  - field: szinkod
-    headerName: Szín
-    enableRowGroup: true
-  - field: kellektipusnev
-    headerName: Kelléktípus
-    enableRowGroup: true
-  - field: db
-    headerName: db
-    type: numericColumn
-  - field: ugyfelnev
-    headerName: Megrendelő
-    enableRowGroup: true
-  - field: utem
-    headerName: Ütem
-    enableRowGroup: true
+    - field: cikkszam
+      headerName: Cikk
+      enableRowGroup: true
+    - field: itszam
+      headerName: IT
+      enableRowGroup: true
+    - field: partnerrendelesszam
+      headerName: Rendelésszám
+      enableRowGroup: true
+    - field: munkalapazonosito
+      headerName: Munkalap
+      enableRowGroup: true
+    - field: kartonszam
+      headerName: Kartonszám
+      enableRowGroup: true
+    - field: helynev
+      headerName: Hely
+      enableRowGroup: true
+    - field: datum
+      headerName: Dátum
+    - field: szinkod
+      headerName: Szín
+      enableRowGroup: true
+    - field: kellektipusnev
+      headerName: Kelléktípus
+      enableRowGroup: true
+    - field: db
+      headerName: db
+      type: numericColumn
+    - field: ugyfelnev
+      headerName: Megrendelő
+      enableRowGroup: true
+    - field: utem
+      headerName: Ütem
+      enableRowGroup: true
   mssql: >-
     SELECT
       fej.cikkszam, fej.itszam, fej.partnerrendelesszam,
