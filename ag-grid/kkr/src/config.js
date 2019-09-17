@@ -35,9 +35,10 @@ kkrmenu:
       - { value: Kellék,             path: kellek_munkalap }
       - { value: E-H-U mozgás,       path: ehu_munkalap_mozgas }
       - { value: Kellék mozgás,      path: kellek_munkalap_mozgas }
-      - { value: Adatok frissítése,  path: mssql_munkalap_update }
+      # - { value: Adatok frissítése,  path: mssql_munkalap_update }
     tervezes:
       - { value: Kapacitásigény,     path: kapacitasigeny }
+      - { value: Kapacitásigény2,    path: kapacitasigeny2 }
     logisztika:
       - { value: '-',                path: logisztika_leadas }
     kotode:
@@ -235,9 +236,13 @@ normak:
     - field: elokeszito
       headerName: Előkészítő
       type: numericColumn
+    - field: kellek
+      headerName: Kellék
+      type: numericColumn
     - field: normaperc
       headerName: Normaperc
       type: numericColumn
+      valueFormatter: value.toFixed(3)
     - field: gepkod
       headerName: Gépkód
       type: numericColumn
@@ -418,15 +423,18 @@ kapacitasigeny:
     - field: rendelt
       headerName: Rendelt perc
       type: numericColumn
+      valueFormatter: value.toFixed(2)
       cellStyle: {'background-color': 'beige'}
       aggFunc: sum
     - field: kesz
       headerName: Kész perc
       type: numericColumn
+      valueFormatter: value.toFixed(2)
       aggFunc: sum
     - field: hatralek
       headerName: Fennmaradó perc
       type: numericColumn
+      valueFormatter: value.toFixed(2)
       aggFunc: sum
   onClick:
     rendelt:
@@ -440,17 +448,17 @@ kapacitasigeny:
     WITH
       rendelt (partnerkod, cikkszam, rendelesszam, elokeszito, hely, gepkod, perc) AS (
         SELECT
-          fej.partnerkod, mlap.cikkszam, mlap.rendelesszam, normak.elokeszito, mlap.hely, normak.gepkod, ROUND(SUM(mlap.db * normak.normaperc),0) AS perc
+          fej.partnerkod, mlap.cikkszam, mlap.rendelesszam, normak.elokeszito, mlap.hely, normak.gepkod, SUM(mlap.db * normak.normaperc) AS perc
         FROM rendelesmunkalap AS mlap
         JOIN rendelesfej AS fej ON fej.rendelesszam = mlap.rendelesszam
-        JOIN normak ON normak.cikkszam = mlap.cikkszam AND normak.elokeszito = CASE LEFT(mlap.munkalapazonosito, 1) WHEN '2' THEN 0 WHEN '4' THEN 1 END
+        JOIN normak ON normak.cikkszam = mlap.cikkszam AND normak.elokeszito = CASE LEFT(mlap.munkalapazonosito, 1) WHEN '2' THEN 0 WHEN '4' THEN 1 END AND normak.kellek = 0
         JOIN @helyek_gep_rel AS rel ON rel.azon = mlap.hely AND rel.gepkod = normak.gepkod
         WHERE mlap.db > 0 AND fej.statusz = 'N'
         GROUP BY fej.partnerkod, mlap.cikkszam, mlap.rendelesszam, normak.elokeszito, mlap.hely, normak.gepkod
       ),
       kesz (partnerkod, cikkszam, rendelesszam, elokeszito, hely, gepkod, perc) AS (
         SELECT
-          fej.partnerkod, mlap.cikkszam, mlap.rendelesszam, normak.elokeszito, mlap.hely, normak.gepkod, ROUND(SUM(kodol.darab * kodol.normaperdb),0) AS perc
+          fej.partnerkod, mlap.cikkszam, mlap.rendelesszam, normak.elokeszito, mlap.hely, normak.gepkod, SUM(kodol.darab * kodol.normaperdb) AS perc
         FROM rendelesmatrica AS kodol
         JOIN rendelesmunkalap AS mlap ON mlap.munkalapazonosito = kodol.vonalkod
         JOIN rendelesfej AS fej ON fej.rendelesszam = mlap.rendelesszam
@@ -498,6 +506,147 @@ kapacitasigeny:
     WHERE {where}
     ORDER BY helyek.hely, gep.gepnev, ugyfel.nev, rendelt.cikkszam
 
+kapacitasigeny2:
+  title: Kapacitásigény2
+  sideBar: true
+  rowSelection: multiple
+  defaultColDef:
+    filter: true
+    sortable: true
+    resizable: true
+  columnDefs:
+    - field: munkalap_tipus
+      headerName: Munkalap
+      cellStyle: {'background-color': 'beige'}
+      enableRowGroup: true
+      enablePivot: true
+    - field: cikkszam
+      headerName: Cikkszám
+      enableRowGroup: true
+      enablePivot: true
+    - field: itszam
+      headerName: IT
+      enableRowGroup: true
+      enablePivot: true
+    - field: partnerrendelesszam
+      headerName: Rendelésszám
+      enableRowGroup: true
+      enablePivot: true
+    - field: helynev
+      headerName: Helynév
+      enableRowGroup: true
+      enablePivot: true
+    - field: gepnev
+      headerName: Gépnév
+      enableRowGroup: true
+      enablePivot: true
+    - field: muveletkod
+      headerName: Műveletkód
+      type: numericColumn
+      enableRowGroup: true
+      enablePivot: true
+    - field: ugyfelnev
+      headerName: Megrendelő
+      enableRowGroup: true
+      enablePivot: true
+    - field: hatarido
+      headerName: Határidő
+    - field: ossz_rendelt_db
+      headerName: Össz rendelt db
+      type: numericColumn
+    - field: kiszallitasra_var
+      headerName: Kiszállításra vár
+      type: numericColumn
+    - field: rendelt_db
+      headerName: Területen db
+      type: numericColumn
+    - field: rendelt
+      headerName: Rendelt perc
+      type: numericColumn
+      valueFormatter: value.toFixed(2)
+      cellStyle: {'background-color': 'beige'}
+      aggFunc: sum
+    - field: kesz
+      headerName: Kész perc
+      type: numericColumn
+      valueFormatter: value.toFixed(2)
+      aggFunc: sum
+    - field: hatralek
+      headerName: Fennmaradó perc
+      type: numericColumn
+      valueFormatter: value.toFixed(2)
+      aggFunc: sum
+  onClick:
+    rendelt:
+      path: normak
+      where: normak.cikkszam='\${cikkszam}' AND normak.gepkod='\${gepkod}' AND normak.elokeszito='\${elokeszito}'
+    munkalap_tipus:
+      path: \${elokeszito?'kellek_munkalap':'ehu_munkalap'}
+      where: ugyfel.ugyfelkod='\${partnerkod}' AND mlap.cikkszam='\${cikkszam}' AND mlap.rendelesszam='\${rendelesszam}' AND mlap.hely='\${hely}'
+  mssql: >-
+    ${HelyekGepRelTable}
+    WITH
+      rendelt (partnerkod, cikkszam, rendelesszam, elokeszito, hely, gepkod, muveletkod, perc) AS (
+        SELECT
+          fej.partnerkod, mlap.cikkszam, mlap.rendelesszam, normak.elokeszito, mlap.hely, normak.gepkod, normak.muveletkod, SUM(mlap.db * normak.normaperc) AS perc
+        FROM rendelesmunkalap AS mlap
+        JOIN rendelesfej AS fej ON fej.rendelesszam = mlap.rendelesszam
+        JOIN normak ON normak.cikkszam = mlap.cikkszam AND normak.elokeszito = CASE LEFT(mlap.munkalapazonosito, 1) WHEN '2' THEN 0 WHEN '4' THEN 1 END AND normak.kellek = 0
+        JOIN @helyek_gep_rel AS rel ON rel.azon = mlap.hely AND rel.gepkod = normak.gepkod
+        WHERE mlap.db > 0 AND fej.statusz = 'N'
+        GROUP BY fej.partnerkod, mlap.cikkszam, mlap.rendelesszam, normak.elokeszito, mlap.hely, normak.gepkod, normak.muveletkod
+      ),
+      kesz (partnerkod, cikkszam, rendelesszam, elokeszito, hely, gepkod, muveletkod, perc) AS (
+        SELECT
+          fej.partnerkod, mlap.cikkszam, mlap.rendelesszam, normak.elokeszito, mlap.hely, normak.gepkod, normak.muveletkod, SUM(kodol.darab * kodol.normaperdb) AS perc
+        FROM rendelesmatrica AS kodol
+        JOIN rendelesmunkalap AS mlap ON mlap.munkalapazonosito = kodol.vonalkod
+        JOIN rendelesfej AS fej ON fej.rendelesszam = mlap.rendelesszam
+        JOIN normak ON normak.cikkszam = kodol.cikkszam AND normak.muveletkod = kodol.muveletkod
+        WHERE mlap.db > 0 AND fej.statusz = 'N'
+        GROUP BY fej.partnerkod, mlap.cikkszam, mlap.rendelesszam, normak.elokeszito, mlap.hely, normak.gepkod, normak.muveletkod
+      ),
+      mlap_db (partnerkod, cikkszam, rendelesszam, elokeszito, hely, db) AS (
+        SELECT
+          fej.partnerkod, mlap.cikkszam, mlap.rendelesszam, CASE LEFT(mlap.munkalapazonosito, 1) WHEN '2' THEN 0 WHEN '4' THEN 1 END AS elokeszito, mlap.hely, SUM(mlap.db) AS db
+        FROM rendelesmunkalap AS mlap
+        JOIN rendelesfej AS fej ON fej.rendelesszam = mlap.rendelesszam
+        WHERE mlap.db > 0 AND fej.statusz = 'N'
+        GROUP BY fej.partnerkod, mlap.cikkszam, mlap.rendelesszam, CASE LEFT(mlap.munkalapazonosito, 1) WHEN '2' THEN 0 WHEN '4' THEN 1 END, mlap.hely
+      )
+    SELECT
+      fej.itszam,
+      CONVERT(VARCHAR, fej.hatarido, 23) AS hatarido,
+      CASE rendelt.elokeszito WHEN 0 THEN 'E-H-U' WHEN 1 THEN 'Kellék' END AS munkalap_tipus,
+      ugyfel.nev AS ugyfelnev,
+      rendelt.partnerkod,
+      rendelt.cikkszam,
+      rendelt.rendelesszam,
+      fej.partnerrendelesszam,
+      rendelt.elokeszito,
+      rendelt.hely,
+      helyek.hely AS helynev,
+      rendelt.gepkod,
+      gep.gepnev,
+      rendelt.muveletkod,
+      fej.mennyiseg AS ossz_rendelt_db,
+      fej.mennyiseg - fej.sumkiszallitva AS kiszallitasra_var,
+      mlap_db.db AS rendelt_db,
+      rendelt.perc AS rendelt,
+      ISNULL(kesz.perc,0) AS kesz,
+      ISNULL(rendelt.perc,0) - ISNULL(kesz.perc,0) AS hatralek
+    FROM rendelt
+    JOIN rendelesfej AS fej ON fej.rendelesszam = rendelt.rendelesszam
+    JOIN gep ON rendelt.gepkod = gep.gepkod
+    JOIN ugyfel ON ugyfel.ugyfelkod = rendelt.partnerkod AND ugyfel.aktiv = 'A'
+    JOIN mlap_db ON mlap_db.partnerkod = rendelt.partnerkod AND mlap_db.cikkszam = rendelt.cikkszam AND mlap_db.rendelesszam = rendelt.rendelesszam AND
+                      mlap_db.elokeszito = rendelt.elokeszito AND mlap_db.hely = rendelt.hely
+    LEFT JOIN kesz ON kesz.partnerkod = rendelt.partnerkod AND kesz.cikkszam = rendelt.cikkszam AND kesz.rendelesszam = rendelt.rendelesszam AND
+                      kesz.elokeszito = rendelt.elokeszito AND kesz.hely = rendelt.hely AND kesz.gepkod = rendelt.gepkod AND kesz.muveletkod = rendelt.muveletkod
+    LEFT JOIN helyek ON helyek.azon = rendelt.hely
+    WHERE {where}
+    ORDER BY helyek.hely, gep.gepnev, ugyfel.nev, rendelt.cikkszam
+
 ehu_munkalap:
   title: E-H-U munkalapok
   #pivotMode: true
@@ -537,6 +686,11 @@ ehu_munkalap:
       headerName: db
       type: numericColumn
       aggFunc: sum
+    - field: ertek
+      headerName: Érték
+      type: numericColumn
+      valueFormatter: value.toFixed(2)
+      aggFunc: sum
     - field: ugyfelnev
       headerName: Megrendelő
       enableRowGroup: true
@@ -552,7 +706,7 @@ ehu_munkalap:
       fej.cikkszam, fej.itszam, fej.partnerrendelesszam,
       ugyfel.nev AS ugyfelnev,
       helyek.rhely AS helynev,
-      mlap.munkalapazonosito, mlap.kartonszam, mlap.utem, mlap.szinkod, mlap.hely, mlap.meret, mlap.kellektipus, mlap.db
+      mlap.munkalapazonosito, mlap.kartonszam, mlap.utem, mlap.szinkod, mlap.hely, mlap.meret, mlap.kellektipus, mlap.db, mlap.db*fej.elfogadottar AS ertek
     FROM rendelesmunkalap AS mlap
     JOIN rendelesfej AS fej ON fej.rendelesszam = mlap.rendelesszam
     JOIN ugyfel  ON ugyfel.ugyfelkod = fej.partnerkod AND ugyfel.aktiv = 'A'
