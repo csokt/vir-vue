@@ -11,7 +11,7 @@
           />
           <v-text-field
             v-model="kodol.helynev"
-            label="Helynév"
+            label="Átadási helynév"
             readonly
           />
           <LookupModel

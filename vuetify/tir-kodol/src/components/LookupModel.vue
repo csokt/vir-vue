@@ -32,7 +32,7 @@ export default {
         case 'dolgozo':
           return 'Dolgozó kód'
         case 'hely':
-          return 'Helykód'
+          return 'Átadási helykód'
         case 'munkalap':
           return 'Munkalap'
         case 'uzem':
@@ -66,7 +66,7 @@ export default {
             return ''
           }
           value = parseInt(this.value) - 54000
-          return 'tir/uzemek/' + value.toString()
+          return 'tir/uzemekvkod/' + value.toString()
         default:
           return ''
       }

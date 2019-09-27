@@ -50,6 +50,7 @@ export default {
     async requestData () {
       if (this.grid.mssql) {
         const sql = this.grid.mssql.replace('{where}', this.sqlWhere)
+        console.log(sql)
         const response = await API.post('tir/call', { sql: sql })
         if (response.ok) {
           response.data.forEach(Object.freeze)
