@@ -1,61 +1,6 @@
+import sql from './sql'
 import yaml from 'js-yaml'
-const HelyekGepRelTable = `
-    DECLARE @helyek_gep_rel TABLE (gepkod int, azon int);
-    INSERT INTO @helyek_gep_rel (gepkod, azon) VALUES
-      (2,38),(2,25),(2,35),(2,24),(3,25),(3,35),(3,38),(3,24),(4,25),(4,35),(4,24),(5,24),(5,25),(5,35),(5,38),(7,21),(7,26),(8,37),(9,37),(10,26),(11,21),(12,38),(13,38),(14,38),(15,38),(12,22),(13,22),(14,22),(15,22),(16,24),(16,25),(16,38),(16,35),(17,24),(18,24),(18,35),(17,38),(18,25),(19,35),(19,38),(19,25),(19,24),(20,25),(20,38),(20,21),(20,35),(20,26),(21,24),(22,38),(22,24),(22,25),(22,35),(24,25),(24,38),(24,24),(24,35),(25,38),(25,22),(26,22),(26,38),(26,23),(27,25),(27,38),(27,24),(30,33),(31,38),(31,22),(34,33),(36,30),(38,26)
-      ;`
-
-const rendelesmunkalapBase = `
-    (
-      SELECT mlap.hsz AS munkalap_hsz, fej.hsz AS fej_hsz, ugyfel.ugyfelhsz, helyek.azon AS helyek_azon, szotar.kodhsz,
-        CASE LEFT(mlap.munkalapazonosito, 1) WHEN '2' THEN 0 WHEN '4' THEN 1 END AS elokeszito,
-        fej.statusz AS fej_statusz
-      FROM rendelesmunkalap AS mlap
-      JOIN rendelesfej AS fej ON fej.rendelesszam = mlap.rendelesszam AND fej.statusz != 'T'
-      JOIN ugyfel  ON ugyfel.ugyfelkod = fej.partnerkod AND ugyfel.aktiv = 'A'
-      LEFT JOIN helyek ON helyek.azon = mlap.hely
-      LEFT JOIN SzefoModulParam.dbo.kodszotar AS szotar ON szotar.kod = mlap.kellektipus AND szotar.tipus = 'KELTIP'
-      WHERE mlap.db > 0
-    )`
-
-const rendelesmunkalapNyitott = `
-    (
-      SELECT
-        mlap.rendelesszam, mlap.partnerrendelesszam, mlap.itszam, mlap.utem, mlap.kartonszam, mlap.cikkszam, mlap.munkalapazonosito,
-        mlap.szinkod, mlap.meret, mlap.meretsorrend, mlap.db, mlap.kellektipus, mlap.hely,
-        CASE LEFT(mlap.munkalapazonosito, 1) WHEN '2' THEN 0 WHEN '4' THEN 1 END AS elokeszito,
-        ugyfel.nev AS ugyfelnev,
-        helyek.rhely AS helynev,
-        mlap.db*fej.elfogadottar AS ertek,
-        szotar.nev AS kellektipusnev
-      FROM ${rendelesmunkalapBase} AS munkalap
-      JOIN rendelesmunkalap AS mlap ON mlap.hsz = munkalap.munkalap_hsz
-      JOIN rendelesfej AS fej ON fej.hsz = munkalap.fej_hsz
-      JOIN ugyfel  ON ugyfel.ugyfelhsz = munkalap.ugyfelhsz
-      LEFT JOIN helyek ON helyek.azon = munkalap.helyek_azon
-      LEFT JOIN SzefoModulParam.dbo.kodszotar AS szotar ON szotar.kodhsz = munkalap.kodhsz
-      WHERE munkalap.fej_statusz = 'N'
-    )`
-
-// const rendelesmunkalapKkr = `
-//     (rendelesszam, partnerrendelesszam, itszam, utem, kartonszam, cikkszam, munkalapazonosito,
-//       szinkod, meret, meretsorrend, db, kellektipus, hely, elokeszito, ugyfelnev, helynev, ertek, kellektipusnev) AS (
-//       SELECT
-//         mlap.rendelesszam, mlap.partnerrendelesszam, mlap.itszam, mlap.utem, mlap.kartonszam, mlap.cikkszam, mlap.munkalapazonosito,
-//         mlap.szinkod, mlap.meret, mlap.meretsorrend, mlap.db, mlap.kellektipus, mlap.hely,
-//         CASE LEFT(mlap.munkalapazonosito, 1) WHEN '2' THEN 0 WHEN '4' THEN 1 END AS elokeszito,
-//         ugyfel.nev AS ugyfelnev,
-//         helyek.rhely AS helynev,
-//         mlap.db*fej.elfogadottar AS ertek,
-//         szotar.nev AS kellektipusnev
-//       FROM rendelesmunkalap AS mlap
-//       JOIN rendelesfej AS fej ON fej.rendelesszam = mlap.rendelesszam AND fej.statusz = 'N'
-//       JOIN ugyfel  ON ugyfel.ugyfelkod = fej.partnerkod AND ugyfel.aktiv = 'A'
-//       LEFT JOIN helyek ON helyek.azon = mlap.hely
-//       LEFT JOIN SzefoModulParam.dbo.kodszotar AS szotar ON szotar.kod = mlap.kellektipus AND szotar.tipus = 'KELTIP'
-//     )`
-
-var configYaml = `
+let configYaml = `
 
 kkrmenu:
   title: Kötöttáru kontrolling rendszer
@@ -73,6 +18,7 @@ kkrmenu:
       - { value: Ügyfelek,           path: ugyfelek }
       - { value: Telephelyek,        path: telephelyek }
       - { value: Üzemek,             path: uzemek }
+      - { value: Dolgozók,           path: dolgozok }
       - { value: Helyek,             path: helyek }
       - { value: Gépek,              path: gepek }
       - { value: Hely-gép kapcsolat, path: helyek_gep_rel }
@@ -149,22 +95,10 @@ ugyfelek:
       path: rendelesfej
       where: partnerkod='\${ugyfelkod}'
   mssql: >-
-    WITH ugyfel_ids (partnerkod) AS (
-      SELECT DISTINCT partnerkod FROM rendelesfej
-      WHERE statusz = 'N'
-    ),
-      fej (partnerkod, mennyiseg, nemgyarthatodb, sumkotesrevar, sumlekotve, sumkiszallitva, sumszamlazva) AS (
-      SELECT partnerkod, SUM(mennyiseg) AS mennyiseg, SUM(nemgyarthatodb) AS nemgyarthatodb, SUM(sumkotesrevar) AS sumkotesrevar,
-        SUM(sumlekotve) AS sumlekotve, SUM(sumkiszallitva) AS sumkiszallitva, SUM(sumszamlazva) AS sumszamlazva
-      FROM rendelesfej AS fej
-      WHERE fej.statusz = 'N'
-      GROUP BY partnerkod
-    )
     SELECT ugyfel.ugyfelkod, ugyfel.nev AS ugyfelnev,
       fej.mennyiseg, fej.nemgyarthatodb, fej.sumkotesrevar, fej.sumlekotve, fej.sumkiszallitva, fej.sumszamlazva
-    FROM ugyfel
-    JOIN ugyfel_ids ON ugyfel_ids.partnerkod = ugyfel.ugyfelkod AND ugyfel.aktiv = 'A'
-    JOIN fej ON fej.partnerkod = ugyfel.ugyfelkod
+    FROM ${sql.ugyfel} AS ugyfel
+    JOIN ${sql.rendelesfejGroupByPartnerkod} AS fej ON fej.partnerkod = ugyfel.ugyfelkod
     WHERE {where}
     ORDER BY ugyfel.ugyfelkod
 
@@ -205,9 +139,34 @@ uzemek:
       headerName: Telephely
     - field: uzemtipus
       headerName: Üzemtípus
-    - field: statusz
-      headerName: Státusz
-  mssql: SELECT uzemek.*, telephely FROM uzemek JOIN telephelyek on uzemek.telephelykod = telephelyek.telephelykod WHERE statusz = 'A' AND {where}
+  mssql: SELECT * FROM ${sql.uzemekView} AS uzemek WHERE {where}
+
+dolgozok:
+  title: Dolgozók
+  defaultColDef:
+    filter: true
+  columnDefs:
+    - field: dolgozokod
+      headerName: Dolgozókód
+    - field: dolgozonev
+      headerName: Dolgozónév
+    - field: uzemkod
+      headerName: Üzemkód
+      filter: agNumberColumnFilter
+      type: numericColumn
+    - field: uzemnev
+      headerName: Üzemnév
+    - field: vonalkod
+      headerName: Vonalkód
+      type: numericColumn
+    - field: telephelykod
+      headerName: Telephelykód
+      type: numericColumn
+    - field: telephely
+      headerName: Telephely
+    - field: uzemtipus
+      headerName: Üzemtípus
+  mssql: SELECT * FROM ${sql.dolgtrView} AS dolgtr WHERE {where}
 
 gepek:
   title: Gépek
@@ -220,9 +179,7 @@ gepek:
       type: numericColumn
     - field: gepnev
       headerName: Gépnév
-    - field: statusz
-      headerName: Státusz
-  mssql: SELECT * FROM gep WHERE statusz = 'A' AND {where} ORDER BY gepkod
+  mssql: SELECT * FROM ${sql.gep} AS gep WHERE {where} ORDER BY gepkod
 
 helyek:
   title: Helyek
@@ -267,9 +224,9 @@ helyek_gep_rel:
     - field: statusz
       headerName: Státusz
   mssql: >-
-    ${HelyekGepRelTable}
-    SELECT helyek.*, gep.* FROM @helyek_gep_rel AS rel JOIN gep ON gep.gepkod = rel.gepkod JOIN helyek ON helyek.azon = rel.azon
-    ORDER BY helyek.sorrend, gep.gepkod
+    ${sql.HelyekGepRelTable}
+    SELECT * FROM ${sql.helyek_gep_rel_view} AS helyek_gep_rel_view
+    ORDER BY sorrend, gepkod
 
 normak:
   title: Normák
@@ -304,16 +261,13 @@ normak:
       headerName: Bontáskód
       type: numericColumn
   mssql: >-
-    WITH cikkszam_ids (cikkszam) AS (
-      SELECT DISTINCT cikkszam FROM rendelesfej
-      WHERE statusz = 'N'
-    )
-    SELECT normak.cikkszam, normak.muveletkod, normak.muveletnev, normak.elokeszito, normak.normaperc, normak.gepkod, normak.felszabaditas, normak.bontaskod, gep.gepnev
-    FROM normak
-    JOIN cikkszam_ids ON cikkszam_ids.cikkszam = normak.cikkszam
+    SELECT normak.cikkszam, normak.muveletkod, normak.muveletnev, normak.elokeszito, normak..kellek, normak.normaperc, normak.gepkod, normak.felszabaditas, normak.bontaskod, gep.gepnev
+    FROM ${sql.normak} AS normak
+    LEFT JOIN ${sql.cikkekGyartasAlatt} AS cikkszam_ids ON cikkszam_ids.cikkszam = normak.cikkszam
     JOIN gep ON gep.gepkod = normak.gepkod
-    WHERE (normak.normaperc > 0.01) AND {where}
+    WHERE {where}
     ORDER BY normak.cikkszam, CAST(normak.muveletkod AS int)
+  where: cikkszam_ids.cikkszam IS NOT NULL
 
 rendelesfej:
   title: Rendelésfej
@@ -499,7 +453,7 @@ kapacitasigeny:
       path: \${elokeszito?'kellek_munkalap':'ehu_munkalap'}
       where: ugyfel.ugyfelkod='\${partnerkod}' AND mlap.cikkszam='\${cikkszam}' AND mlap.rendelesszam='\${rendelesszam}' AND mlap.hely='\${hely}'
   mssql: >-
-    ${HelyekGepRelTable}
+    ${sql.HelyekGepRelTable}
     WITH
       rendelt (partnerkod, cikkszam, rendelesszam, elokeszito, hely, gepkod, perc) AS (
         SELECT
@@ -507,7 +461,7 @@ kapacitasigeny:
         FROM rendelesmunkalap AS mlap
         JOIN rendelesfej AS fej ON fej.rendelesszam = mlap.rendelesszam
         JOIN normak ON normak.cikkszam = mlap.cikkszam AND normak.elokeszito = CASE LEFT(mlap.munkalapazonosito, 1) WHEN '2' THEN 0 WHEN '4' THEN 1 END AND normak.kellek = 0
-        JOIN @helyek_gep_rel AS rel ON rel.azon = mlap.hely AND rel.gepkod = normak.gepkod
+        JOIN @helyek_gep_rel AS rel ON rel.helykod = mlap.hely AND rel.gepkod = normak.gepkod
         WHERE mlap.db > 0 AND fej.statusz = 'N'
         GROUP BY fej.partnerkod, mlap.cikkszam, mlap.rendelesszam, normak.elokeszito, mlap.hely, normak.gepkod
       ),
@@ -639,7 +593,7 @@ kapacitasigeny2:
       path: \${elokeszito?'kellek_munkalap':'ehu_munkalap'}
       where: ugyfel.ugyfelkod='\${partnerkod}' AND mlap.cikkszam='\${cikkszam}' AND mlap.rendelesszam='\${rendelesszam}' AND mlap.hely='\${hely}'
   mssql: >-
-    ${HelyekGepRelTable}
+    ${sql.HelyekGepRelTable}
     WITH
       rendelt (partnerkod, cikkszam, rendelesszam, elokeszito, hely, gepkod, muveletkod, perc) AS (
         SELECT
@@ -647,7 +601,7 @@ kapacitasigeny2:
         FROM rendelesmunkalap AS mlap
         JOIN rendelesfej AS fej ON fej.rendelesszam = mlap.rendelesszam AND fej.statusz = 'N'
         JOIN normak ON normak.cikkszam = mlap.cikkszam AND normak.elokeszito = CASE LEFT(mlap.munkalapazonosito, 1) WHEN '2' THEN 0 WHEN '4' THEN 1 END AND normak.kellek = 0
-        JOIN @helyek_gep_rel AS rel ON rel.azon = mlap.hely AND rel.gepkod = normak.gepkod
+        JOIN @helyek_gep_rel AS rel ON rel.helykod = mlap.hely AND rel.gepkod = normak.gepkod
         WHERE mlap.db > 0
         GROUP BY fej.partnerkod, mlap.cikkszam, mlap.rendelesszam, normak.elokeszito, mlap.hely, normak.gepkod, normak.muveletkod
       ),
@@ -746,6 +700,11 @@ ehu_munkalap:
       type: numericColumn
       valueFormatter: value.toFixed(2)
       aggFunc: sum
+    - field: rendelt_perc
+      headerName: Rendelt perc
+      type: numericColumn
+      valueFormatter: value.toFixed(2)
+      aggFunc: sum
     - field: ugyfelnev
       headerName: Megrendelő
       enableRowGroup: true
@@ -757,9 +716,11 @@ ehu_munkalap:
       path: ehu_munkalap_mozgas
       where: mlap.munkalapazonosito='\${munkalapazonosito}'
   mssql: >-
-    SELECT * FROM ${rendelesmunkalapNyitott} AS mlap
+    ${sql.HelyekGepRelTable}
+    SELECT * FROM ${sql.rendelesmunkalapView} AS mlap
     WHERE (elokeszito = 0) AND {where}
     ORDER BY mlap.rendelesszam, mlap.munkalapazonosito
+  where: statusz = 'N'
 
 kellek_munkalap:
   title: Kellék munkalapok
@@ -800,6 +761,11 @@ kellek_munkalap:
       headerName: db
       type: numericColumn
       aggFunc: sum
+    - field: rendelt_perc
+      headerName: Rendelt perc
+      type: numericColumn
+      valueFormatter: value.toFixed(2)
+      aggFunc: sum
     - field: ugyfelnev
       headerName: Megrendelő
       enableRowGroup: true
@@ -811,9 +777,11 @@ kellek_munkalap:
       path: kellek_munkalap_mozgas
       where: mlap.munkalapazonosito='\${munkalapazonosito}'
   mssql: >-
-    SELECT * FROM ${rendelesmunkalapNyitott} AS mlap
+    ${sql.HelyekGepRelTable}
+    SELECT * FROM ${sql.rendelesmunkalapView} AS mlap
     WHERE (elokeszito = 1) AND {where}
     ORDER BY mlap.rendelesszam, mlap.munkalapazonosito
+  where: statusz = 'N'
 
 ehu_munkalap_mozgas:
   title: E-H-U munkalap mozgás
@@ -870,10 +838,11 @@ ehu_munkalap_mozgas:
       enableRowGroup: true
 
   mssql: >-
+    ${sql.HelyekGepRelTable}
     SELECT
       mlap.cikkszam, mlap.itszam, mlap.partnerrendelesszam, mlap.munkalapazonosito, mlap.kartonszam,
       mhely.rhely AS helynev, mozgas.datum, mlap.szinkod, mlap.meret, mlap.db, mlap.ertek, mlap.ugyfelnev, mlap.utem
-    FROM ${rendelesmunkalapNyitott} AS mlap
+    FROM ${sql.rendelesmunkalapView} AS mlap
     LEFT JOIN rendeleskartonmozgas AS mozgas ON mozgas.munkalapazonosito = mlap.munkalapazonosito
     LEFT JOIN helyek AS mhely ON mhely.azon = mozgas.hely
     WHERE (mlap.elokeszito = 0) AND {where}
@@ -924,10 +893,11 @@ kellek_munkalap_mozgas:
       headerName: Ütem
       enableRowGroup: true
   mssql: >-
+    ${sql.HelyekGepRelTable}
     SELECT
       mlap.cikkszam, mlap.itszam, mlap.partnerrendelesszam, mlap.munkalapazonosito, mlap.kartonszam,
       mhely.rhely AS helynev, mozgas.datum, mlap.szinkod, mlap.kellektipusnev, mlap.db, mlap.ugyfelnev, mlap.utem
-    FROM ${rendelesmunkalapNyitott} AS mlap
+    FROM ${sql.rendelesmunkalapView} AS mlap
     LEFT JOIN rendeleskartonmozgas AS mozgas ON mozgas.munkalapazonosito = mlap.munkalapazonosito
     LEFT JOIN helyek AS mhely ON mhely.azon = mozgas.hely
     WHERE (mlap.elokeszito = 1) AND {where}
