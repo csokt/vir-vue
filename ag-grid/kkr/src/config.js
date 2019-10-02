@@ -29,8 +29,10 @@ kkrmenu:
     munkalap:
       - { value: E-H-U,              path: ehu_munkalap }
       - { value: Kellék,             path: kellek_munkalap }
+      - { value: Összes,             path: osszes_munkalap }
       - { value: E-H-U mozgás,       path: ehu_munkalap_mozgas }
       - { value: Kellék mozgás,      path: kellek_munkalap_mozgas }
+      - { value: Összes mozgás,      path: osszes_munkalap_mozgas }
       # - { value: Adatok frissítése,  path: mssql_munkalap_update }
     tervezes:
       - { value: Kapacitásigény,     path: kapacitasigeny }
@@ -59,6 +61,7 @@ mssql_munkalap_update:
     UPDATE rendelesmunkalap SET hely = lasthely.hely FROM lasthely WHERE lasthely.munkalapazonosito = rendelesmunkalap.munkalapazonosito AND
       ( rendelesmunkalap.hely IS NULL OR lasthely.hely != rendelesmunkalap.hely )
 
+###############################################################################################################################################################
 ugyfelek:
   title: Ügyfelek
   columnDefs:
@@ -102,6 +105,7 @@ ugyfelek:
     WHERE {where}
     ORDER BY ugyfel.ugyfelkod
 
+###############################################################################################################################################################
 telephelyek:
   title: Telephelyek
   columnDefs:
@@ -118,6 +122,7 @@ telephelyek:
       type: numericColumn
   mssql: SELECT * FROM telephelyek WHERE {where}
 
+###############################################################################################################################################################
 uzemek:
   title: Üzemek
   defaultColDef:
@@ -141,6 +146,7 @@ uzemek:
       headerName: Üzemtípus
   mssql: SELECT * FROM ${sql.uzemekView} AS uzemek WHERE {where}
 
+###############################################################################################################################################################
 dolgozok:
   title: Dolgozók
   defaultColDef:
@@ -168,6 +174,7 @@ dolgozok:
       headerName: Üzemtípus
   mssql: SELECT * FROM ${sql.dolgtrView} AS dolgtr WHERE {where}
 
+###############################################################################################################################################################
 gepek:
   title: Gépek
   defaultColDef:
@@ -181,6 +188,7 @@ gepek:
       headerName: Gépnév
   mssql: SELECT * FROM ${sql.gep} AS gep WHERE {where} ORDER BY gepkod
 
+###############################################################################################################################################################
 helyek:
   title: Helyek
   defaultColDef:
@@ -199,6 +207,7 @@ helyek:
       type: numericColumn
   mssql: SELECT * FROM helyek WHERE {where} ORDER BY sorrend, azon
 
+###############################################################################################################################################################
 helyek_gep_rel:
   title: Hely-gép kapcsolat
   defaultColDef:
@@ -228,6 +237,7 @@ helyek_gep_rel:
     SELECT * FROM ${sql.helyek_gep_rel_view} AS helyek_gep_rel_view
     ORDER BY sorrend, gepkod
 
+###############################################################################################################################################################
 normak:
   title: Normák
   defaultColDef:
@@ -249,7 +259,7 @@ normak:
     - field: normaperc
       headerName: Normaperc
       type: numericColumn
-      valueFormatter: value.toFixed(3)
+      valueFormatter: "value ? value.toFixed(3) : value"
     - field: gepkod
       headerName: Gépkód
       type: numericColumn
@@ -261,14 +271,12 @@ normak:
       headerName: Bontáskód
       type: numericColumn
   mssql: >-
-    SELECT normak.cikkszam, normak.muveletkod, normak.muveletnev, normak.elokeszito, normak..kellek, normak.normaperc, normak.gepkod, normak.felszabaditas, normak.bontaskod, gep.gepnev
-    FROM ${sql.normak} AS normak
-    LEFT JOIN ${sql.cikkekGyartasAlatt} AS cikkszam_ids ON cikkszam_ids.cikkszam = normak.cikkszam
-    JOIN gep ON gep.gepkod = normak.gepkod
+    SELECT * FROM ${sql.normakView} AS normak
     WHERE {where}
-    ORDER BY normak.cikkszam, CAST(normak.muveletkod AS int)
-  where: cikkszam_ids.cikkszam IS NOT NULL
+    ORDER BY cikkszam, muveletkod
+  where: nyitott_cikkszam IS NOT NULL
 
+###############################################################################################################################################################
 rendelesfej:
   title: Rendelésfej
   defaultColDef:
@@ -327,12 +335,14 @@ rendelesfej:
       where: sor.rendelesszam='\${rendelesszam}'
     ehu:
       path: ehu_munkalap
-      where: mlap.rendelesszam='\${rendelesszam}'
+      where: rendelesszam='\${rendelesszam}'
     kellek:
       path: kellek_munkalap
-      where: mlap.rendelesszam='\${rendelesszam}'
-  mssql: SELECT *, partnerrendelesszam AS ehu, partnerrendelesszam AS kellek FROM rendelesfej AS fej WHERE fej.statusz = 'N' AND {where}
+      where: rendelesszam='\${rendelesszam}'
+  mssql: SELECT *, partnerrendelesszam AS ehu, partnerrendelesszam AS kellek FROM rendelesfej AS fej WHERE {where}
+  where: fej.statusz = 'N'
 
+###############################################################################################################################################################
 rendelessor:
   title: Rendeléssor
   defaultColDef:
@@ -378,8 +388,10 @@ rendelessor:
       headerName: Számlázva
       filter: agNumberColumnFilter
       type: numericColumn
-  mssql: SELECT sor.* FROM rendelessorok AS sor JOIN rendelesfej AS fej ON fej.rendelesszam = sor.rendelesszam WHERE fej.statusz = 'N' AND {where}
+  mssql: SELECT sor.* FROM rendelessorok AS sor JOIN rendelesfej AS fej ON fej.rendelesszam = sor.rendelesszam WHERE {where}
+  where: fej.statusz = 'N'
 
+###############################################################################################################################################################
 kapacitasigeny:
   title: Kapacitásigény
   sideBar: true
@@ -438,20 +450,20 @@ kapacitasigeny:
     - field: kesz
       headerName: Kész perc
       type: numericColumn
-      valueFormatter: value.toFixed(2)
+      valueFormatter: "value ? value.toFixed(2) : value"
       aggFunc: sum
     - field: hatralek
       headerName: Fennmaradó perc
       type: numericColumn
-      valueFormatter: value.toFixed(2)
+      valueFormatter: "value ? value.toFixed(2) : value"
       aggFunc: sum
   onClick:
     rendelt:
       path: normak
-      where: normak.cikkszam='\${cikkszam}' AND normak.gepkod='\${gepkod}' AND normak.elokeszito='\${elokeszito}'
+      where: cikkszam='\${cikkszam}' AND gepkod='\${gepkod}' AND elokeszito='\${elokeszito}'
     munkalap_tipus:
       path: \${elokeszito?'kellek_munkalap':'ehu_munkalap'}
-      where: ugyfel.ugyfelkod='\${partnerkod}' AND mlap.cikkszam='\${cikkszam}' AND mlap.rendelesszam='\${rendelesszam}' AND mlap.hely='\${hely}'
+      where: ugyfelkod='\${partnerkod}' AND cikkszam='\${cikkszam}' AND rendelesszam='\${rendelesszam}' AND hely='\${hely}'
   mssql: >-
     ${sql.HelyekGepRelTable}
     WITH
@@ -515,6 +527,7 @@ kapacitasigeny:
     WHERE {where}
     ORDER BY helyek.hely, gep.gepnev, ugyfel.nev, rendelt.cikkszam
 
+###############################################################################################################################################################
 kapacitasigeny2:
   title: Kapacitásigény2
   sideBar: true
@@ -572,26 +585,26 @@ kapacitasigeny2:
     - field: rendelt
       headerName: Rendelt perc
       type: numericColumn
-      valueFormatter: value.toFixed(2)
+      valueFormatter: "value ? value.toFixed(2) : value"
       cellStyle: {'background-color': 'beige'}
       aggFunc: sum
     - field: kesz
       headerName: Kész perc
       type: numericColumn
-      valueFormatter: value.toFixed(2)
+      valueFormatter: "value ? value.toFixed(2) : value"
       aggFunc: sum
     - field: hatralek
       headerName: Fennmaradó perc
       type: numericColumn
-      valueFormatter: value.toFixed(2)
+      valueFormatter: "value ? value.toFixed(2) : value"
       aggFunc: sum
   onClick:
     rendelt:
       path: normak
-      where: normak.cikkszam='\${cikkszam}' AND normak.gepkod='\${gepkod}' AND normak.elokeszito='\${elokeszito}'
+      where: cikkszam='\${cikkszam}' AND gepkod='\${gepkod}' AND elokeszito='\${elokeszito}'
     munkalap_tipus:
       path: \${elokeszito?'kellek_munkalap':'ehu_munkalap'}
-      where: ugyfel.ugyfelkod='\${partnerkod}' AND mlap.cikkszam='\${cikkszam}' AND mlap.rendelesszam='\${rendelesszam}' AND mlap.hely='\${hely}'
+      where: ugyfelkod='\${partnerkod}' AND cikkszam='\${cikkszam}' AND rendelesszam='\${rendelesszam}' AND hely='\${hely}'
   mssql: >-
     ${sql.HelyekGepRelTable}
     WITH
@@ -656,6 +669,7 @@ kapacitasigeny2:
     WHERE {where}
     ORDER BY helyek.hely, gep.gepnev, ugyfel.nev, rendelt.cikkszam
 
+###############################################################################################################################################################
 ehu_munkalap:
   title: E-H-U munkalapok
   #pivotMode: true
@@ -695,16 +709,6 @@ ehu_munkalap:
       headerName: db
       type: numericColumn
       aggFunc: sum
-    - field: ertek
-      headerName: Érték
-      type: numericColumn
-      valueFormatter: value.toFixed(2)
-      aggFunc: sum
-    - field: rendelt_perc
-      headerName: Rendelt perc
-      type: numericColumn
-      valueFormatter: value.toFixed(2)
-      aggFunc: sum
     - field: ugyfelnev
       headerName: Megrendelő
       enableRowGroup: true
@@ -714,14 +718,14 @@ ehu_munkalap:
   onClick:
     munkalapazonosito:
       path: ehu_munkalap_mozgas
-      where: mlap.munkalapazonosito='\${munkalapazonosito}'
+      where: munkalapazonosito='\${munkalapazonosito}'
   mssql: >-
-    ${sql.HelyekGepRelTable}
     SELECT * FROM ${sql.rendelesmunkalapView} AS mlap
     WHERE (elokeszito = 0) AND {where}
     ORDER BY mlap.rendelesszam, mlap.munkalapazonosito
   where: statusz = 'N'
 
+###############################################################################################################################################################
 kellek_munkalap:
   title: Kellék munkalapok
   #pivotMode: true
@@ -761,11 +765,6 @@ kellek_munkalap:
       headerName: db
       type: numericColumn
       aggFunc: sum
-    - field: rendelt_perc
-      headerName: Rendelt perc
-      type: numericColumn
-      valueFormatter: value.toFixed(2)
-      aggFunc: sum
     - field: ugyfelnev
       headerName: Megrendelő
       enableRowGroup: true
@@ -775,14 +774,72 @@ kellek_munkalap:
   onClick:
     munkalapazonosito:
       path: kellek_munkalap_mozgas
-      where: mlap.munkalapazonosito='\${munkalapazonosito}'
+      where: munkalapazonosito='\${munkalapazonosito}'
   mssql: >-
-    ${sql.HelyekGepRelTable}
     SELECT * FROM ${sql.rendelesmunkalapView} AS mlap
     WHERE (elokeszito = 1) AND {where}
     ORDER BY mlap.rendelesszam, mlap.munkalapazonosito
   where: statusz = 'N'
 
+###############################################################################################################################################################
+osszes_munkalap:
+  title: Összes munkalap
+  #pivotMode: true
+  sideBar: true
+  rowSelection: multiple
+  defaultColDef:
+    filter: true
+    sortable: true
+    resizable: true
+  columnDefs:
+    - field: cikkszam
+      headerName: Cikk
+      enableRowGroup: true
+    - field: itszam
+      headerName: IT
+      enableRowGroup: true
+    - field: partnerrendelesszam
+      headerName: Rendelésszám
+      enableRowGroup: true
+    - field: munkalapazonosito
+      headerName: Munkalap
+      cellStyle: {'background-color': 'beige'}
+    - field: kartonszam
+      headerName: Kartonszám
+    - field: helynev
+      headerName: Hely
+      enableRowGroup: true
+      enablePivot: true
+      pivot: true
+    - field: db
+      headerName: db
+      type: numericColumn
+      aggFunc: sum
+    - field: ertek
+      headerName: Érték
+      type: numericColumn
+      valueFormatter: "value ? value.toFixed(2) : value"
+      aggFunc: sum
+    - field: rendelt_perc
+      headerName: Területen perc
+      type: numericColumn
+      valueFormatter: "value ? value.toFixed(2) : value"
+      aggFunc: sum
+    - field: ugyfelnev
+      headerName: Megrendelő
+      enableRowGroup: true
+  onClick:
+    munkalapazonosito:
+      path: osszes_munkalap_mozgas
+      where: munkalapazonosito='\${munkalapazonosito}'
+  mssql: >-
+    ${sql.HelyekGepRelTable}
+    SELECT * FROM ${sql.rendelesmunkalapView2} AS mlap
+    WHERE {where}
+    ORDER BY mlap.rendelesszam, mlap.munkalapazonosito
+  where: statusz = 'N'
+
+###############################################################################################################################################################
 ehu_munkalap_mozgas:
   title: E-H-U munkalap mozgás
   sideBar: true
@@ -807,8 +864,8 @@ ehu_munkalap_mozgas:
     - field: kartonszam
       headerName: Kartonszám
       enableRowGroup: true
-    - field: helynev
-      headerName: Hely
+    - field: hova
+      headerName: Hova
       enableRowGroup: true
     - field: datum
       headerName: Dátum
@@ -825,29 +882,19 @@ ehu_munkalap_mozgas:
       headerName: db
       type: numericColumn
       aggFunc: sum
-    - field: ertek
-      headerName: Érték
-      type: numericColumn
-      valueFormatter: value.toFixed(2)
-      aggFunc: sum
     - field: ugyfelnev
       headerName: Megrendelő
       enableRowGroup: true
     - field: utem
       headerName: Ütem
       enableRowGroup: true
-
   mssql: >-
-    ${sql.HelyekGepRelTable}
-    SELECT
-      mlap.cikkszam, mlap.itszam, mlap.partnerrendelesszam, mlap.munkalapazonosito, mlap.kartonszam,
-      mhely.rhely AS helynev, mozgas.datum, mlap.szinkod, mlap.meret, mlap.db, mlap.ertek, mlap.ugyfelnev, mlap.utem
-    FROM ${sql.rendelesmunkalapView} AS mlap
-    LEFT JOIN rendeleskartonmozgas AS mozgas ON mozgas.munkalapazonosito = mlap.munkalapazonosito
-    LEFT JOIN helyek AS mhely ON mhely.azon = mozgas.hely
-    WHERE (mlap.elokeszito = 0) AND {where}
-    ORDER BY mozgas.datum
+    SELECT * FROM ${sql.rendeleskartonmozgasView} AS mozgas
+    WHERE (elokeszito = 0) AND {where}
+    ORDER BY datum
+  where: statusz = 'N'
 
+###############################################################################################################################################################
 kellek_munkalap_mozgas:
   title: Kellék munkalap mozgás
   sideBar: true
@@ -872,8 +919,8 @@ kellek_munkalap_mozgas:
     - field: kartonszam
       headerName: Kartonszám
       enableRowGroup: true
-    - field: helynev
-      headerName: Hely
+    - field: hova
+      headerName: Hova
       enableRowGroup: true
     - field: datum
       headerName: Dátum
@@ -893,15 +940,68 @@ kellek_munkalap_mozgas:
       headerName: Ütem
       enableRowGroup: true
   mssql: >-
+    SELECT * FROM ${sql.rendeleskartonmozgasView} AS mozgas
+    WHERE (elokeszito = 1) AND {where}
+    ORDER BY datum
+  where: statusz = 'N'
+
+###############################################################################################################################################################
+osszes_munkalap_mozgas:
+  title: Összes munkalap mozgás
+  sideBar: true
+  #rowSelection: multiple
+  defaultColDef:
+    filter: true
+    sortable: true
+    resizable: true
+  columnDefs:
+    - field: cikkszam
+      headerName: Cikk
+      enableRowGroup: true
+    - field: itszam
+      headerName: IT
+      enableRowGroup: true
+    - field: partnerrendelesszam
+      headerName: Rendelésszám
+      enableRowGroup: true
+    - field: munkalapazonosito
+      headerName: Munkalap
+      enableRowGroup: true
+    - field: kartonszam
+      headerName: Kartonszám
+      enableRowGroup: true
+    - field: hova
+      headerName: Hova
+      enableRowGroup: true
+    - field: datum
+      headerName: Dátum
+    - headerName: Nap
+      valueGetter: data.datum.substring(0,10)
+      enableRowGroup: true
+    - field: db
+      headerName: db
+      type: numericColumn
+      aggFunc: sum
+    - field: ertek
+      headerName: Érték
+      type: numericColumn
+      valueFormatter: "value ? value.toFixed(2) : value"
+      aggFunc: sum
+    - field: rendelt_perc
+      headerName: Területen perc
+      type: numericColumn
+      valueFormatter: "value ? value.toFixed(2) : value"
+      aggFunc: sum
+    - field: ugyfelnev
+      headerName: Megrendelő
+      enableRowGroup: true
+  mssql: >-
     ${sql.HelyekGepRelTable}
-    SELECT
-      mlap.cikkszam, mlap.itszam, mlap.partnerrendelesszam, mlap.munkalapazonosito, mlap.kartonszam,
-      mhely.rhely AS helynev, mozgas.datum, mlap.szinkod, mlap.kellektipusnev, mlap.db, mlap.ugyfelnev, mlap.utem
-    FROM ${sql.rendelesmunkalapView} AS mlap
-    LEFT JOIN rendeleskartonmozgas AS mozgas ON mozgas.munkalapazonosito = mlap.munkalapazonosito
-    LEFT JOIN helyek AS mhely ON mhely.azon = mozgas.hely
-    WHERE (mlap.elokeszito = 1) AND {where}
-    ORDER BY mlap.munkalapazonosito, mozgas.datum
+    SELECT * FROM ${sql.rendeleskartonmozgasView2} AS mozgas
+    WHERE {where}
+    ORDER BY datum
+  where: statusz = 'N'
+
 `
 
 const localeText = {

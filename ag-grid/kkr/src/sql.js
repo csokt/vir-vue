@@ -62,7 +62,16 @@ sql.gep = `(SELECT * FROM gep WHERE statusz = 'A')`
 // ############################################################################################################################  Normák  ###
 sql.normak = `(SELECT * FROM normak WHERE normaperc > 0.01)`
 
-sql.normakGroupByCikkszamElokeszitoHelykodGepkodMuveletkodSumPerc = `
+sql.normakView = `
+    (
+      SELECT normak.cikkszam, nyitott.cikkszam AS nyitott_cikkszam, CAST(normak.muveletkod AS int) AS muveletkod, normak.muveletnev,
+        normak.elokeszito, normak.kellek, normak.normaperc, normak.gepkod, normak.felszabaditas, normak.bontaskod, gep.gepnev
+      FROM ${sql.normak} AS normak
+      JOIN gep ON gep.gepkod = normak.gepkod
+      LEFT JOIN ${sql.cikkekGyartasAlatt} AS nyitott ON nyitott.cikkszam = normak.cikkszam
+    )`
+
+sql.normakGroupByHelykodGepkodMuveletkod = `
     (
       SELECT
         normak.cikkszam, normak.elokeszito, rel.helykod, normak.gepkod, normak.muveletkod, SUM(normak.normaperc) AS sumperc
@@ -72,7 +81,7 @@ sql.normakGroupByCikkszamElokeszitoHelykodGepkodMuveletkodSumPerc = `
       GROUP BY normak.cikkszam, normak.elokeszito, rel.helykod, normak.gepkod, normak.muveletkod
     )`
 
-sql.normakGroupByCikkszamElokeszitoHelykodSumPerc = `
+sql.normakGroupByHelykod = `
     (
       SELECT
         normak.cikkszam, normak.elokeszito, rel.helykod, SUM(normak.normaperc) AS sumperc
@@ -82,10 +91,23 @@ sql.normakGroupByCikkszamElokeszitoHelykodSumPerc = `
       GROUP BY normak.cikkszam, normak.elokeszito, rel.helykod
     )`
 
+// ############################################################################################################################  Rendelésmatrica  ###
+sql.rendelesmatricaView = `
+    (
+      SELECT matricakod, mlap.munkalapazonosito, normak.muveletkod
+      FROM rendelesmatrica AS kodol
+      JOIN rendelesmunkalap AS mlap ON mlap.munkalapazonosito = kodol.vonalkod
+      JOIN normak ON normak.cikkszam = kodol.cikkszam AND normak.muveletkod = kodol.muveletkod
+    )`
+
+sql.kodolGroupByMunkalap = `
+    (
+      SELECT vonalkod AS munkalapazonosito, SUM(darab * normaperdb) AS sumperc
+      FROM rendelesmatrica
+      GROUP BY vonalkod
+    )`
+
 // ############################################################################################################################  Rendelésmunkalap  ###
-// sql.rendelesmunkalapKkr = `
-//    (rendelesszam, partnerrendelesszam, itszam, utem, kartonszam, cikkszam, munkalapazonosito,
-//      szinkod, meret, meretsorrend, db, kellektipus, hely, elokeszito, ugyfelnev, helynev, ertek, kellektipusnev) AS (
 sql.rendelesmunkalap = `(SELECT *, CASE LEFT(munkalapazonosito, 1) WHEN '2' THEN 0 WHEN '4' THEN 1 END AS elokeszito FROM rendelesmunkalap WHERE db > 0)`
 
 sql.rendelesmunkalapView = `
@@ -94,34 +116,54 @@ sql.rendelesmunkalapView = `
         mlap.rendelesszam, mlap.partnerrendelesszam, mlap.itszam, mlap.utem, mlap.kartonszam, mlap.cikkszam, mlap.munkalapazonosito,
         mlap.szinkod, mlap.meret, mlap.meretsorrend, mlap.db, mlap.kellektipus, mlap.hely, mlap.elokeszito,
         fej.statusz,
-        ugyfel.nev AS ugyfelnev,
+        ugyfel.ugyfelkod, ugyfel.nev AS ugyfelnev,
         helyek.rhely AS helynev,
-        mlap.db*fej.elfogadottar AS ertek,
-        mlap.db*norma.sumperc AS rendelt_perc,
+        CASE mlap.elokeszito WHEN 0 THEN mlap.db*fej.elfogadottar WHEN 1 THEN 0.0 END AS ertek,
         szotar.nev AS kellektipusnev
       FROM ${sql.rendelesmunkalap} AS mlap
       JOIN ${sql.rendelesfej} AS fej ON fej.rendelesszam = mlap.rendelesszam
       JOIN ${sql.ugyfel} AS ugyfel ON ugyfel.ugyfelkod = fej.partnerkod
       LEFT JOIN helyek ON helyek.azon = mlap.hely
       LEFT JOIN SzefoModulParam.dbo.kodszotar AS szotar ON szotar.kod = mlap.kellektipus AND szotar.tipus = 'KELTIP'
-      LEFT JOIN ${sql.normakGroupByCikkszamElokeszitoHelykodSumPerc} AS norma
+    )`
+
+sql.rendelesmunkalapView2 = `
+    (
+      SELECT
+        mlap.*, mlap.db * norma.sumperc AS rendelt_perc
+      FROM ${sql.rendelesmunkalapView} AS mlap
+      LEFT JOIN ${sql.normakGroupByHelykod} AS norma
         ON norma.cikkszam = mlap.cikkszam AND norma.elokeszito = mlap.elokeszito AND norma.helykod = mlap.hely
     )`
 
-// sql.rendelesmunkaBase = `
-//     (
-//       SELECT matricakod, mlap.munkalapazonosito, normak.muveletkod
-//       FROM rendelesmatrica AS kodol
-//       JOIN ${rendelesmunkalapBase} AS mlap ON mlap.munkalapazonosito = kodol.vonalkod
-//       JOIN normak ON normak.cikkszam = kodol.cikkszam AND normak.muveletkod = kodol.muveletkod
-//     )`
+// ############################################################################################################################  Rendeléskartonmozgás  ###
+sql.rendeleskartonmozgasView = `
+    (
+      SELECT
+        mlap.*, mozgas.hely AS hova_helykod, hova.rhely AS hova, mozgas.datum
+      FROM rendeleskartonmozgas AS mozgas
+      JOIN ${sql.rendelesmunkalapView} AS mlap ON mlap.munkalapazonosito = mozgas.munkalapazonosito
+      JOIN helyek AS hova ON hova.azon = mozgas.hely
+    )`
 
-// sql.rendelesmatricaBase = `
-//     (
-//       SELECT matricakod, mlap.munkalapazonosito, normak.muveletkod
-//       FROM rendelesmatrica AS kodol
-//       JOIN ${rendelesmunkalapBase} AS mlap ON mlap.munkalapazonosito = kodol.vonalkod
-//       JOIN normak ON normak.cikkszam = kodol.cikkszam AND normak.muveletkod = kodol.muveletkod
-//     )`
+sql.rendeleskartonmozgasViewX = `
+    (
+      SELECT
+        mlap.*, hova.rhely AS hova, mozgas.datum, mlap.db * norma.sumperc AS rendelt_perc
+      FROM rendeleskartonmozgas AS mozgas
+      JOIN ${sql.rendelesmunkalapView} AS mlap ON mlap.munkalapazonosito = mozgas.munkalapazonosito
+      JOIN helyek AS hova ON hova.azon = mozgas.hely
+      LEFT JOIN ${sql.normakGroupByHelykod} AS norma
+        ON norma.cikkszam = mlap.cikkszam AND norma.elokeszito = mlap.elokeszito AND norma.helykod = mozgas.hely
+    )`
+
+sql.rendeleskartonmozgasView2 = `
+    (
+      SELECT
+        mozgas.*, mozgas.db * norma.sumperc AS rendelt_perc
+      FROM ${sql.rendeleskartonmozgasView} AS mozgas
+      LEFT JOIN ${sql.normakGroupByHelykod} AS norma
+        ON norma.cikkszam = mozgas.cikkszam AND norma.elokeszito = mozgas.elokeszito AND norma.helykod = mozgas.hova_helykod
+    )`
 
 export default sql
