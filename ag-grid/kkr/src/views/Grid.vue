@@ -3,9 +3,10 @@
     :gridId="gridId"
     :grid="grid"
     :rowData="rowData"
-    :errorMessage="errorMessage"
+    :statusMessage="statusMessage"
     @grid-ready="onGridReady"
     @select="onSelect"
+    @change-where="onChangeWhere"
   />
 </template>
 
@@ -27,41 +28,46 @@ export default {
       store: Store,
       gridId: null,
       grid: {},
-      sqlWhere: '',
       rowData: null,
       gridApi: null,
       columnApi: null,
-      errorMessage: ''
+      statusMessage: ''
     }
   },
 
   watch: {
     'store.loggedIn': function () {
-      if (this.store.loggedIn) this.requestData()
+      if (this.store.loggedIn) this.requestData(0)
     }
   },
 
   methods: {
     onGridReady (params) {
+      console.log('params', params)
       this.gridApi = params.api
       this.columnApi = params.columnApi
     },
 
-    async requestData () {
+    async requestData (whereIndex) {
       if (this.grid.mssql) {
-        const sql = this.grid.mssql.replace('{where}', this.sqlWhere)
+        this.statusMessage = 'betöltés...'
+        const sqlWhere = this.grid.where.length ? this.grid.where[whereIndex].value : '1=1'
+        const sql = this.grid.mssql.replace('{where}', sqlWhere)
         console.log(sql)
+        this.rowData = null
         const response = await API.post('tir/call', { sql: sql })
         if (response.ok) {
           response.data.forEach(Object.freeze)
           this.rowData = Object.freeze(response.data)
+          this.statusMessage = ''
         } else {
           this.rowData = []
-          this.errorMessage = response.data.error.message
+          this.statusMessage = response.data.error.message
         }
         await this.$nextTick()
         this.columnApi.autoSizeColumns(this.columnApi.getAllColumns())
       } else {
+        this.statusMessage = 'Invalid handler!'
         this.rowData = []
       }
     },
@@ -80,15 +86,21 @@ export default {
       } else {
         alert('Engedélyezze a felugró ablakokat ezen az oldalon!')
       }
+    },
+
+    onChangeWhere (content) {
+      // console.log('content', content)
+      this.requestData(content)
     }
   },
 
   created () {
     this.gridId = this.$route.params.id
     this.grid = Config[this.gridId] || { title: 'Nincs ilyen táblázat!' }
-    this.sqlWhere = this.$route.query.where ? this.$route.query.where : this.grid.where ? this.grid.where : '1=1'
-    // if (this.$route.query.where) this.sqlWhere = this.$route.query.where
-    if (this.store.loggedIn) this.requestData()
+    // where tömb előkészítése
+    if (!this.grid.where) this.grid.where = []
+    if (this.$route.query.where) this.grid.where.unshift({ label: 'Egyedi', value: this.$route.query.where })
+    if (this.store.loggedIn) this.requestData(0)
   },
 
   mounted () {

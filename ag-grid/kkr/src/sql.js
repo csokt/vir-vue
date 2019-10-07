@@ -1,5 +1,15 @@
 let sql = {}
 
+// ############################################################################################################################  Expressions  ###
+sql._0napja = 'dateadd(day,datediff(day,0,GETDATE()),0)'
+sql._1napja = 'dateadd(day,datediff(day,1,GETDATE()),0)'
+sql._2napja = 'dateadd(day,datediff(day,2,GETDATE()),0)'
+sql._3napja = 'dateadd(day,datediff(day,3,GETDATE()),0)'
+sql._7napja = 'dateadd(day,datediff(day,7,GETDATE()),0)'
+sql._14napja = 'dateadd(day,datediff(day,14,GETDATE()),0)'
+sql._30napja = 'dateadd(day,datediff(day,30,GETDATE()),0)'
+sql._60napja = 'dateadd(day,datediff(day,60,GETDATE()),0)'
+
 // ############################################################################################################################  Helyek - Gép  ###
 sql.HelyekGepRelTable = `
     DECLARE @helyek_gep_rel TABLE (gepkod int, helykod int);
@@ -20,6 +30,15 @@ sql.ugyfel = `
       SELECT ugyfel.* FROM ugyfel
       JOIN (SELECT DISTINCT partnerkod FROM rendelesfej) AS ugyfel_ids ON ugyfel_ids.partnerkod = ugyfel.ugyfelkod
       WHERE ugyfel.aktiv = 'A'
+    )`
+
+// ############################################################################################################################  Cikktörzs  ###
+sql.cikktorzs = `(SELECT * FROM cikktorzs WHERE aktiv = 'A')`
+
+sql.cikktorzsView = `
+    (
+      SELECT cikkhsz, tcikkszam AS cikkszam, markanev, partnercikk, nev AS cikknev, eladasiar, elfogadottar, ugyfelkod, ugyfelnev
+      FROM ${sql.cikktorzs} AS cikktorzs
     )`
 
 // ############################################################################################################################  Rendelésfej  ###
@@ -134,6 +153,14 @@ sql.rendelesmunkalapView2 = `
       FROM ${sql.rendelesmunkalapView} AS mlap
       LEFT JOIN ${sql.normakGroupByHelykod} AS norma
         ON norma.cikkszam = mlap.cikkszam AND norma.elokeszito = mlap.elokeszito AND norma.helykod = mlap.hely
+    )`
+
+sql.munkalapGroupByRendelesszamElokeszito = `
+    (
+      SELECT
+        rendelesszam, elokeszito, COUNT(*) AS tetelszam
+      FROM ${sql.rendelesmunkalap} AS mlap
+      GROUP BY rendelesszam, elokeszito
     )`
 
 // ############################################################################################################################  Rendeléskartonmozgás  ###

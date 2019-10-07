@@ -57,7 +57,14 @@ export default {
 
   methods: {
     onSelect (content) {
-      this.$router.push('/grid/' + this.menuItems[content].path)
+      // this.$router.push('/grid/' + this.menuItems[content].path)
+      const url = window.location.origin + '/grid/' + this.menuItems[content].path
+      let win = window.open(url, '_blank')
+      if (win) {
+        win.focus()
+      } else {
+        alert('Engedélyezze a felugró ablakokat ezen az oldalon!')
+      }
     }
   }
 }

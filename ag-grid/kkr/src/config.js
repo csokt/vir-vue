@@ -16,13 +16,14 @@ kkrmenu:
   menu:
     torzs:
       - { value: Ügyfelek,           path: ugyfelek }
+      - { value: Cikktörzs,          path: cikktorzs }
+      - { value: Normák,             path: normak }
       - { value: Telephelyek,        path: telephelyek }
       - { value: Üzemek,             path: uzemek }
       - { value: Dolgozók,           path: dolgozok }
       - { value: Helyek,             path: helyek }
       - { value: Gépek,              path: gepek }
       - { value: Hely-gép kapcsolat, path: helyek_gep_rel }
-      - { value: Normák,             path: normak }
     rendeles:
       - { value: Rendelésfej,        path: rendelesfej }
       - { value: Rendeléssor,        path: rendelessor }
@@ -104,6 +105,37 @@ ugyfelek:
     JOIN ${sql.rendelesfejGroupByPartnerkod} AS fej ON fej.partnerkod = ugyfel.ugyfelkod
     WHERE {where}
     ORDER BY ugyfel.ugyfelkod
+
+###############################################################################################################################################################
+cikktorzs:
+  title: Cikktörzs
+  defaultColDef:
+    filter: true
+  columnDefs:
+    - field: cikkszam
+      headerName: Cikkszám
+      cellStyle: {'background-color': 'beige'}
+    - field: markanev
+      headerName: Márkanév
+    - field: partnercikk
+      headerName: Partner cikkszám
+    - field: cikknev
+      headerName: Cikknév
+    - field: eladasiar
+      headerName: Eladási ár
+      filter: agNumberColumnFilter
+      type: numericColumn
+    - field: elfogadottar
+      headerName: Elfogadott ár
+      filter: agNumberColumnFilter
+      type: numericColumn
+    - field: ugyfelnev
+      headerName: Ügyfél
+  onClick:
+    cikkszam:
+      path: rendelesfej
+      where: cikkszam='\${cikkszam}'
+  mssql: SELECT * FROM ${sql.cikktorzsView} AS cikktorzs WHERE {where} ORDER by cikkszam
 
 ###############################################################################################################################################################
 telephelyek:
@@ -274,7 +306,9 @@ normak:
     SELECT * FROM ${sql.normakView} AS normak
     WHERE {where}
     ORDER BY cikkszam, muveletkod
-  where: nyitott_cikkszam IS NOT NULL
+  where:
+    - label: Gyártás alatt
+      value: nyitott_cikkszam IS NOT NULL
 
 ###############################################################################################################################################################
 rendelesfej:
@@ -299,6 +333,12 @@ rendelesfej:
       headerName: Rendelés ideje
     - field: hatarido
       headerName: Határidő
+    - field: ehu
+      headerName: E-H-U
+      cellStyle: {'background-color': 'beige'}
+    - field: kellek
+      headerName: Kellék
+      cellStyle: {'background-color': 'beige'}
     - field: mennyiseg
       headerName: Rendelt
       filter: agNumberColumnFilter
@@ -323,12 +363,6 @@ rendelesfej:
       headerName: Számlázva
       filter: agNumberColumnFilter
       type: numericColumn
-    - field: ehu
-      headerName: E-H-U
-      cellStyle: {'background-color': 'beige'}
-    - field: kellek
-      headerName: Kellék
-      cellStyle: {'background-color': 'beige'}
   onClick:
     partnerrendelesszam:
       path: rendelessor
@@ -339,8 +373,17 @@ rendelesfej:
     kellek:
       path: kellek_munkalap
       where: rendelesszam='\${rendelesszam}'
-  mssql: SELECT *, partnerrendelesszam AS ehu, partnerrendelesszam AS kellek FROM rendelesfej AS fej WHERE {where}
-  where: fej.statusz = 'N'
+  mssql: >-
+    SELECT fej.*, ehu_mlap.tetelszam AS ehu, kellek_mlap.tetelszam AS kellek
+    FROM rendelesfej AS fej
+    LEFT JOIN ${sql.munkalapGroupByRendelesszamElokeszito} AS ehu_mlap    ON ehu_mlap.rendelesszam    = fej.rendelesszam AND ehu_mlap.elokeszito = 0
+    LEFT JOIN ${sql.munkalapGroupByRendelesszamElokeszito} AS kellek_mlap ON kellek_mlap.rendelesszam = fej.rendelesszam AND kellek_mlap.elokeszito = 1
+    WHERE {where}
+  where:
+    - label: Nyitott
+      value: fej.statusz = 'N'
+    - label: Törölt
+      value: fej.statusz = 'T'
 
 ###############################################################################################################################################################
 rendelessor:
@@ -389,7 +432,9 @@ rendelessor:
       filter: agNumberColumnFilter
       type: numericColumn
   mssql: SELECT sor.* FROM rendelessorok AS sor JOIN rendelesfej AS fej ON fej.rendelesszam = sor.rendelesszam WHERE {where}
-  where: fej.statusz = 'N'
+  where:
+    - label: Nyitott
+      value: fej.statusz = 'N'
 
 ###############################################################################################################################################################
 kapacitasigeny:
@@ -723,7 +768,9 @@ ehu_munkalap:
     SELECT * FROM ${sql.rendelesmunkalapView} AS mlap
     WHERE (elokeszito = 0) AND {where}
     ORDER BY mlap.rendelesszam, mlap.munkalapazonosito
-  where: statusz = 'N'
+  where:
+    - label: Nyitott
+      value: statusz = 'N'
 
 ###############################################################################################################################################################
 kellek_munkalap:
@@ -779,7 +826,9 @@ kellek_munkalap:
     SELECT * FROM ${sql.rendelesmunkalapView} AS mlap
     WHERE (elokeszito = 1) AND {where}
     ORDER BY mlap.rendelesszam, mlap.munkalapazonosito
-  where: statusz = 'N'
+  where:
+    - label: Nyitott
+      value: statusz = 'N'
 
 ###############################################################################################################################################################
 osszes_munkalap:
@@ -837,7 +886,9 @@ osszes_munkalap:
     SELECT * FROM ${sql.rendelesmunkalapView2} AS mlap
     WHERE {where}
     ORDER BY mlap.rendelesszam, mlap.munkalapazonosito
-  where: statusz = 'N'
+  where:
+    - label: Nyitott
+      value: statusz = 'N'
 
 ###############################################################################################################################################################
 ehu_munkalap_mozgas:
@@ -892,7 +943,25 @@ ehu_munkalap_mozgas:
     SELECT * FROM ${sql.rendeleskartonmozgasView} AS mozgas
     WHERE (elokeszito = 0) AND {where}
     ORDER BY datum
-  where: statusz = 'N'
+  where:
+    - label: Ma
+      value: datum >= ${sql._0napja}
+    - label: 1 napja
+      value: datum >= ${sql._1napja}
+    - label: 2 napja
+      value: datum >= ${sql._2napja}
+    - label: 3 napja
+      value: datum >= ${sql._3napja}
+    - label: 7 napja
+      value: datum >= ${sql._7napja}
+    - label: 14 napja
+      value: datum >= ${sql._14napja}
+    - label: 30 napja
+      value: datum >= ${sql._30napja}
+    - label: 60 napja
+      value: datum >= ${sql._60napja}
+    - label: Nyitott
+      value: statusz = 'N'
 
 ###############################################################################################################################################################
 kellek_munkalap_mozgas:
@@ -943,7 +1012,25 @@ kellek_munkalap_mozgas:
     SELECT * FROM ${sql.rendeleskartonmozgasView} AS mozgas
     WHERE (elokeszito = 1) AND {where}
     ORDER BY datum
-  where: statusz = 'N'
+  where:
+    - label: Ma
+      value: datum >= ${sql._0napja}
+    - label: 1 napja
+      value: datum >= ${sql._1napja}
+    - label: 2 napja
+      value: datum >= ${sql._2napja}
+    - label: 3 napja
+      value: datum >= ${sql._3napja}
+    - label: 7 napja
+      value: datum >= ${sql._7napja}
+    - label: 14 napja
+      value: datum >= ${sql._14napja}
+    - label: 30 napja
+      value: datum >= ${sql._30napja}
+    - label: 60 napja
+      value: datum >= ${sql._60napja}
+    - label: Nyitott
+      value: statusz = 'N'
 
 ###############################################################################################################################################################
 osszes_munkalap_mozgas:
@@ -1000,7 +1087,25 @@ osszes_munkalap_mozgas:
     SELECT * FROM ${sql.rendeleskartonmozgasView2} AS mozgas
     WHERE {where}
     ORDER BY datum
-  where: statusz = 'N'
+  where:
+    - label: Ma
+      value: datum >= ${sql._0napja}
+    - label: 1 napja
+      value: datum >= ${sql._1napja}
+    - label: 2 napja
+      value: datum >= ${sql._2napja}
+    - label: 3 napja
+      value: datum >= ${sql._3napja}
+    - label: 7 napja
+      value: datum >= ${sql._7napja}
+    - label: 14 napja
+      value: datum >= ${sql._14napja}
+    - label: 30 napja
+      value: datum >= ${sql._30napja}
+    - label: 60 napja
+      value: datum >= ${sql._60napja}
+    - label: Nyitott
+      value: statusz = 'N'
 
 `
 

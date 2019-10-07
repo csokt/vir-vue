@@ -17,7 +17,6 @@
 import { AgGridVue } from 'ag-grid-vue'
 
 export default {
-  name: 'App',
   components: {
     AgGridVue
   },

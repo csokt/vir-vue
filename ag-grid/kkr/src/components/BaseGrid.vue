@@ -1,20 +1,29 @@
 <template>
   <div style="height: 100%">
-    {{ grid.title }} {{ errorMessage }}
-    <button v-on:click="onBtExport()">Export Excelbe</button>
-    <select v-model="stateName">
-      <option v-for="(value, name) in gridStates" v-bind:value="name" v-bind:key="name">
-        {{ name }}
-      </option>
-    </select>
-    <button v-on:click="restoreState()">Visszaállít</button>
-    <input v-model="stateName">
-    <button v-on:click="saveState()">{{saveButton}}</button>
-    <button v-on:click="resetState()">Alapállapot</button>
-    <button v-on:click="deleteState()">Töröl</button>
-    <span>Export:</span>
-    <textarea rows="1" cols="25" v-model="jsonParams" @focus="$event.target.select()"/>
-    <button v-on:click="importState()">Import</button>
+    <span>{{ grid.title }} {{ statusMessage }}</span>
+    <template v-if="!statusMessage">
+      Szűrő:
+      <select v-model="whereIndex" @change="$emit('change-where', whereIndex)">
+        <option v-for="(item, index) in grid.where" :value="index" :key="index">
+          {{ item.label }}
+        </option>
+      </select>
+      Megjelenés:
+      <select v-model="stateName">
+        <option v-for="(value, name) in gridStates" :value="name" :key="name">
+          {{ name }}
+        </option>
+      </select>
+      <button v-on:click="restoreState()">Visszaállít</button>
+      <input v-model="stateName">
+      <button v-on:click="saveState()">{{saveButton}}</button>
+      <button v-on:click="resetState()">Alapállapot</button>
+      <button v-on:click="deleteState()">Töröl</button>
+      <span>Export:</span>
+      <textarea rows="1" cols="25" v-model="jsonParams" @focus="$event.target.select()"/>
+      <button v-on:click="importState()">Import</button>
+      <button v-on:click="onBtExport()">Export Excelbe</button>
+    </template>
 
     <ag-grid-vue
       style="height: 100%"
@@ -53,7 +62,7 @@ export default {
       required: true
     },
     rowData: Array,
-    errorMessage: String
+    statusMessage: String
   },
 
   computed: {
@@ -64,6 +73,7 @@ export default {
 
   data () {
     return {
+      whereIndex: 0,
       stateName: '',
       gridStates: {},
       saveButton: 'Ment',
@@ -198,7 +208,7 @@ export default {
 <style scoped>
 button, input, select, span {
   margin-bottom: 4px;
-  margin-left: 20px;
+  margin-right: 20px;
 }
 
 textarea {
