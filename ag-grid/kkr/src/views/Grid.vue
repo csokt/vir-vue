@@ -43,19 +43,29 @@ export default {
 
   methods: {
     onGridReady (params) {
-      console.log('params', params)
+      // console.log('params', params)
       this.gridApi = params.api
       this.columnApi = params.columnApi
     },
 
     async requestData (whereIndex) {
+      let gridSql = ''
+      let apiPath = ''
       if (this.grid.mssql) {
+        gridSql = this.grid.mssql
+        apiPath = 'tir/call'
+      }
+      if (this.grid.pgraktar) {
+        gridSql = this.grid.pgraktar
+        apiPath = 'vir/raktarcall'
+      }
+      if (gridSql) {
         this.statusMessage = 'betöltés...'
         const sqlWhere = this.grid.where.length ? this.grid.where[whereIndex].value : '1=1'
-        const sql = this.grid.mssql.replace('{where}', sqlWhere)
+        const sql = gridSql.replace('{where}', sqlWhere)
         console.log(sql)
         this.rowData = null
-        const response = await API.post('tir/call', { sql: sql })
+        const response = await API.post(apiPath, { sql: sql })
         if (response.ok) {
           response.data.forEach(Object.freeze)
           this.rowData = Object.freeze(response.data)

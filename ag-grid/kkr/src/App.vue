@@ -53,4 +53,23 @@ export default {
 <style lang="scss">
   @import "../node_modules/ag-grid-community/dist/styles/ag-grid.css";
   @import "../node_modules/ag-grid-community/dist/styles/ag-theme-balham.css";
+
+.div-percent-bar {
+    display: inline-block;
+    height: 100%;
+    position: absolute;
+}
+
+.div-percent-value {
+    position: absolute;
+    padding-left: 4px;
+    font-weight: bold;
+    font-size: 13px;
+}
+
+.div-outer-div {
+    display: inline-block;
+    height: 100%;
+    width: 100%;
+}
 </style>

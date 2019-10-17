@@ -9,6 +9,14 @@ sql._7napja = 'dateadd(day,datediff(day,7,GETDATE()),0)'
 sql._14napja = 'dateadd(day,datediff(day,14,GETDATE()),0)'
 sql._30napja = 'dateadd(day,datediff(day,30,GETDATE()),0)'
 sql._60napja = 'dateadd(day,datediff(day,60,GETDATE()),0)'
+sql.pg_0napja = "(current_date AT TIME ZONE 'UTC')"
+sql.pg_1napja = "(current_date AT TIME ZONE 'UTC' - interval '1 day')"
+sql.pg_2napja = "(current_date AT TIME ZONE 'UTC' - interval '2 days')"
+sql.pg_3napja = "(current_date AT TIME ZONE 'UTC' - interval '3 days')"
+sql.pg_7napja = "(current_date AT TIME ZONE 'UTC' - interval '7 days')"
+sql.pg_14napja = "(current_date AT TIME ZONE 'UTC' - interval '14 days')"
+sql.pg_30napja = "(current_date AT TIME ZONE 'UTC' - interval '30 days')"
+sql.pg_60napja = "(current_date AT TIME ZONE 'UTC' - interval '60 days')"
 
 // ############################################################################################################################  Helyek - Gép  ###
 sql.HelyekGepRelTable = `

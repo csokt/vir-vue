@@ -1,5 +1,34 @@
 import sql from './sql'
 import yaml from 'js-yaml'
+
+let functions = {}
+
+functions.percentCellRenderer = function (params) {
+  var value = params.value !== null ? params.value.toFixed(1) : ''
+
+  var eDivPercentBar = document.createElement('div')
+  eDivPercentBar.className = 'div-percent-bar'
+  eDivPercentBar.style.width = value + '%'
+  if (value < 50) {
+    eDivPercentBar.style.backgroundColor = '#F44336'
+  } else if (value < 80) {
+    eDivPercentBar.style.backgroundColor = '#FF9100'
+  } else {
+    eDivPercentBar.style.backgroundColor = '#4CAF50'
+  }
+
+  var eValue = document.createElement('div')
+  eValue.className = 'div-percent-value'
+  eValue.innerHTML = value ? value + '%' : value
+
+  var eOuterDiv = document.createElement('div')
+  eOuterDiv.className = 'div-outer-div'
+  eOuterDiv.appendChild(eDivPercentBar)
+  eOuterDiv.appendChild(eValue)
+
+  return eOuterDiv
+}
+
 let configYaml = `
 
 kkrmenu:
@@ -38,12 +67,14 @@ kkrmenu:
     tervezes:
       - { value: Kapacitásigény,     path: kapacitasigeny }
       - { value: Kapacitásigény2,    path: kapacitasigeny2 }
-    logisztika:
-      - { value: '-',                path: logisztika_leadas }
     kotode:
-      - { value: '-',                path: kotode_leadas }
+      - { value: 'Kötőgépek',        path: kotode_kotogep }
+      - { value: 'Kötőgép log',      path: kotode_kotogep_log }
+      - { value: 'Kötőgép értékelés',path: kotode_kotogep_ertekeles }
     varroda:
       - { value: '-',                path: varroda_leadas }
+    logisztika:
+      - { value: '-',                path: logisztika_leadas }
 
 
 
@@ -135,7 +166,7 @@ cikktorzs:
     cikkszam:
       path: rendelesfej
       where: cikkszam='\${cikkszam}'
-  mssql: SELECT * FROM ${sql.cikktorzsView} AS cikktorzs WHERE {where} ORDER by cikkszam
+  mssql: SELECT * FROM ${sql.cikktorzsView} AS cikktorzs WHERE {where} ORDER BY cikkszam
 
 ###############################################################################################################################################################
 telephelyek:
@@ -1107,6 +1138,193 @@ osszes_munkalap_mozgas:
     - label: Nyitott
       value: statusz = 'N'
 
+###############################################################################################################################################################
+kotode_kotogep:
+  title: Kötőgépek
+  defaultColDef:
+    filter: true
+  columnDefs:
+    - field: name
+      headerName: Név
+    - field: aktiv
+      headerName: Aktív?
+    - field: azonosito
+      headerName: Azonosító
+    - field: tipus
+      headerName: Típus
+    - field: finomsag
+      headerName: Finomság
+    - field: uzem
+      headerName: Üzem
+    - field: sor
+      headerName: Sor
+    - field: allapot
+      headerName: Állapot
+    - field: jelzes
+      headerName: Jelzés
+  pgraktar: SELECT * FROM kotode_kotogep ORDER BY name
+
+###############################################################################################################################################################
+kotode_kotogep_log:
+  title: Kötőgép log
+  sideBar: true
+  defaultColDef:
+    filter: true
+    sortable: true
+    resizable: true
+  columnDefs:
+    - field: jelzes
+      headerName: Jelzés
+      enableRowGroup: true
+      enablePivot: true
+      pivot: true
+    - field: datumstr
+      headerName: Dátum
+    - field: nap
+      headerName: Nap
+      valueGetter: data.datumstr.substring(0,10)
+      enableRowGroup: true
+    - field: uzem
+      headerName: Üzem
+    - field: gepazonosito
+      headerName: Gép azon.
+      enableRowGroup: true
+    - field: gep
+      headerName: Gép
+      enableRowGroup: true
+    - field: muszak
+      headerName: Műszak
+      enableRowGroup: true
+      enablePivot: true
+    - field: idotartam
+      headerName: Időtartam mp
+      type: numericColumn
+      aggFunc: sum
+    - field: idotartam_perc
+      headerName: Időtartam perc
+      type: numericColumn
+      valueFormatter: "value ? value.toFixed(2) : value"
+      aggFunc: sum
+    - field: idotartam_ora
+      headerName: Időtartam óra
+      type: numericColumn
+      valueFormatter: "value ? value.toFixed(2) : value"
+      aggFunc: sum
+    - field: megjegyzes
+      headerName: Megjegyzés
+  pgraktar: >-
+    SELECT log.*, (datum AT TIME ZONE 'UTC')::CHAR(19) AS datumstr, megj.name AS megjegyzes
+    FROM kotode_kotogep_log AS log
+    LEFT JOIN kotode_megjegyzes AS megj ON megj.id = log.megjegyzes_id
+    WHERE {where} ORDER BY id
+  where:
+    - label: Ma
+      value: datum >= ${sql.pg_0napja}
+    - label: 1 napja
+      value: datum >= ${sql.pg_1napja} AND datum < ${sql.pg_0napja}
+    - label: 2 napja
+      value: datum >= ${sql.pg_2napja} AND datum < ${sql.pg_0napja}
+    - label: 3 napja
+      value: datum >= ${sql.pg_3napja} AND datum < ${sql.pg_0napja}
+    - label: 7 napja
+      value: datum >= ${sql.pg_7napja} AND datum < ${sql.pg_0napja}
+    - label: 14 napja
+      value: datum >= ${sql.pg_14napja} AND datum < ${sql.pg_0napja}
+
+###############################################################################################################################################################
+kotode_kotogep_ertekeles:
+  title: Kötőgép értékelés
+  defaultColDef:
+    filter: true
+    sortable: true
+    resizable: true
+  columnDefs:
+    - field: nap
+      headerName: Nap
+    - field: gep
+      headerName: Gép
+      enableRowGroup: true
+    - field: all
+      headerName: Áll
+      type: numericColumn
+      valueFormatter: "value ? value.toFixed(2) : value"
+    - field: hiba
+      headerName: Hibával áll
+      type: numericColumn
+      valueFormatter: "value ? value.toFixed(2) : value"
+    - field: ki
+      headerName: Kikapcsolva
+      type: numericColumn
+      valueFormatter: "value ? value.toFixed(2) : value"
+    - field: termel
+      headerName: Termel
+      type: numericColumn
+      valueFormatter: "value ? value.toFixed(2) : value"
+    - field: ora
+      headerName: Összesen
+      type: numericColumn
+      valueFormatter: "value ? value.toFixed(2) : value"
+    - field: uzemeltetes
+      headerName: Üzemeltetési teljesítmény
+      valueGetter: "(data.ora-data.ki) ? 100*data.termel/(data.ora-data.ki) : null"
+      # type: numericColumn
+      # valueFormatter: "value ? value.toFixed(1) : value"
+      cellRenderer: percentCellRenderer
+    - field: kihasznaltsag
+      headerName: Gép teljesítmény (24 óra)
+      valueGetter: "100*data.termel/(data.szamlal*24)"
+      # type: numericColumn
+      # valueFormatter: "value ? value.toFixed(1) : value"
+      cellRenderer: percentCellRenderer
+  pgraktar: >-
+    WITH
+      log AS (
+        SELECT (datum AT TIME ZONE 'UTC')::CHAR(10) AS nap, gep, jelzes, idotartam_ora
+        FROM kotode_kotogep_log AS log
+        WHERE {where}
+      ),
+      group_nap_gep_jelzes AS (
+        SELECT nap, gep, jelzes, SUM(idotartam_ora) AS ora FROM log GROUP BY nap, gep, jelzes
+      ),
+      group_nap_gep AS (
+        SELECT  nap, gep, 1 AS szamlal, SUM(idotartam_ora) AS ora FROM log GROUP BY nap, gep
+      ),
+      pivot_nap_gep AS (
+        SELECT ''::CHAR AS napprefix, ''::CHAR AS gepprefix, group_nap_gep.nap, group_nap_gep.gep,
+          group_nap_gep.szamlal, group_nap_gep.ora, group_all.ora AS all, group_hiba.ora AS hiba, group_ki.ora AS ki, group_termel.ora AS termel
+        FROM group_nap_gep
+        LEFT JOIN group_nap_gep_jelzes AS group_all ON group_all.nap = group_nap_gep.nap AND group_all.gep = group_nap_gep.gep AND group_all.jelzes = 'all'
+        LEFT JOIN group_nap_gep_jelzes AS group_hiba ON group_hiba.nap = group_nap_gep.nap AND group_hiba.gep = group_nap_gep.gep AND group_hiba.jelzes = 'hiba'
+        LEFT JOIN group_nap_gep_jelzes AS group_ki ON group_ki.nap = group_nap_gep.nap AND group_ki.gep = group_nap_gep.gep AND group_ki.jelzes = 'ki'
+        LEFT JOIN group_nap_gep_jelzes AS group_termel ON group_termel.nap = group_nap_gep.nap AND group_termel.gep = group_nap_gep.gep AND group_termel.jelzes = 'termel'
+      ),
+      pivot_nap AS (
+        SELECT ''::CHAR AS napprefix, '0'::CHAR AS gepprefix, nap, 'összesen'::VARCHAR AS gep,
+          SUM(szamlal) AS szamlal, SUM(ora) AS ora, SUM("all") AS all, SUM(hiba) AS hiba, SUM(ki) AS ki, SUM(termel) AS termel
+        FROM pivot_nap_gep GROUP BY nap
+      ),
+      pivot_osszes AS (
+        SELECT '0'::CHAR AS napprefix, '0'::CHAR AS gepprefix, 'Összesen'::VARCHAR AS nap, ''::VARCHAR AS gep,
+          SUM(szamlal) AS szamlal, SUM(ora) AS ora, SUM("all") AS all, SUM(hiba) AS hiba, SUM(ki) AS ki, SUM(termel) AS termel
+        FROM pivot_nap_gep
+      ),
+      pivot AS (
+        SELECT * FROM pivot_nap_gep UNION ALL SELECT * FROM pivot_nap UNION ALL SELECT * FROM pivot_osszes
+      )
+    SELECT * FROM pivot ORDER BY napprefix || nap, gepprefix || gep
+  where:
+    - label: Ma
+      value: datum >= ${sql.pg_0napja}
+    - label: 1 napja
+      value: datum >= ${sql.pg_1napja} AND datum < ${sql.pg_0napja}
+    - label: 2 napja
+      value: datum >= ${sql.pg_2napja} AND datum < ${sql.pg_0napja}
+    - label: 3 napja
+      value: datum >= ${sql.pg_3napja} AND datum < ${sql.pg_0napja}
+    - label: 7 napja
+      value: datum >= ${sql.pg_7napja} AND datum < ${sql.pg_0napja}
+    - label: 14 napja
+      value: datum >= ${sql.pg_14napja} AND datum < ${sql.pg_0napja}
 `
 
 const localeText = {
@@ -1300,6 +1518,18 @@ let Config = null
 try {
   // console.log(configYaml)
   Config = yaml.safeLoad(configYaml)
+  // Config.kotode_kotogep.columnDefs[3].cellRenderer = cellRenderer
+  // console.log(Config)
+  for (const gridkey in Config) {
+    let grid = Config[gridkey]
+    if (grid.columnDefs) {
+      for (let column of grid.columnDefs) {
+        if (column.cellRenderer) {
+          column.cellRenderer = functions[column.cellRenderer]
+        }
+      }
+    }
+  }
   let arr = []
   for (const iterator of Config.kkrmenu.columnDefs) {
     const column = Config.kkrmenu.menu[iterator.field]
@@ -1320,6 +1550,7 @@ try {
   Config.localeText = localeText
 } catch (err) {
   console.log(err)
+  // console.log(cellRenderer)
 }
 
 export default Config
