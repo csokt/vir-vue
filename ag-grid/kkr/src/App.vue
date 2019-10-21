@@ -54,6 +54,11 @@ export default {
   @import "../node_modules/ag-grid-community/dist/styles/ag-grid.css";
   @import "../node_modules/ag-grid-community/dist/styles/ag-theme-balham.css";
 
+.row-class-header {
+    background: darkgrey !important;
+    font-weight: bold;
+}
+
 .div-percent-bar {
     display: inline-block;
     height: 100%;

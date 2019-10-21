@@ -1230,10 +1230,17 @@ kotode_kotogep_log:
       value: datum >= ${sql.pg_7napja} AND datum < ${sql.pg_0napja}
     - label: 14 napja
       value: datum >= ${sql.pg_14napja} AND datum < ${sql.pg_0napja}
+    - label: Elmúlt hét
+      value: datum >= ${sql.pg_1hete} AND datum < ${sql.pg_0hete}
+    - label: Elmúlt 2 hét
+      value: datum >= ${sql.pg_2hete} AND datum < ${sql.pg_0hete}
 
 ###############################################################################################################################################################
 kotode_kotogep_ertekeles:
   title: Kötőgép értékelés
+  domLayout: print
+  # rowClass: row-class-header
+  rowClassRules: {'row-class-header': 'data.gepprefix === "0"'}
   defaultColDef:
     filter: true
     sortable: true
@@ -1249,11 +1256,11 @@ kotode_kotogep_ertekeles:
       type: numericColumn
       valueFormatter: "value ? value.toFixed(2) : value"
     - field: hiba
-      headerName: Hibával áll
+      headerName: Hiba
       type: numericColumn
       valueFormatter: "value ? value.toFixed(2) : value"
     - field: ki
-      headerName: Kikapcsolva
+      headerName: Kikapcs.
       type: numericColumn
       valueFormatter: "value ? value.toFixed(2) : value"
     - field: termel
@@ -1261,7 +1268,7 @@ kotode_kotogep_ertekeles:
       type: numericColumn
       valueFormatter: "value ? value.toFixed(2) : value"
     - field: ora
-      headerName: Összesen
+      headerName: Össz.
       type: numericColumn
       valueFormatter: "value ? value.toFixed(2) : value"
     - field: uzemeltetes
@@ -1279,9 +1286,10 @@ kotode_kotogep_ertekeles:
   pgraktar: >-
     WITH
       log AS (
-        SELECT (datum AT TIME ZONE 'UTC')::CHAR(10) AS nap, gep, jelzes, idotartam_ora
+        SELECT (log.datum AT TIME ZONE 'UTC')::CHAR(10) AS nap, log.gep, log.jelzes, log.idotartam_ora
         FROM kotode_kotogep_log AS log
-        WHERE {where}
+        LEFT JOIN kotode_kotogep AS gep ON gep.id = log.kotogep_id
+        WHERE (log.uzem = 'sik' AND log.megjegyzes_id IS NULL AND gep.aktiv) AND {where}
       ),
       group_nap_gep_jelzes AS (
         SELECT nap, gep, jelzes, SUM(idotartam_ora) AS ora FROM log GROUP BY nap, gep, jelzes
@@ -1299,7 +1307,7 @@ kotode_kotogep_ertekeles:
         LEFT JOIN group_nap_gep_jelzes AS group_termel ON group_termel.nap = group_nap_gep.nap AND group_termel.gep = group_nap_gep.gep AND group_termel.jelzes = 'termel'
       ),
       pivot_nap AS (
-        SELECT ''::CHAR AS napprefix, '0'::CHAR AS gepprefix, nap, 'összesen'::VARCHAR AS gep,
+        SELECT ''::CHAR AS napprefix, '0'::CHAR AS gepprefix, nap, 'össz.'::VARCHAR AS gep,
           SUM(szamlal) AS szamlal, SUM(ora) AS ora, SUM("all") AS all, SUM(hiba) AS hiba, SUM(ki) AS ki, SUM(termel) AS termel
         FROM pivot_nap_gep GROUP BY nap
       ),
@@ -1313,6 +1321,18 @@ kotode_kotogep_ertekeles:
       )
     SELECT * FROM pivot ORDER BY napprefix || nap, gepprefix || gep
   where:
+    - label: Elmúlt hét
+      value: datum >= ${sql.pg_1hete} AND datum < ${sql.pg_0hete}
+    - label: Elmúlt 2 hét
+      value: datum >= ${sql.pg_2hete} AND datum < ${sql.pg_0hete}
+    - label: Elmúlt 4 hét
+      value: datum >= ${sql.pg_4hete} AND datum < ${sql.pg_0hete}
+    - label: Elmúlt hónap
+      value: datum >= ${sql.pg_1honapja} AND datum < ${sql.pg_0honapja}
+    - label: Elmúlt 2 hónap
+      value: datum >= ${sql.pg_2honapja} AND datum < ${sql.pg_0honapja}
+    - label: Elmúlt 3 hónap
+      value: datum >= ${sql.pg_3honapja} AND datum < ${sql.pg_0honapja}
     - label: Ma
       value: datum >= ${sql.pg_0napja}
     - label: 1 napja
@@ -1325,6 +1345,10 @@ kotode_kotogep_ertekeles:
       value: datum >= ${sql.pg_7napja} AND datum < ${sql.pg_0napja}
     - label: 14 napja
       value: datum >= ${sql.pg_14napja} AND datum < ${sql.pg_0napja}
+    - label: 30 napja
+      value: datum >= ${sql.pg_30napja} AND datum < ${sql.pg_0napja}
+    - label: 60 napja
+      value: datum >= ${sql.pg_60napja} AND datum < ${sql.pg_0napja}
 `
 
 const localeText = {
