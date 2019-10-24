@@ -67,17 +67,54 @@ kkrmenu:
     tervezes:
       - { value: Kapacitásigény,     path: kapacitasigeny }
       - { value: Kapacitásigény2,    path: kapacitasigeny2 }
+    logisztika:
+      - { value: 'Teszt',            path: teszt }
     kotode:
+      - { value: 'Kötőgép értékelés',path: kotode_kotogep_ertekeles }
       - { value: 'Kötőgépek',        path: kotode_kotogep }
       - { value: 'Kötőgép log',      path: kotode_kotogep_log }
-      - { value: 'Kötőgép értékelés',path: kotode_kotogep_ertekeles }
     varroda:
       - { value: '-',                path: varroda_leadas }
-    logisztika:
-      - { value: '-',                path: logisztika_leadas }
 
 
+###############################################################################################################################################################
+teszt:
+  title: Teszt
+  columnDefs:
+    - field: uzemkod
+      headerName: Üzemkód
+      filter: agNumberColumnFilter
+      type: numericColumn
+    - field: uzemnev
+      headerName: Üzemnév
+    - field: vonalkod
+      headerName: Vonalkód
+      type: numericColumn
+    - field: telephelykod
+      headerName: Telephelykód
+      type: numericColumn
+    - field: telephely
+      headerName: Telephely
+    - field: uzemtipus
+      headerName: Üzemtípus
+  # mssql: SELECT * FROM {sql.uzemekView} AS uzemek WHERE {where}
+  # mssql: SELECT * FROM telephelyek WHERE {where}
+  pipe:
+    - type: sql
+      apiPath: tir/call
+      query: SELECT * FROM ${sql.uzemek} AS uzemek
+    - type: sql
+      apiPath: tir/call
+      query: SELECT * FROM telephelyek
+    - type: alasql
+      query: SELECT uzemek.*, telephelyek.telephely FROM ? AS uzemek JOIN ? AS telephelyek ON uzemek.telephelykod = telephelyek.telephelykod
+    # - type: function
+    #   code: !!js/function >
+    #     function (msg) {
+    #       msg.payload = msg.alasql[1]
+    #     }
 
+###############################################################################################################################################################
 mssql_munkalap_update:
   title: Munkalap adatok frissítése
   columnDefs:
@@ -1238,6 +1275,7 @@ kotode_kotogep_log:
 ###############################################################################################################################################################
 kotode_kotogep_ertekeles:
   title: Kötőgép értékelés
+  sideBar: true
   domLayout: print
   # rowClass: row-class-header
   rowClassRules: {'row-class-header': 'data.gepprefix === "0"'}
@@ -1541,7 +1579,8 @@ const localeText = {
 let Config = null
 try {
   // console.log(configYaml)
-  Config = yaml.safeLoad(configYaml)
+  // Config = yaml.safeLoad(configYaml)
+  Config = yaml.load(configYaml)
   // Config.kotode_kotogep.columnDefs[3].cellRenderer = cellRenderer
   // console.log(Config)
   for (const gridkey in Config) {

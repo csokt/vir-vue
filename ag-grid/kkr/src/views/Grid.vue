@@ -12,6 +12,7 @@
 
 <script>
 import str2template from 'string-to-template'
+import alasql from 'alasql'
 import Store from '@/store'
 import Config from '@/config'
 import { API } from '@/util'
@@ -36,8 +37,10 @@ export default {
   },
 
   watch: {
-    'store.loggedIn': function () {
-      if (this.store.loggedIn) this.requestData(0)
+    'store.loggedIn': async function () {
+      if (this.store.loggedIn) {
+        await this.requestData(0)
+      }
     }
   },
 
@@ -46,6 +49,19 @@ export default {
       // console.log('params', params)
       this.gridApi = params.api
       this.columnApi = params.columnApi
+    },
+
+    async execSQL (msg, sql) {
+      const query = sql.query
+      console.log(query)
+      const response = await API.post(sql.apiPath, { sql: query })
+      if (response.ok) {
+        msg.payload = response.data
+      } else {
+        msg.payload = []
+        this.statusMessage = response.data.error.message
+      }
+      msg.payloadArray.push(msg.payload)
     },
 
     async requestData (whereIndex) {
@@ -74,6 +90,23 @@ export default {
           this.rowData = []
           this.statusMessage = response.data.error.message
         }
+        await this.$nextTick()
+        this.columnApi.autoSizeColumns(this.columnApi.getAllColumns())
+      } else if (this.grid.pipe) {
+        let msg = { payloadArray: [] }
+        this.rowData = null
+        for (const item of this.grid.pipe) {
+          if (item.type === 'sql') {
+            await this.execSQL(msg, item)
+          } else if (item.type === 'alasql') {
+            msg.payload = alasql(item.query, msg.payloadArray)
+          } else if (item.type === 'function') {
+            item.code(msg)
+          }
+        }
+        console.log('requestData msg', msg)
+        msg.payload.forEach(Object.freeze)
+        this.rowData = Object.freeze(msg.payload)
         await this.$nextTick()
         this.columnApi.autoSizeColumns(this.columnApi.getAllColumns())
       } else {
