@@ -1,35 +1,35 @@
 import sql from './sql'
 import yaml from 'js-yaml'
 
-let functions = {}
-
-functions.percentCellRenderer = function (params) {
-  var value = params.value !== null ? params.value.toFixed(1) : ''
-
-  var eDivPercentBar = document.createElement('div')
-  eDivPercentBar.className = 'div-percent-bar'
-  eDivPercentBar.style.width = value + '%'
-  if (value < 50) {
-    eDivPercentBar.style.backgroundColor = '#F44336'
-  } else if (value < 80) {
-    eDivPercentBar.style.backgroundColor = '#FF9100'
-  } else {
-    eDivPercentBar.style.backgroundColor = '#4CAF50'
-  }
-
-  var eValue = document.createElement('div')
-  eValue.className = 'div-percent-value'
-  eValue.innerHTML = value ? value + '%' : value
-
-  var eOuterDiv = document.createElement('div')
-  eOuterDiv.className = 'div-outer-div'
-  eOuterDiv.appendChild(eDivPercentBar)
-  eOuterDiv.appendChild(eValue)
-
-  return eOuterDiv
-}
-
 let configYaml = `
+
+functions:
+  percentCellRenderer: &percentCellRenderer !!js/function >
+    function (params) {
+      var value = params.value !== null ? params.value.toFixed(1) : ''
+
+      var eDivPercentBar = document.createElement('div')
+      eDivPercentBar.className = 'div-percent-bar'
+      eDivPercentBar.style.width = value + '%'
+      if (value < 50) {
+        eDivPercentBar.style.backgroundColor = '#F44336'
+      } else if (value < 80) {
+        eDivPercentBar.style.backgroundColor = '#FF9100'
+      } else {
+        eDivPercentBar.style.backgroundColor = '#4CAF50'
+      }
+
+      var eValue = document.createElement('div')
+      eValue.className = 'div-percent-value'
+      eValue.innerHTML = value ? value + '%' : value
+
+      var eOuterDiv = document.createElement('div')
+      eOuterDiv.className = 'div-outer-div'
+      eOuterDiv.appendChild(eDivPercentBar)
+      eOuterDiv.appendChild(eValue)
+
+      return eOuterDiv
+    }
 
 kkrmenu:
   title: Kötöttáru kontrolling rendszer
@@ -97,8 +97,6 @@ teszt:
       headerName: Telephely
     - field: uzemtipus
       headerName: Üzemtípus
-  # mssql: SELECT * FROM {sql.uzemekView} AS uzemek WHERE {where}
-  # mssql: SELECT * FROM telephelyek WHERE {where}
   pipe:
     - type: sql
       apiPath: tir/call
@@ -108,11 +106,11 @@ teszt:
       query: SELECT * FROM telephelyek
     - type: alasql
       query: SELECT uzemek.*, telephelyek.telephely FROM ? AS uzemek JOIN ? AS telephelyek ON uzemek.telephelykod = telephelyek.telephelykod
-    # - type: function
-    #   code: !!js/function >
-    #     function (msg) {
-    #       msg.payload = msg.alasql[1]
-    #     }
+    - type: function
+      code: !!js/function >
+        function (msg) {
+          // throw new Error("Division by zero")
+        }
 
 ###############################################################################################################################################################
 mssql_munkalap_update:
@@ -1314,13 +1312,13 @@ kotode_kotogep_ertekeles:
       valueGetter: "(data.ora-data.ki) ? 100*data.termel/(data.ora-data.ki) : null"
       # type: numericColumn
       # valueFormatter: "value ? value.toFixed(1) : value"
-      cellRenderer: percentCellRenderer
+      cellRenderer: *percentCellRenderer
     - field: kihasznaltsag
       headerName: Gép teljesítmény (24 óra)
       valueGetter: "100*data.termel/(data.szamlal*24)"
       # type: numericColumn
       # valueFormatter: "value ? value.toFixed(1) : value"
-      cellRenderer: percentCellRenderer
+      cellRenderer: *percentCellRenderer
   pgraktar: >-
     WITH
       log AS (
@@ -1581,16 +1579,28 @@ try {
   // console.log(configYaml)
   // Config = yaml.safeLoad(configYaml)
   Config = yaml.load(configYaml)
-  // Config.kotode_kotogep.columnDefs[3].cellRenderer = cellRenderer
   // console.log(Config)
   for (const gridkey in Config) {
     let grid = Config[gridkey]
-    if (grid.columnDefs) {
-      for (let column of grid.columnDefs) {
-        if (column.cellRenderer) {
-          column.cellRenderer = functions[column.cellRenderer]
-        }
+    let pipe = []
+    for (const key in grid) {
+      switch (key) {
+        case 'mssql':
+          pipe.push({ type: 'sql', apiPath: 'tir/call', query: grid[key] })
+          break
+        case 'pgraktar':
+          pipe.push({ type: 'sql', apiPath: 'vir/raktarcall', query: grid[key] })
+          break
+        case 'alasql':
+          pipe.push({ type: 'alasql', query: grid[key] })
+          break
+        case 'function':
+          pipe.push({ type: 'function', code: grid[key] })
+          break
       }
+    }
+    if (pipe.length) {
+      grid.pipe = pipe
     }
   }
   let arr = []
@@ -1611,9 +1621,9 @@ try {
   }
   Config.kkrmenu.menu = menu
   Config.localeText = localeText
+  // console.log(Config)
 } catch (err) {
   console.log(err)
-  // console.log(cellRenderer)
 }
 
 export default Config
