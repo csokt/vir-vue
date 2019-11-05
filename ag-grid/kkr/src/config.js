@@ -98,19 +98,23 @@ teszt:
     - field: uzemtipus
       headerName: Üzemtípus
   pipe:
-    - type: sql
-      apiPath: tir/call
-      query: SELECT * FROM ${sql.uzemek} AS uzemek
-    - type: sql
-      apiPath: tir/call
-      query: SELECT * FROM telephelyek
-    - type: alasql
-      query: SELECT uzemek.*, telephelyek.telephely FROM ? AS uzemek JOIN ? AS telephelyek ON uzemek.telephelykod = telephelyek.telephelykod
+    - type: inject
+      payload: SELECT * FROM ${sql.uzemek} AS uzemek WHERE {where} AND telephelykod >= {minhelykod} AND telephelykod <= {maxhelykod}
+    - type: replacewhere
     - type: function
       code: !!js/function >
         function (msg) {
-          // throw new Error("Division by zero")
+          msg.params = {minhelykod: 1, maxhelykod: 2}
         }
+    - type: replaceparams
+    - type: logpayload
+    - type: apiCall
+      api: tir/call
+  mssql: SELECT * FROM telephelyek
+  alasql: SELECT uzemek.*, telephelyek.telephely FROM ? AS uzemek JOIN ? AS telephelyek ON uzemek.telephelykod = telephelyek.telephelykod
+  where:
+    - label: U üzemtípus
+      value: uzemtipus != 'XU'
 
 ###############################################################################################################################################################
 mssql_munkalap_update:
@@ -1584,18 +1588,26 @@ try {
     let grid = Config[gridkey]
     let pipe = []
     for (const key in grid) {
+      if (['mssql', 'pgraktar'].includes(key)) {
+        pipe.push({ type: 'inject', payload: grid[key] })
+        pipe.push({ type: 'replacewhere' })
+        pipe.push({ type: 'logpayload' })
+      }
       switch (key) {
         case 'mssql':
-          pipe.push({ type: 'sql', apiPath: 'tir/call', query: grid[key] })
+          pipe.push({ type: 'apiCall', api: 'tir/call' })
           break
         case 'pgraktar':
-          pipe.push({ type: 'sql', apiPath: 'vir/raktarcall', query: grid[key] })
+          pipe.push({ type: 'apiCall', api: 'vir/raktarcall' })
           break
         case 'alasql':
           pipe.push({ type: 'alasql', query: grid[key] })
           break
         case 'function':
           pipe.push({ type: 'function', code: grid[key] })
+          break
+        case 'pipe':
+          pipe.push(...grid[key])
           break
       }
     }

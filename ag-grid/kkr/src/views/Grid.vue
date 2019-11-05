@@ -51,20 +51,6 @@ export default {
       this.columnApi = params.columnApi
     },
 
-    async execSQL (msg, sql, where) {
-      const query = sql.query.replace('{where}', where)
-      console.log(query)
-      const response = await API.post(sql.apiPath, { sql: query })
-      if (response.ok) {
-        msg.payload = response.data
-      } else {
-        msg.error = true
-        msg.payload = []
-        this.statusMessage = response.data.error.message
-      }
-      msg.payloadArray.push(msg.payload)
-    },
-
     async requestData (whereIndex) {
       this.rowData = null
       if (!this.grid.pipe) {
@@ -75,26 +61,68 @@ export default {
       const sqlWhere = this.grid.where.length ? this.grid.where[whereIndex].value : '1=1'
       let msg = { error: false, payloadArray: [] }
       for (const item of this.grid.pipe) {
-        if (item.type === 'sql') {
-          await this.execSQL(msg, item, sqlWhere)
-        } else if (item.type === 'alasql') {
-          const query = item.query.replace('{where}', sqlWhere)
-          console.log(query)
-          msg.payload = alasql(query, msg.payloadArray)
-        } else if (item.type === 'function') {
-          try {
-            item.code(msg)
-          } catch (error) {
+        switch (item.type) {
+          case 'inject':
+            msg.payload = item.payload
+            break
+          case 'replacewhere':
+            msg.payload = msg.payload.replace('{where}', sqlWhere)
+            break
+          case 'replaceparams':
+            for (const key in msg.params) {
+              msg.payload = msg.payload.split('{' + key + '}').join(msg.params[key])
+            }
+            break
+          case 'apiCall':
+            const response = await API.post(item.api, { sql: msg.payload })
+            if (response.ok) {
+              msg.payload = response.data
+              msg.payloadArray.push(msg.payload)
+            } else {
+              msg.error = true
+              msg.payload = []
+              this.statusMessage = response.data.error.message
+            }
+            break
+          case 'alasql':
+            msg.payload = alasql(item.query, msg.payloadArray)
+            break
+          case 'function':
+            try {
+              item.code(msg)
+            } catch (error) {
+              msg.error = true
+              msg.payload = []
+              this.statusMessage = 'Grid function error!'
+              console.log(error)
+            }
+            break
+          case 'logpayload':
+            console.log(JSON.parse(JSON.stringify(msg.payload)))
+            break
+          case 'logmsg':
+            console.log(JSON.parse(JSON.stringify(msg)))
+            break
+          case 'logpipe':
+            console.log(this.grid.pipe)
+            break
+          case 'break':
             msg.error = true
-            msg.payload = []
-            this.statusMessage = 'Grid function error!'
-            console.log(error)
-          }
+            this.statusMessage = 'Break!'
+            console.log(JSON.parse(JSON.stringify(msg.payload)))
+            break
+          default:
+            console.log('Unknown pipetype', item.type)
+            break
         }
         if (msg.error) break
       }
-      msg.payload.forEach(Object.freeze)
-      this.rowData = Object.freeze(msg.payload)
+      if (Array.isArray(msg.payload)) {
+        msg.payload.forEach(Object.freeze)
+        this.rowData = Object.freeze(msg.payload)
+      } else {
+        this.rowData = []
+      }
       if (!msg.error) this.statusMessage = ''
       // console.log('msg', msg)
       await this.$nextTick()
