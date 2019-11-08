@@ -1,14 +1,14 @@
 let sql = {}
 
 // ############################################################################################################################  Expressions  ###
-sql._0napja = 'dateadd(day,datediff(day,0,GETDATE()),0)'
-sql._1napja = 'dateadd(day,datediff(day,1,GETDATE()),0)'
-sql._2napja = 'dateadd(day,datediff(day,2,GETDATE()),0)'
-sql._3napja = 'dateadd(day,datediff(day,3,GETDATE()),0)'
-sql._7napja = 'dateadd(day,datediff(day,7,GETDATE()),0)'
-sql._14napja = 'dateadd(day,datediff(day,14,GETDATE()),0)'
-sql._30napja = 'dateadd(day,datediff(day,30,GETDATE()),0)'
-sql._60napja = 'dateadd(day,datediff(day,60,GETDATE()),0)'
+sql.ms_0napja = 'dateadd(day,datediff(day,0,GETDATE()),0)'
+sql.ms_1napja = 'dateadd(day,datediff(day,1,GETDATE()),0)'
+sql.ms_2napja = 'dateadd(day,datediff(day,2,GETDATE()),0)'
+sql.ms_3napja = 'dateadd(day,datediff(day,3,GETDATE()),0)'
+sql.ms_7napja = 'dateadd(day,datediff(day,7,GETDATE()),0)'
+sql.ms_14napja = 'dateadd(day,datediff(day,14,GETDATE()),0)'
+sql.ms_30napja = 'dateadd(day,datediff(day,30,GETDATE()),0)'
+sql.ms_60napja = 'dateadd(day,datediff(day,60,GETDATE()),0)'
 sql.pg_0napja = "(date_trunc('day', now()) AT TIME ZONE 'UTC')"
 sql.pg_1napja = "(date_trunc('day', now()) - interval '1 day') AT TIME ZONE 'UTC'"
 sql.pg_2napja = "(date_trunc('day', now()) - interval '2 days') AT TIME ZONE 'UTC'"

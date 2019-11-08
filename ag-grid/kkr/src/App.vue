@@ -77,4 +77,15 @@ export default {
     height: 100%;
     width: 100%;
 }
+
+.background-red {
+    background-color: #F44336;
+}
+.background-green {
+    background-color: #4CAF50;
+}
+.background-amber {
+    background-color: lightsalmon;
+}
+
 </style>

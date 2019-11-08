@@ -31,50 +31,63 @@ functions:
       return eOuterDiv
     }
 
+  triStateCellStyle: &triStateCellStyle !!js/function >
+    function(params) {
+      if (params.value < 0.0) {
+        return { backgroundColor: '#F44336'}
+      } else if (params.value > 0.0) {
+        return { backgroundColor: '#4CAF50'}
+      } else {
+        return null
+      }
+    }
+
 kkrmenu:
   title: Kötöttáru kontrolling rendszer
   columnDefs:
-    - { headerName: Törzsadatok,     field: torzs }
-    - { headerName: Rendelések,      field: rendeles }
-    - { headerName: Munkalap,        field: munkalap }
-    - { headerName: Tervezés,        field: tervezes }
-    - { headerName: Logisztika,      field: logisztika }
-    - { headerName: Kötöde,          field: kotode }
-    - { headerName: Varroda,         field: varroda }
+    - { headerName: Törzsadatok,        field: torzs }
+    - { headerName: Rendelések,         field: rendeles }
+    - { headerName: Munkalap,           field: munkalap }
+    - { headerName: Tervezés,           field: tervezes }
+    - { headerName: Logisztika,         field: logisztika }
+    - { headerName: Kötöde,             field: kotode }
+    - { headerName: Varroda,            field: varroda }
 
   menu:
     torzs:
-      - { value: Ügyfelek,           path: ugyfelek }
-      - { value: Cikktörzs,          path: cikktorzs }
-      - { value: Normák,             path: normak }
-      - { value: Telephelyek,        path: telephelyek }
-      - { value: Üzemek,             path: uzemek }
-      - { value: Dolgozók,           path: dolgozok }
-      - { value: Helyek,             path: helyek }
-      - { value: Gépek,              path: gepek }
-      - { value: Hely-gép kapcsolat, path: helyek_gep_rel }
+      - { value: Ügyfelek,              path: ugyfelek }
+      - { value: Cikktörzs,             path: cikktorzs }
+      - { value: Normák,                path: normak }
+      - { value: Telephelyek,           path: telephelyek }
+      - { value: Üzemek,                path: uzemek }
+      - { value: Dolgozók,              path: dolgozok }
+      - { value: Helyek,                path: helyek }
+      - { value: Gépek,                 path: gepek }
+      - { value: Hely-gép kapcsolat,    path: helyek_gep_rel }
     rendeles:
-      - { value: Rendelésfej,        path: rendelesfej }
-      - { value: Rendeléssor,        path: rendelessor }
+      - { value: Rendelésfej,           path: rendelesfej }
+      - { value: Rendeléssor,           path: rendelessor }
     munkalap:
-      - { value: E-H-U,              path: ehu_munkalap }
-      - { value: Kellék,             path: kellek_munkalap }
-      - { value: Összes,             path: osszes_munkalap }
-      - { value: E-H-U mozgás,       path: ehu_munkalap_mozgas }
-      - { value: Kellék mozgás,      path: kellek_munkalap_mozgas }
-      - { value: Összes mozgás,      path: osszes_munkalap_mozgas }
-      # - { value: Adatok frissítése,  path: mssql_munkalap_update }
+      - { value: E-H-U,                 path: ehu_munkalap }
+      - { value: Kellék,                path: kellek_munkalap }
+      - { value: Összes,                path: osszes_munkalap }
+      - { value: E-H-U mozgás,          path: ehu_munkalap_mozgas }
+      - { value: Kellék mozgás,         path: kellek_munkalap_mozgas }
+      - { value: Összes mozgás,         path: osszes_munkalap_mozgas }
+      # - { value: Adatok frissítése,   path: mssql_munkalap_update }
     tervezes:
-      - { value: Kapacitásigény,     path: kapacitasigeny }
-      - { value: Kapacitásigény2,    path: kapacitasigeny2 }
+      - { value: Kapacitásigény,        path: kapacitasigeny }
+      - { value: Kapacitásigény2,       path: kapacitasigeny2 }
     logisztika:
-      - { value: 'Teszt',            path: teszt }
+      - { value: 'Teszt',               path: teszt }
     kotode:
-      - { value: 'Kötőgép értékelés',path: kotode_kotogep_ertekeles }
-      - { value: 'Kötőgépek',        path: kotode_kotogep }
-      - { value: 'Kötőgép log',      path: kotode_kotogep_log }
+      - { value: 'Kötőgép értékelés',   path: kotogep_ertekeles }
+      - { value: 'Kötőgép értékelés2',  path: kotogep_ertekeles2 }
+      - { value: 'Kötőgépek',           path: kotogep }
+      - { value: 'Kötőgép log',         path: kotogep_log }
+      - { value: 'Kötőgép kódolás',     path: kotogep_kodolas }
     varroda:
-      - { value: '-',                path: varroda_leadas }
+      - { value: '-',                   path: varroda_leadas }
 
 
 ###############################################################################################################################################################
@@ -108,7 +121,7 @@ teszt:
         }
     - type: replaceparams
     - type: logpayload
-    - type: apiCall
+    - type: apicall
       api: tir/call
   mssql: SELECT * FROM telephelyek
   alasql: SELECT uzemek.*, telephelyek.telephely FROM ? AS uzemek JOIN ? AS telephelyek ON uzemek.telephelykod = telephelyek.telephelykod
@@ -1015,21 +1028,21 @@ ehu_munkalap_mozgas:
     ORDER BY datum
   where:
     - label: Ma
-      value: datum >= ${sql._0napja}
+      value: datum >= ${sql.ms_0napja}
     - label: 1 napja
-      value: datum >= ${sql._1napja}
+      value: datum >= ${sql.ms_1napja}
     - label: 2 napja
-      value: datum >= ${sql._2napja}
+      value: datum >= ${sql.ms_2napja}
     - label: 3 napja
-      value: datum >= ${sql._3napja}
+      value: datum >= ${sql.ms_3napja}
     - label: 7 napja
-      value: datum >= ${sql._7napja}
+      value: datum >= ${sql.ms_7napja}
     - label: 14 napja
-      value: datum >= ${sql._14napja}
+      value: datum >= ${sql.ms_14napja}
     - label: 30 napja
-      value: datum >= ${sql._30napja}
+      value: datum >= ${sql.ms_30napja}
     - label: 60 napja
-      value: datum >= ${sql._60napja}
+      value: datum >= ${sql.ms_60napja}
     - label: Nyitott
       value: statusz = 'N'
 
@@ -1084,21 +1097,21 @@ kellek_munkalap_mozgas:
     ORDER BY datum
   where:
     - label: Ma
-      value: datum >= ${sql._0napja}
+      value: datum >= ${sql.ms_0napja}
     - label: 1 napja
-      value: datum >= ${sql._1napja}
+      value: datum >= ${sql.ms_1napja}
     - label: 2 napja
-      value: datum >= ${sql._2napja}
+      value: datum >= ${sql.ms_2napja}
     - label: 3 napja
-      value: datum >= ${sql._3napja}
+      value: datum >= ${sql.ms_3napja}
     - label: 7 napja
-      value: datum >= ${sql._7napja}
+      value: datum >= ${sql.ms_7napja}
     - label: 14 napja
-      value: datum >= ${sql._14napja}
+      value: datum >= ${sql.ms_14napja}
     - label: 30 napja
-      value: datum >= ${sql._30napja}
+      value: datum >= ${sql.ms_30napja}
     - label: 60 napja
-      value: datum >= ${sql._60napja}
+      value: datum >= ${sql.ms_60napja}
     - label: Nyitott
       value: statusz = 'N'
 
@@ -1159,26 +1172,26 @@ osszes_munkalap_mozgas:
     ORDER BY datum
   where:
     - label: Ma
-      value: datum >= ${sql._0napja}
+      value: datum >= ${sql.ms_0napja}
     - label: 1 napja
-      value: datum >= ${sql._1napja}
+      value: datum >= ${sql.ms_1napja}
     - label: 2 napja
-      value: datum >= ${sql._2napja}
+      value: datum >= ${sql.ms_2napja}
     - label: 3 napja
-      value: datum >= ${sql._3napja}
+      value: datum >= ${sql.ms_3napja}
     - label: 7 napja
-      value: datum >= ${sql._7napja}
+      value: datum >= ${sql.ms_7napja}
     - label: 14 napja
-      value: datum >= ${sql._14napja}
+      value: datum >= ${sql.ms_14napja}
     - label: 30 napja
-      value: datum >= ${sql._30napja}
+      value: datum >= ${sql.ms_30napja}
     - label: 60 napja
-      value: datum >= ${sql._60napja}
+      value: datum >= ${sql.ms_60napja}
     - label: Nyitott
       value: statusz = 'N'
 
 ###############################################################################################################################################################
-kotode_kotogep:
+kotogep:
   title: Kötőgépek
   defaultColDef:
     filter: true
@@ -1204,7 +1217,7 @@ kotode_kotogep:
   pgraktar: SELECT * FROM kotode_kotogep ORDER BY name
 
 ###############################################################################################################################################################
-kotode_kotogep_log:
+kotogep_log:
   title: Kötőgép log
   sideBar: true
   defaultColDef:
@@ -1275,7 +1288,7 @@ kotode_kotogep_log:
       value: datum >= ${sql.pg_2hete} AND datum < ${sql.pg_0hete}
 
 ###############################################################################################################################################################
-kotode_kotogep_ertekeles:
+kotogep_ertekeles: &kotogep_ertekeles
   title: Kötőgép értékelés
   sideBar: true
   domLayout: print
@@ -1389,6 +1402,129 @@ kotode_kotogep_ertekeles:
       value: datum >= ${sql.pg_30napja} AND datum < ${sql.pg_0napja}
     - label: 60 napja
       value: datum >= ${sql.pg_60napja} AND datum < ${sql.pg_0napja}
+
+###############################################################################################################################################################
+kotogep_ertekeles2:
+  <<: *kotogep_ertekeles
+  title: Kötőgép értékelés2
+  columnDefs:
+    - field: nap
+      headerName: Nap
+    - field: gep
+      headerName: Gép
+      enableRowGroup: true
+    - field: termel
+      headerName: Termelt óra
+      type: numericColumn
+      valueFormatter: "value ? value.toFixed(2) : value"
+    - field: kodolt_ora
+      headerName: Kódolt óra
+      type: numericColumn
+      valueFormatter: "value ? value.toFixed(2) : value"
+    - field: elter_ora
+      headerName: Eltérés óra
+      # valueGetter: "(data.kodolt_ora ? data.kodolt_ora : 0.0) - (data.termel ? data.termel : 0.0)"
+      type: numericColumn
+      valueFormatter: "value ? value.toFixed(2) : value"
+      # cellStyle: *triStateCellStyle
+      cellClassRules: { 'background-green': 'x > 0.0', 'background-red': 'x < 0.0' }
+  function: !!js/function >
+    function (msg) {
+      msg.params = {mindatum: msg.payload[1].nap, maxdatum: msg.payload.slice(-1)[0].nap}
+    }
+  pipe:
+    - type: inject
+      payload: >-
+        WITH
+          kodol AS (
+            SELECT CONVERT(CHAR(10), kodol.accessdate, 126) AS nap, kotogepek.megnevezes AS gep, kodol.darab * normak.normaperc / 60.0 AS ora
+            FROM rendelesmatrica AS kodol
+            JOIN kotogepek ON kotogepek.kotogepkod = kodol.gepkod
+            JOIN ${sql.normak} AS normak ON normak.cikkszam = kodol.cikkszam AND normak.muveletkod = kodol.muveletkod
+            WHERE kodol.muveletkod > 900 AND kodol.muveletkod < 960 AND kodol.darab > 0 AND kodol.accessdate >= '{mindatum}' AND kodol.accessdate < dateadd(day,1,'{maxdatum}')
+          )
+        SELECT nap, gep, SUM(ora) AS ora FROM kodol GROUP BY nap, gep
+    - type: replaceparams
+    - type: logpayload
+    - type: apicall
+      api: tir/call
+
+    - type: inject
+      payload: SELECT ms.* FROM ? AS pg JOIN ? AS ms ON ms.nap = pg.nap AND ms.gep = pg.gep
+    - type: alasql
+
+    - type: function
+      code: !!js/function >
+        function (msg) {
+          let res = []
+          let nap = {}
+          let osszes = 0.0
+          for (const row of msg.payload) {
+            if (nap[row.nap]) nap[row.nap] += row.ora
+            else nap[row.nap] = row.ora
+            osszes += row.ora
+          }
+          for (const key in nap) {
+            res.push({ nap: key, gep: 'össz.', ora: nap[key] })
+          }
+          res.push({ nap: 'Összesen', gep: '', ora: osszes })
+          msg.payload.push(...res)
+          msg.payloadArray[1] = msg.payload
+        }
+  alasql: SELECT pg.*, ms.ora AS kodolt_ora, COALESCE(ms.ora, 0.0) - COALESCE(pg.termel, 0.0) AS elter_ora FROM ? AS pg LEFT JOIN ? AS ms ON ms.nap = pg.nap AND ms.gep = pg.gep
+  # logmsg:
+
+###############################################################################################################################################################
+kotogep_kodolas:
+  title: Kötőgép kódolás
+  sideBar: true
+  #rowSelection: multiple
+  defaultColDef:
+    filter: true
+    sortable: true
+    resizable: true
+  columnDefs:
+    - field: datum
+      headerName: Dátum
+    - field: gepkod
+      headerName: Gépkód
+      type: numericColumn
+    - field: megnevezes
+      headerName: Megnevezés
+      type: numericColumn
+    - field: ora
+      headerName: Óra
+      type: numericColumn
+      valueFormatter: "value ? value.toFixed(2) : value"
+  mssql: >-
+    WITH
+      kodol AS (
+        SELECT CONVERT(CHAR(10), kodol.accessdate, 126) AS datum, kodol.gepkod, kotogepek.megnevezes, kodol.darab * normak.normaperc / 60.0 AS ora
+        FROM rendelesmatrica AS kodol
+        JOIN kotogepek ON kotogepek.kotogepkod = kodol.gepkod
+        JOIN ${sql.normak} AS normak ON normak.cikkszam = kodol.cikkszam AND normak.muveletkod = kodol.muveletkod
+        WHERE kodol.muveletkod > 900 AND kodol.muveletkod < 960 AND kodol.darab > 0 AND {where}
+      )
+    SELECT datum, gepkod, megnevezes, SUM(ora) AS ora FROM kodol
+    GROUP BY datum, gepkod, megnevezes
+    ORDER BY datum
+  where:
+    - label: Ma
+      value: kodol.accessdate >= ${sql.ms_0napja}
+    - label: 1 napja
+      value: kodol.accessdate >= ${sql.ms_1napja}
+    - label: 2 napja
+      value: kodol.accessdate >= ${sql.ms_2napja}
+    - label: 3 napja
+      value: kodol.accessdate >= ${sql.ms_3napja}
+    - label: 7 napja
+      value: kodol.accessdate >= ${sql.ms_7napja}
+    - label: 14 napja
+      value: kodol.accessdate >= ${sql.ms_14napja}
+    - label: 30 napja
+      value: kodol.accessdate >= ${sql.ms_30napja}
+    - label: 60 napja
+      value: kodol.accessdate >= ${sql.ms_60napja}
 `
 
 const localeText = {
@@ -1595,19 +1731,29 @@ try {
       }
       switch (key) {
         case 'mssql':
-          pipe.push({ type: 'apiCall', api: 'tir/call' })
+          pipe.push({ type: 'apicall', api: 'tir/call' })
           break
         case 'pgraktar':
-          pipe.push({ type: 'apiCall', api: 'vir/raktarcall' })
+          pipe.push({ type: 'apicall', api: 'vir/raktarcall' })
           break
         case 'alasql':
-          pipe.push({ type: 'alasql', query: grid[key] })
+          pipe.push({ type: 'inject', payload: grid[key] })
+          pipe.push({ type: 'alasql' })
           break
         case 'function':
           pipe.push({ type: 'function', code: grid[key] })
           break
         case 'pipe':
           pipe.push(...grid[key])
+          break
+        case 'logpayload':
+          pipe.push({ type: 'logpayload' })
+          break
+        case 'logmsg':
+          pipe.push({ type: 'logmsg' })
+          break
+        case 'logpipe':
+          pipe.push({ type: 'logpipe' })
           break
       }
     }

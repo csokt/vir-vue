@@ -73,7 +73,7 @@ export default {
               msg.payload = msg.payload.split('{' + key + '}').join(msg.params[key])
             }
             break
-          case 'apiCall':
+          case 'apicall':
             const response = await API.post(item.api, { sql: msg.payload })
             if (response.ok) {
               msg.payload = response.data
@@ -85,7 +85,7 @@ export default {
             }
             break
           case 'alasql':
-            msg.payload = alasql(item.query, msg.payloadArray)
+            msg.payload = alasql(msg.payload, msg.payloadArray)
             break
           case 'function':
             try {
