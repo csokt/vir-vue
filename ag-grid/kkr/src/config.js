@@ -1472,7 +1472,6 @@ kotogep_ertekeles2:
           msg.payloadArray[1] = msg.payload
         }
   alasql: SELECT pg.*, ms.ora AS kodolt_ora, COALESCE(ms.ora, 0.0) - COALESCE(pg.termel, 0.0) AS elter_ora FROM ? AS pg LEFT JOIN ? AS ms ON ms.nap = pg.nap AND ms.gep = pg.gep
-  # logmsg:
 
 ###############################################################################################################################################################
 kotogep_kodolas:
@@ -1488,6 +1487,10 @@ kotogep_kodolas:
       headerName: Dátum
       enableRowGroup: true
       enablePivot: true
+    - field: kategoria
+      headerName: Kötöde
+      enableRowGroup: true
+      enablePivot: true
     - field: megnevezes
       headerName: Kötőgép
       enableRowGroup: true
@@ -1500,14 +1503,14 @@ kotogep_kodolas:
   mssql: >-
     WITH
       kodol AS (
-        SELECT CONVERT(CHAR(10), kodol.accessdate, 126) AS datum, kodol.gepkod, kotogepek.megnevezes, kodol.darab * normak.normaperc / 60.0 AS ora
+        SELECT CONVERT(CHAR(10), kodol.accessdate, 126) AS datum, kotogepek.kategoria, kotogepek.megnevezes, kodol.darab * normak.normaperc / 60.0 AS ora
         FROM rendelesmatrica AS kodol
         JOIN kotogepek ON kotogepek.kotogepkod = kodol.gepkod
         JOIN ${sql.normak} AS normak ON normak.cikkszam = kodol.cikkszam AND normak.muveletkod = kodol.muveletkod
         WHERE kodol.muveletkod > 900 AND kodol.muveletkod < 960 AND kodol.darab > 0 AND {where}
       )
-    SELECT datum, gepkod, megnevezes, SUM(ora) AS ora FROM kodol
-    GROUP BY datum, gepkod, megnevezes
+    SELECT datum, kategoria, megnevezes, SUM(ora) AS ora FROM kodol
+    GROUP BY datum, kategoria, megnevezes
     ORDER BY datum
   where:
     - label: Ma
