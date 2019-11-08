@@ -79,7 +79,8 @@ kkrmenu:
       - { value: Kapacitásigény,        path: kapacitasigeny }
       - { value: Kapacitásigény2,       path: kapacitasigeny2 }
     logisztika:
-      - { value: 'Teszt',               path: teszt }
+      - { value: '-',                   path: xxx }
+      # - { value: 'Teszt',               path: teszt }
     kotode:
       - { value: 'Kötőgép értékelés',   path: kotogep_ertekeles }
       - { value: 'Kötőgép értékelés2',  path: kotogep_ertekeles2 }
@@ -1426,7 +1427,6 @@ kotogep_ertekeles2:
       # valueGetter: "(data.kodolt_ora ? data.kodolt_ora : 0.0) - (data.termel ? data.termel : 0.0)"
       type: numericColumn
       valueFormatter: "value ? value.toFixed(2) : value"
-      # cellStyle: *triStateCellStyle
       cellClassRules: { 'background-green': 'x > 0.0', 'background-red': 'x < 0.0' }
   function: !!js/function >
     function (msg) {
@@ -1486,15 +1486,16 @@ kotogep_kodolas:
   columnDefs:
     - field: datum
       headerName: Dátum
-    - field: gepkod
-      headerName: Gépkód
-      type: numericColumn
+      enableRowGroup: true
+      enablePivot: true
     - field: megnevezes
-      headerName: Megnevezés
-      type: numericColumn
+      headerName: Kötőgép
+      enableRowGroup: true
+      enablePivot: true
     - field: ora
       headerName: Óra
       type: numericColumn
+      aggFunc: sum
       valueFormatter: "value ? value.toFixed(2) : value"
   mssql: >-
     WITH
