@@ -59,7 +59,7 @@ export default {
       }
       this.statusMessage = 'betöltés...'
       const sqlWhere = this.grid.where.length ? this.grid.where[whereIndex].value : '1=1'
-      let msg = { error: false, payloadArray: [] }
+      let msg = { error: false, alasql: alasql, payloadArray: [] }
       for (const item of this.grid.pipe) {
         switch (item.type) {
           case 'inject':

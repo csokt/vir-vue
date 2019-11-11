@@ -1430,7 +1430,12 @@ kotogep_ertekeles2:
       cellClassRules: { 'background-green': 'x > 0.0', 'background-red': 'x < 0.0' }
   function: !!js/function >
     function (msg) {
-      msg.params = {mindatum: msg.payload[1].nap, maxdatum: msg.payload.slice(-1)[0].nap}
+      if (msg.payload.length) {
+        msg.params = {mindatum: msg.payload[1].nap, maxdatum: msg.payload.slice(-1)[0].nap}
+      } else {
+        msg.error = true
+        console.log(JSON.parse(JSON.stringify(msg)))
+      }
     }
   pipe:
     - type: inject
@@ -1449,27 +1454,13 @@ kotogep_ertekeles2:
     - type: apicall
       api: tir/call
 
-    - type: inject
-      payload: SELECT ms.* FROM ? AS pg JOIN ? AS ms ON ms.nap = pg.nap AND ms.gep = pg.gep
-    - type: alasql
-
     - type: function
       code: !!js/function >
         function (msg) {
-          let res = []
-          let nap = {}
-          let osszes = 0.0
-          for (const row of msg.payload) {
-            if (nap[row.nap]) nap[row.nap] += row.ora
-            else nap[row.nap] = row.ora
-            osszes += row.ora
-          }
-          for (const key in nap) {
-            res.push({ nap: key, gep: 'össz.', ora: nap[key] })
-          }
-          res.push({ nap: 'Összesen', gep: '', ora: osszes })
-          msg.payload.push(...res)
-          msg.payloadArray[1] = msg.payload
+          const pivot_nap_gep = msg.alasql("SELECT ms.* FROM ? AS pg JOIN ? AS ms ON ms.nap = pg.nap AND ms.gep = pg.gep", msg.payloadArray)
+          const pivot_nap     = msg.alasql("SELECT nap, 'össz.' AS gep, SUM(ora) AS ora FROM ? GROUP BY nap", [pivot_nap_gep])
+          const pivot_osszes  = msg.alasql("SELECT 'Összesen' AS nap, '' AS gep, SUM(ora) AS ora FROM ?", [pivot_nap_gep])
+          msg.payloadArray[1] = [...pivot_nap_gep, ...pivot_nap, ...pivot_osszes]
         }
   alasql: SELECT pg.*, ms.ora AS kodolt_ora, COALESCE(ms.ora, 0.0) - COALESCE(pg.termel, 0.0) AS elter_ora FROM ? AS pg LEFT JOIN ? AS ms ON ms.nap = pg.nap AND ms.gep = pg.gep
 
