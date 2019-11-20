@@ -46,6 +46,20 @@ export default new Router({
       component: () => import(/* webpackChunkName: "chance-keszlet" */ './views/chance/Keszlet.vue')
     },
     {
+      path: '/chance-leltar',
+      component: () => import(/* webpackChunkName: "chance-leltar" */ './views/chance/Leltar.vue')
+    },
+    {
+      path: '/chance-leltar-felvetel-auto',
+      props: { kezi: false },
+      component: () => import(/* webpackChunkName: "chance-leltar-felvetel" */ './views/chance/LeltarFelvetel.vue')
+    },
+    {
+      path: '/chance-leltar-felvetel-kezi',
+      props: { kezi: true },
+      component: () => import(/* webpackChunkName: "chance-leltar-felvetel" */ './views/chance/LeltarFelvetel.vue')
+    },
+    {
       path: '/targyi-eszkoz-info',
       component: () => import(/* webpackChunkName: "targyi-eszkoz-info" */ './views/targyi-eszkoz/Info.vue')
     },

@@ -6,10 +6,11 @@ import { make } from 'vuex-pathify'
 Vue.use(Vuex)
 
 const state = {
-  version: '18.12.19',
+  version: '19.11.21',
   pageTitle: '',
   user: {},
-  leltariv: {}
+  leltariv: {},
+  chanceiv: {}
 }
 
 const mutations = make.mutations(state)

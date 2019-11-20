@@ -34,6 +34,7 @@ export default {
         { groupId: groupId.LegrandUser, app: 'legrand', path: '/legrand-muveletvegzes', icon: 'work', title: 'Műveletvégzés' },
         { groupId: groupId.ChanceViewer, app: 'chance', path: '/chance-cikkinfo', icon: 'info', title: 'Termék információk' },
         { groupId: groupId.ChanceViewer, app: 'chance', path: '/chance-keszlet', icon: 'info', title: 'Készlet információk' },
+        { groupId: groupId.ChanceUser, app: 'chance', path: '/chance-leltar', icon: 'assignment', title: 'Chance leltár' },
         { groupId: groupId.LeltarViewer, app: 'targyi-eszkoz', path: '/targyi-eszkoz-info', icon: 'info', title: 'Tárgyi eszköz információk' },
         { groupId: groupId.LeltarViewer, app: 'targyi-eszkoz', path: '/targyi-eszkoz-leltarkorzet', icon: 'info', title: 'Leltárkörzet információk' },
         { groupId: groupId.LeltarUser, app: 'targyi-eszkoz', path: '/targyi-eszkoz-athelyezes', icon: 'exit_to_app', title: 'Tárgyi eszköz áthelyezés' },
