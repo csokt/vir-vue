@@ -40,18 +40,6 @@
         >
           Cikk levonása
         </v-btn>
-        <v-card-text>
-          <v-text-field readonly/>
-          <v-textarea
-            v-for="(row, index) in felvettEszkozok"
-            :key="index"
-            v-model="row.name"
-            :label="row.label"
-            rows="1"
-            auto-grow
-            readonly
-          />
-        </v-card-text>
       </BaseCard>
     </v-layout>
   </v-container>
@@ -80,19 +68,12 @@ export default {
     return {
       vonalkod: '',
       cikk: {},
-      leltarivFelmeres: {},
-      lengthEszkozok: 0,
-      felvettEszkozokId: 0,
-      felvettEszkozok: []
+      leltarivFelmeres: {}
     }
   },
 
   computed: {
     ...get(['chanceiv']),
-
-    titleEszkozok () {
-      return 'Hiányzó eszközök (' + this.lengthEszkozok + ')'
-    },
 
     felveheto () {
       return this.cikk.id
@@ -110,13 +91,6 @@ export default {
       const check = checkResponse(response)
       this.leltarivFelmeres = check ? response.data.length ? response.data[0] : {} : {}
       return check
-    },
-
-    async onChange (content) {
-      this.vonalkod = ''
-      if (!content.id) return
-      this.cikk = content
-      await this.getFelmeres() && !this.kezi && this.felvesz()
     },
 
     async felvesz () {
@@ -141,6 +115,13 @@ export default {
       const response = await API.post('vir/update/chance.leltariv_felmeres/' + this.leltarivFelmeres.id.toString(), { fellelt: this.leltarivFelmeres.fellelt - 1 })
       if (!checkResponse(response)) return
       await this.getFelmeres() && EventBus.$emit('inform', { type: 'alert', variation: 'success', message: 'Levonva!' })
+    },
+
+    async onChange (content) {
+      this.vonalkod = ''
+      if (!content.id) return
+      this.cikk = content
+      await this.getFelmeres() && !this.kezi && this.felvesz()
     }
   },
 
