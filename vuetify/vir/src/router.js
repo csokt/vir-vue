@@ -60,6 +60,26 @@ export default new Router({
       component: () => import(/* webpackChunkName: "chance-leltar-felvetel" */ './views/chance/LeltarFelvetel.vue')
     },
     {
+      path: '/chance-leltar-elteres-osszes',
+      props: { filter: 'osszes' },
+      component: () => import(/* webpackChunkName: "chance-leltar-elteres" */ './views/chance/LeltarElteres.vue')
+    },
+    {
+      path: '/chance-leltar-elteres-fellelt',
+      props: { filter: 'fellelt' },
+      component: () => import(/* webpackChunkName: "chance-leltar-elteres" */ './views/chance/LeltarElteres.vue')
+    },
+    {
+      path: '/chance-leltar-elteres-nem-fellelt',
+      props: { filter: 'nem-fellelt' },
+      component: () => import(/* webpackChunkName: "chance-leltar-elteres" */ './views/chance/LeltarElteres.vue')
+    },
+    {
+      path: '/chance-leltar-elteres-elter',
+      props: { filter: 'elter' },
+      component: () => import(/* webpackChunkName: "chance-leltar-elteres" */ './views/chance/LeltarElteres.vue')
+    },
+    {
       path: '/targyi-eszkoz-info',
       component: () => import(/* webpackChunkName: "targyi-eszkoz-info" */ './views/targyi-eszkoz/Info.vue')
     },

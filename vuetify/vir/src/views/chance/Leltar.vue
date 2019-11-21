@@ -51,7 +51,11 @@ export default {
       if (!this.chanceiv.id) return []
       const items = [
         { icon: 'add', title: 'Automatikus felvétel', path: '/chance-leltar-felvetel-auto' },
-        { icon: 'add', title: 'Kézi felvétel', path: '/chance-leltar-felvetel-kezi' }
+        { icon: 'add', title: 'Kézi felvétel', path: '/chance-leltar-felvetel-kezi' },
+        { icon: 'info', title: 'Összes cikk', path: '/chance-leltar-elteres-osszes' },
+        { icon: 'info', title: 'Fellelt cikkek', path: '/chance-leltar-elteres-fellelt' },
+        { icon: 'info', title: 'Nem fellelt cikkek', path: '/chance-leltar-elteres-nem-fellelt' },
+        { icon: 'info', title: 'Fellelt és raktáron eltér', path: '/chance-leltar-elteres-elter' }
       ]
       return items
     }
