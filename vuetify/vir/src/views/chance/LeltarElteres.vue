@@ -13,6 +13,7 @@
           <v-data-table
             :headers="headers"
             :items="items"
+            :loading="loading"
             :search="search"
             :no-data-text="noDataText"
             no-results-text="A keresés nem hozott eredményt"
@@ -52,9 +53,6 @@ export default {
 
   data () {
     return {
-      where: [],
-      search: '',
-      items: [],
       headers: [
         { text: 'Cikk', value: 'display_name' },
         { text: 'V.kód', value: 'vonalkod' },
@@ -62,6 +60,10 @@ export default {
         { text: 'Rakt.', value: 'raktaron', align: 'right', sortable: false },
         { text: 'Eltér', value: 'elteres', align: 'right', sortable: false }
       ],
+      items: [],
+      where: [],
+      search: '',
+      loading: true,
       noDataText: 'Betöltés...'
     }
   },
@@ -100,6 +102,7 @@ export default {
 
     const response = await API.get(this.apiUrl)
     this.items = checkResponse(response) && response.data
+    this.loading = false
     this.noDataText = 'Nincs adat'
   }
 }
