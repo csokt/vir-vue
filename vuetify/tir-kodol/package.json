@@ -13,6 +13,7 @@
     "apisauce": "^0.16.0",
     "vue": "^2.6.10",
     "vue-form-generator": "^2.3.4",
+    "vue-qr-reader": "^1.6.2",
     "vue-qrcode-reader": "^1.4.2",
     "vue-router": "^3.0.6",
     "vuetify": "^1.5.16",

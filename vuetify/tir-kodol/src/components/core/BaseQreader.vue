@@ -1,5 +1,6 @@
 <template>
   <v-dialog
+    v-if="dialog"
     v-model="dialog"
     persistent
     max-width="400"
@@ -15,23 +16,35 @@
         {{label}}
       </v-card-title>
       <v-img :contain="false">
+        <vue-qr-reader
+          @code-scanned="onDecode"
+          :use-back-camera="useBackCamera"
+          :video-width="videoWidth"
+          :video-height="videoHeight"
+          :responsive="false"
+        />
+      </v-img>
+    </v-card>
+  </v-dialog>
+<!--
         <QrcodeReader
           :camera="camera"
           :paused="!dialog"
           :track="false"
           @decode="onDecode"
         />
-      </v-img>
-    </v-card>
-  </v-dialog>
+-->
 </template>
 
 <script>
-import { QrcodeReader } from 'vue-qrcode-reader'
+// import { QrcodeReader } from 'vue-qrcode-reader'
+import VueQrReader from 'vue-qr-reader/dist/lib/vue-qr-reader.umd.js'
+// import VueQrReader from '@/components/core/VueQrReader.vue'
 
 export default {
   components: {
-    QrcodeReader
+    // QrcodeReader
+    VueQrReader
   },
 
   props: {
@@ -52,6 +65,15 @@ export default {
         return {}
       }
       return { facingMode: 'user' }
+    },
+    useBackCamera () {
+      return this.$vuetify.breakpoint.smAndDown
+    },
+    videoWidth () {
+      return this.$vuetify.breakpoint.smAndDown ? 300 : 400
+    },
+    videoHeight () {
+      return this.$vuetify.breakpoint.smAndDown ? 400 : 300
     }
   },
 
