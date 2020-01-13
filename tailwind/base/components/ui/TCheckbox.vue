@@ -2,7 +2,12 @@
   <div class="max-w-sm mt-4">
     <label :class="computedClasses" class="mt-4">
       <input
-        @change="$emit('input', $event.target.checked)"
+        @change="
+          $emit('input', $event.target.checked)
+          $emit('change', $event.target.checked)
+        "
+        @focus="onFocus"
+        @blur="onBlur"
         :checked="value"
         :disabled="readonly || disabled"
         :class="computedClasses"
@@ -15,13 +20,10 @@
 </template>
 
 <script>
+import htmlInput from '@/mixins/htmlInput.js'
+
 export default {
-  props: {
-    value: { type: Boolean, required: true },
-    label: { type: String, required: true },
-    readonly: { type: Boolean, default: false },
-    disabled: { type: Boolean, default: false }
-  },
+  mixins: [htmlInput],
 
   computed: {
     computedClasses() {

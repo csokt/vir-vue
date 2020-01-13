@@ -2,7 +2,6 @@
   <button
     v-on="$listeners"
     :class="computedClasses"
-    :disabled="disabled"
     type="button"
     class="text-white font-bold py-2 px-4 rounded tracking-wider my-1 focus:outline-none focus:shadow-outline"
   >

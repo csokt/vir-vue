@@ -6,8 +6,9 @@
     </div>
     <input
       @input="$emit('input', $event.target.value)"
-      @focus="focused = true"
-      @blur="focused = false"
+      @change="$emit('change', $event.target.value)"
+      @focus="onFocus"
+      @blur="onBlur"
       :value="value"
       :type="type"
       :placeholder="focused && !readonly ? '' : placeholder || label"
@@ -20,20 +21,28 @@
 </template>
 
 <script>
+import htmlInput from '@/mixins/htmlInput.js'
+
 export default {
+  mixins: [htmlInput],
+
   props: {
-    value: { type: String, required: true },
-    type: { type: String, default: 'text' },
-    label: { type: String, default: '' },
-    placeholder: { type: String, default: '' },
-    readonly: { type: Boolean, default: false },
-    disabled: { type: Boolean, default: false }
+    // value: { type: String, required: true },
+    // type: {
+    //   type: String,
+    //   default: 'text',
+    //   validator(value) {
+    //     return ['number', 'password', 'search', 'text'].includes(value)
+    //   }
+    // },
+    // label: { type: String, default: '' },
+    // placeholder: { type: String, default: '' },
+    // readonly: { type: Boolean, default: false },
+    // disabled: { type: Boolean, default: false }
   },
 
   data() {
-    return {
-      focused: false
-    }
+    return {}
   },
 
   computed: {
