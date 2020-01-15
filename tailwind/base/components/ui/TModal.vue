@@ -1,44 +1,59 @@
 <template>
-  <button
-    v-on="$listeners"
-    :class="computedClasses"
-    type="button"
-    class="text-white font-bold py-2 px-4 rounded tracking-wider my-1 focus:outline-none focus:shadow-outline"
-  >
-    <span class="whitespace-no-wrap">
-      {{ value }}
-      <slot name="icon"></slot>
-    </span>
-  </button>
+  <Transition name="fade">
+    <div
+      v-if="value"
+      @click.self="close"
+      class="fixed inset-0 w-full h-screen flex items-center justify-center bg-smoke-800"
+    >
+      <div
+        class="relative max-h-screen w-full max-w-2xl bg-white shadow-lg rounded-lg p-8 flex"
+      >
+        <button
+          @click.prevent="close"
+          aria-label="close"
+          class="absolute top-0 right-0 text-xl text-gray-700 font-bold my-2 mx-4"
+        >
+          ×
+        </button>
+        <div class="overflow-auto max-h-screen w-full">
+          <slot />
+        </div>
+      </div>
+    </div>
+  </Transition>
 </template>
 
 <script>
 export default {
   props: {
-    value: { type: String, required: true },
-    color: { type: String, default: 'primary' },
-    disabled: { type: Boolean, default: false }
+    value: {
+      required: true,
+      type: Boolean
+    }
   },
-
-  computed: {
-    computedClasses() {
-      return {
-        'bg-blue-600 hover:bg-blue-700': ['blue', 'primary'].includes(
-          this.color
-        ),
-        'bg-indigo-600 hover:bg-indigo-700': ['indigo', 'info'].includes(
-          this.color
-        ),
-        'bg-green-600 hover:bg-green-700': ['green', 'success'].includes(
-          this.color
-        ),
-        'bg-orange-500 hover:bg-orange-600': ['orange', 'warning'].includes(
-          this.color
-        ),
-        'bg-red-600 hover:bg-red-700': ['red', 'error'].includes(this.color),
-        'opacity-25 cursor-not-allowed': this.disabled
+  watch: {
+    value(value) {
+      if (value) {
+        return document.querySelector('body').classList.add('overflow-hidden')
       }
+
+      document.querySelector('body').classList.remove('overflow-hidden')
+    }
+  },
+  methods: {
+    close() {
+      this.$emit('close')
     }
   }
 }
 </script>
+<style>
+.fade-enter-active,
+.fade-leave-active {
+  transition: all 0.6s;
+}
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>
