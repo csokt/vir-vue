@@ -3,23 +3,23 @@
     <div
       v-if="localShow"
       ref="modal"
-      :class="baseClass"
+      :class="baseClass" 'z-40 overflow-auto left-0 top-0 bottom-0 right-0 w-full h-full fixed'
       tabindex="0"
       @keydown.esc="escClick"
     >
       <div
         ref="container"
         :style="containerStyle"
-        :class="containerClass"
+        :class="containerClass" 'z-50 relative p-3 mx-auto my-0 max-w-full'
       >
         <div
           :style="{ minHeight: normalizedHeight }"
-          :class="wrapperClass"
+          :class="wrapperClass" 'bg-white rounded shadow-lg border flex flex-col overflow-hidden'
         >
           <button
             v-if="!hideCloseButton"
             ref="close"
-            :class="closeIconClass"
+            :class="closeIconClass" 'fill-current h-6 w-6 absolute right-0 top-0 m-6'
             @click="hide"
           >
             <slot name="close">
@@ -36,33 +36,33 @@
           <div
             v-if="hasHeaderSlot"
             ref="header"
-            :class="headerClass"
+            :class="headerClass" 'px-6 py-3 text-xl border-b'
           >
             <slot name="header" />
           </div>
           <div
             v-else-if="header"
             ref="header"
-            :class="headerClass"
+            :class="headerClass" 'px-6 py-3 text-xl border-b'
             v-text="header"
           />
           <div
             ref="body"
-            :class="bodyClass"
+            :class="bodyClass" 'p-6 flex-grow'
           >
             <slot />
           </div>
           <div
             v-if="hasFooterSlot"
             ref="footer"
-            :class="footerClass"
+            :class="footerClass" 'px-6 py-3 border-t'
           >
             <slot name="footer" />
           </div>
         </div>
       </div>
       <div
-        :class="overlayClass"
+        :class="overlayClass" 'z-40 overflow-auto left-0 top-0 bottom-0 right-0 w-full h-full fixed bg-black opacity-75'
         @click="outsideClick"
       />
     </div>
@@ -202,7 +202,7 @@ export default {
 
     /**
      * The default classes
-     * 
+     *
      * @return {Array}
      */
     currentClass () {
@@ -236,7 +236,7 @@ export default {
         await this.$nextTick();
         this.closed();
       }
-    }, 
+    },
   },
 
   mounted() {

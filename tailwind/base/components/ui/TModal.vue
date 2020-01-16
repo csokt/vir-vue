@@ -3,20 +3,25 @@
     <div
       v-if="value"
       @click.self="close"
-      class="fixed inset-0 w-full h-screen flex items-center justify-center bg-smoke-800"
+      class="fixed inset-0 w-full h-screen flex items-center justify-center bg-smoke-400"
     >
       <div
-        class="relative max-h-screen w-full max-w-2xl bg-white shadow-lg rounded-lg p-8 flex"
+        class="relative max-h-screen w-full max-w-xs md:max-w-md bg-white shadow-lg rounded p-0 flex flex-col"
       >
         <button
+          v-if="!hideCloseButton"
           @click.prevent="close"
           aria-label="close"
           class="absolute top-0 right-0 text-xl text-gray-700 font-bold my-2 mx-4"
         >
           ×
         </button>
+        <div v-if="header" v-text="header" class="px-4 py-2 text-xl border-b" />
         <div class="overflow-auto max-h-screen w-full">
           <slot />
+        </div>
+        <div v-if="hasFooterSlot" class="px-4 py-2 border-t">
+          <slot name="footer" />
         </div>
       </div>
     </div>
@@ -26,9 +31,22 @@
 <script>
 export default {
   props: {
+    header: {
+      type: String,
+      default: null
+    },
+    hideCloseButton: {
+      type: Boolean,
+      default: false
+    },
     value: {
       required: true,
       type: Boolean
+    }
+  },
+  computed: {
+    hasFooterSlot() {
+      return !!this.$slots.footer
     }
   },
   watch: {
