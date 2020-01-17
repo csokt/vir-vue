@@ -5,19 +5,23 @@
       @click.self="close"
       class="fixed inset-0 w-full h-screen flex items-center justify-center bg-smoke-400"
     >
-      <div
-        class="relative max-h-screen w-full max-w-xs md:max-w-md bg-white shadow-lg rounded p-0 flex flex-col"
-      >
+      <div class="relative bg-white shadow-lg rounded p-0 flex flex-col">
         <button
           v-if="!hideCloseButton"
           @click.prevent="close"
+          :class="headerClass"
           aria-label="close"
-          class="absolute top-0 right-0 text-xl text-gray-700 font-bold my-2 mx-4"
+          class="absolute top-0 right-0 text-xl font-bold my-2 mx-4"
         >
           ×
         </button>
-        <div v-if="header" v-text="header" class="px-4 py-2 text-xl border-b" />
-        <div class="overflow-auto max-h-screen w-full">
+        <div
+          v-if="header"
+          v-text="header"
+          :class="headerClass"
+          class="px-4 py-2 text-xl border-b"
+        />
+        <div class="overflow-auto">
           <slot />
         </div>
         <div v-if="hasFooterSlot" class="px-4 py-2 border-t">
@@ -26,6 +30,8 @@
       </div>
     </div>
   </Transition>
+  <!-- class="relative max-h-screen w-full max-w-xs md:max-w-md bg-white shadow-lg rounded p-0 flex flex-col" -->
+  <!-- <div class="overflow-auto max-h-screen w-full"> -->
 </template>
 
 <script>
@@ -34,6 +40,10 @@ export default {
     header: {
       type: String,
       default: null
+    },
+    headerClass: {
+      type: String,
+      default: 'text-white bg-blue-600'
     },
     hideCloseButton: {
       type: Boolean,
