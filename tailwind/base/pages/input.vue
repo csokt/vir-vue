@@ -5,7 +5,7 @@
     <t-input v-model="username" @click="onClick" label="Default"></t-input>
     <t-input v-model="username" type="search" label="Search"></t-input>
     <t-input v-model="username" type="number" label="Number"></t-input>
-    <t-input v-model="username" readonly label="Readonly"></t-input>
+    <t-input v-model="username" readonly qrcode label="Readonly"></t-input>
     <t-input v-model="username" disabled label="Disabled"></t-input>
     <t-input v-model="username" type="password" label="Password"></t-input>
     <t-input v-model="username" placeholder="No label"></t-input>

@@ -5,6 +5,7 @@
       <li><nuxt-link to="/about">About</nuxt-link></li>
       <li><nuxt-link to="/button">Button</nuxt-link></li>
       <li><nuxt-link to="/input">Input</nuxt-link></li>
+      <li><nuxt-link to="/select">Select</nuxt-link></li>
       <li><nuxt-link to="/modal">Modal</nuxt-link></li>
       <li><nuxt-link to="/qrcode">QR code</nuxt-link></li>
     </ul>

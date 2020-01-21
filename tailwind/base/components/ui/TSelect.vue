@@ -5,7 +5,7 @@
       &nbsp;
     </div>
     <div class="flex w-full">
-      <input
+      <select
         @input="$emit('input', $event.target.value)"
         @change="$emit('change', $event.target.value)"
         @focus="onFocus"
@@ -17,20 +17,17 @@
         :disabled="disabled"
         :class="computedClasses"
         class="flex-grow bg-transparent border-b border-gray-700 w-auto mb-px text-gray-800 pb-1 focus:outline-none focus:border-b-2 focus:border-blue-400 focus:mb-0"
-      />
-      <button v-if="qrcode" @click="dialog = true" class="text-xl">
-        &#x1f532;
-      </button>
-      <TQread
-        :dialog="dialog"
-        @input="
-          dialog = false
-          $emit('input', $event)
-        "
-        @close="dialog = false"
-        :header="label"
       >
-      </TQread>
+        <option value="" disabled selected>{{ label }}</option>
+        <option
+          v-for="option in options"
+          :value="option.value"
+          :label="option.label"
+        />
+      </select>
+      <button v-if="clearable" @click="$emit('input', null)" class="text-xl">
+        &#x2715;
+      </button>
     </div>
   </div>
   <!-- class="bg-transparent border-b border-gray-700 w-full mb-px text-gray-800 pb-1 focus:outline-none focus:border-b-2 focus:border-blue-400 focus:mb-0" -->
@@ -38,27 +35,19 @@
 
 <script>
 import htmlInput from '@/mixins/htmlInput.js'
-import TQread from '@/components/ui/TQread.vue'
 
 export default {
-  components: {
-    TQread
-  },
   mixins: [htmlInput],
 
   props: {
-    qrcode: {
+    clearable: {
       type: Boolean,
       default: false
+    },
+    options: {
+      type: Array,
+      default: null
     }
-    // type: {
-    //   type: String,
-    //   default: 'text',
-    //   validator(value) {
-    //     return ['number', 'password', 'search', 'text'].includes(value)
-    //   }
-    // },
-    // value: { type: String, required: true }
   },
 
   data() {

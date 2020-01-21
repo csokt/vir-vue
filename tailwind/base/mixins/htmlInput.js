@@ -20,13 +20,13 @@ const htmlInput = {
       type: Boolean,
       default: false
     },
-    value: {
-      type: [String, Number, Boolean],
-      default: null
-    },
     type: {
       type: String,
       default: 'text'
+    },
+    value: {
+      type: [String, Number, Boolean],
+      default: null
     }
   },
 
