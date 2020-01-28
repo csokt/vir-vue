@@ -137,7 +137,7 @@ export default {
         return
       }
       const uzemkod = this.store.kodol.uzemkod - 54000
-      const response = await RpcRaw('select uzemkod, uzemnev from uzemek where uzemkod = ' + uzemkod.toString())
+      const response = await RpcRaw('select vonalkod, uzemnev from uzemek where vonalkod = ' + uzemkod.toString())
       if (response.result && response.result.length) {
         const row = response.result[0]
         this.store.kodol.uzemnev = row.uzemnev

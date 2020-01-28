@@ -68,7 +68,7 @@ export default {
 
     onSelect (item) {
       Log('show', { file: item.fullpath })
-      const publicUrl = 'https://mobilszefo.hopto.org:19540/d/2e2d6b2c61fb4acdb9e2/'
+      const publicUrl = 'https://mobilszefo.hopto.org:19540/d/a5008cf7b7484ef6b34e/'
       let win = window.open(publicUrl + 'files/?p=' + item.fullpath, '_blank')
       if (win) {
         win.focus()

@@ -29,7 +29,7 @@ import {
   QSpinner
 } from 'quasar'
 
-const publicUrl = 'https://seahub.szefo.local/d/2e2d6b2c61fb4acdb9e2/'
+const publicUrl = 'https://seahub.szefo.local/d/a5008cf7b7484ef6b34e/'
 const token = 'f5dde53149a19f988d8292b10026b6eecace2596'
 const HTTP = axios.create({
   baseURL: './',

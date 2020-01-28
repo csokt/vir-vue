@@ -7,7 +7,7 @@ Vue.use(Vuex)
 
 const state = {
   production: process.env.NODE_ENV === 'production',
-  version: '19.12.02',
+  version: '20.01.27',
   publicIP: '',
   privateIP: '',
   pageTitle: '',
