@@ -18,6 +18,18 @@ export default new Router({
       path: '/grid/:id',
       name: 'grid',
       component: Grid
+    },
+    {
+      path: '/data/:id',
+      props: { isData: true },
+      name: 'data',
+      component: Grid
+    },
+    {
+      path: '/sql/:id',
+      props: { isSql: true },
+      name: 'sql',
+      component: Grid
     }
   ]
 })

@@ -1,13 +1,38 @@
 <template>
-  <BaseGrid
-    :gridId="gridId"
-    :grid="grid"
-    :rowData="rowData"
-    :statusMessage="statusMessage"
-    @grid-ready="onGridReady"
-    @select="onSelect"
-    @change-where="onChangeWhere"
-  />
+  <div style="height: 100%">
+    <div v-if="isData">
+      <table v-if="rowData && rowData.length" style="width:100%">
+        <tr>
+          <td v-for="(item, index) in rowData[0]" :key="index">
+            {{index}}
+          </td>
+        </tr>
+        <tr v-for="(row, rowindex) in rowData" :key="rowindex">
+          <td v-for="(item, index) in row" :key="index">
+            {{item}}
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div v-if="isSql">
+      <table style="width:100%">
+        <tr v-for="(row, rowindex) in messages" :key="rowindex">
+          <td v-for="(item, index) in row" :key="index">
+            {{item}}
+          </td>
+        </tr>
+      </table>
+    </div>
+    <BaseGrid v-if="isGrid"
+      :gridId="gridId"
+      :grid="grid"
+      :rowData="rowData"
+      :statusMessage="statusMessage"
+      @grid-ready="onGridReady"
+      @select="onSelect"
+      @change-where="onChangeWhere"
+    />
+  </div>
 </template>
 
 <script>
@@ -24,6 +49,23 @@ export default {
     BaseGrid
   },
 
+  props: {
+    isData: {
+      type: Boolean,
+      default: false
+    },
+    isSql: {
+      type: Boolean,
+      default: false
+    }
+  },
+
+  computed: {
+    isGrid () {
+      return !(this.isData || this.isSql)
+    }
+  },
+
   data () {
     return {
       store: Store,
@@ -32,7 +74,8 @@ export default {
       rowData: null,
       gridApi: null,
       columnApi: null,
-      statusMessage: ''
+      statusMessage: '',
+      messages: []
     }
   },
 
@@ -74,6 +117,10 @@ export default {
             }
             break
           case 'apicall':
+            if (this.isSql) {
+              this.messages.push([item.api, '\u00A0', msg.payload])
+              this.messages.push(['\u00A0'])
+            }
             const response = await API.post(item.api, { sql: msg.payload })
             if (response.ok) {
               msg.payload = response.data
@@ -85,6 +132,10 @@ export default {
             }
             break
           case 'alasql':
+            if (this.isSql) {
+              this.messages.push(['alasql', '\u00A0', msg.payload])
+              this.messages.push(['\u00A0'])
+            }
             msg.payload = alasql(msg.payload, msg.payloadArray)
             break
           case 'function':
@@ -126,7 +177,9 @@ export default {
       if (!msg.error) this.statusMessage = ''
       // console.log('msg', msg)
       await this.$nextTick()
-      this.columnApi.autoSizeColumns(this.columnApi.getAllColumns())
+      if (this.isGrid) {
+        this.columnApi.autoSizeColumns(this.columnApi.getAllColumns())
+      }
     },
 
     onSelect (content) {
@@ -152,6 +205,10 @@ export default {
   },
 
   created () {
+    if (this.isSql) {
+      this.messages.push(['Api', '', 'SQL'])
+      this.messages.push(['-----', '', '-----'])
+    }
     this.gridId = this.$route.params.id
     this.grid = Config[this.gridId] || { title: 'Nincs ilyen táblázat!' }
     // where tömb előkészítése
