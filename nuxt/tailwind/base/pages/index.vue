@@ -1,6 +1,6 @@
 <template>
   <div>
-    My praiseworthy Nuxt.js project
+    <h1>My praiseworthy Nuxt.js project</h1>
     <ul>
       <li><nuxt-link to="/about">About</nuxt-link></li>
       <li><nuxt-link to="/button">Button</nuxt-link></li>
