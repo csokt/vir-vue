@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "apisauce": "^0.15.2",
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "vue": "^2.6.10",
     "vue-router": "^3.0.2",
     "vuetify": "^1.5.9"
